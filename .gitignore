@@ -1,0 +1,25 @@
+# Java & Maven
+server/target/
+server/pom.xml.tag
+server/pom.xml.releaseBackup
+server/pom.xml.versionsBackup
+server/pom.xml.next
+server/release.properties
+*.class
+
+# IDE & Editor files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
