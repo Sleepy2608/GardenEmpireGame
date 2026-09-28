@@ -89,9 +89,13 @@ public class GameEngine {
         game.getState().setTier3DeckCount(game.getTier3Deck().size());
     }
 
-    // ==========================================
-    // ACTION 1: LẤY TÀI NGUYÊN (TAKE TOKENS)
-    // ==========================================
+    // =========================================================================
+    // 3 HÀNH ĐỘNG CHÍNH (MAIN ACTIONS) — Mỗi lượt người chơi CHỈ CHỌN 1 TRONG 3
+    // =========================================================================
+
+    // -------------------------------------------------------------------------
+    // HÀNH ĐỘNG CHÍNH 1: LẤY TÀI NGUYÊN (TAKE TOKENS)
+    // -------------------------------------------------------------------------
     public void takeTokens(Game game, String playerId, Map<Resource, Integer> requestedTokens) {
         validateTurnAndActive(game, playerId);
 
@@ -157,12 +161,16 @@ public class GameEngine {
             player.getTokens().put(res, player.getTokens().getOrDefault(res, 0) + count);
         }
 
-        endTurn(game, playerId);
+        // Nếu tổng token sau khi lấy <= 10 -> Lượt chơi hoàn tất và chuyển lượt
+        // Nếu > 10 -> Giữ nguyên lượt để người chơi thực hiện EXTRA ACTION: returnTokens
+        if (player.getTotalTokensCount() <= 10) {
+            endTurn(game, playerId);
+        }
     }
 
-    // ==========================================
-    // ACTION 2: TRỒNG CÂY (BUY PLANT CARD)
-    // ==========================================
+    // -------------------------------------------------------------------------
+    // HÀNH ĐỘNG CHÍNH 2: TRỒNG CÂY (BUY PLANT CARD)
+    // -------------------------------------------------------------------------
     public void buyPlantCard(Game game, String playerId, String cardId, boolean fromReserved) {
         validateTurnAndActive(game, playerId);
         Player player = getPlayer(game, playerId);
@@ -248,9 +256,9 @@ public class GameEngine {
         endTurn(game, playerId);
     }
 
-    // ==========================================
-    // ACTION 3: GIỮ CÂY (RESERVE PLANT CARD)
-    // ==========================================
+    // -------------------------------------------------------------------------
+    // HÀNH ĐỘNG CHÍNH 3: GIỮ CÂY (RESERVE PLANT CARD)
+    // -------------------------------------------------------------------------
     public void reservePlantCard(Game game, String playerId, String cardId, Integer tierFromDeck) {
         validateTurnAndActive(game, playerId);
         Player player = getPlayer(game, playerId);
@@ -297,12 +305,61 @@ public class GameEngine {
             player.getTokens().put(Resource.WILD, player.getTokens().getOrDefault(Resource.WILD, 0) + 1);
         }
 
-        endTurn(game, playerId);
+        // Nếu tổng token sau khi nhận WILD <= 10 -> Lượt chơi hoàn tất
+        // Nếu > 10 -> Yêu cầu người chơi trả bớt token bằng EXTRA ACTION: returnTokens
+        if (player.getTotalTokensCount() <= 10) {
+            endTurn(game, playerId);
+        }
     }
 
-    // ==========================================
-    // ACTION 4: TỰ ĐỘNG RƯỚC KHÁCH THĂM VƯỜN (CLAIM VISITOR)
-    // ==========================================
+    // =========================================================================
+    // EXTRA ACTION 1: TRẢ LẠI TOKEN DƯ (Khi và chỉ khi tổng token trên tay > 10)
+    // Trả lại về cho số token còn lại 10
+    // =========================================================================
+    public void returnTokens(Game game, String playerId, Map<Resource, Integer> returnedTokens) {
+        validateTurnAndActive(game, playerId);
+        Player player = getPlayer(game, playerId);
+
+        if (player.getTotalTokensCount() <= 10) {
+            throw new GameException("Bạn đang có " + player.getTotalTokensCount() + " token (không vượt quá 10), không cần phải trả lại.");
+        }
+
+        if (returnedTokens == null || returnedTokens.isEmpty()) {
+            throw new GameException("Vui lòng chọn tài nguyên cần trả lại.");
+        }
+
+        int totalReturned = returnedTokens.values().stream().mapToInt(Integer::intValue).sum();
+        if (player.getTotalTokensCount() - totalReturned > 10) {
+            throw new GameException("Bạn cần trả thêm token để số token trên tay không vượt quá 10 (còn dư " + (player.getTotalTokensCount() - totalReturned - 10) + " token).");
+        }
+
+        for (Map.Entry<Resource, Integer> entry : returnedTokens.entrySet()) {
+            Resource res = entry.getKey();
+            int count = entry.getValue();
+            int current = player.getTokens().getOrDefault(res, 0);
+            if (current < count) {
+                throw new GameException("Bạn không có đủ token " + res + " để trả lại.");
+            }
+        }
+
+        Map<Resource, Integer> bank = game.getState().getResourceBank();
+        for (Map.Entry<Resource, Integer> entry : returnedTokens.entrySet()) {
+            Resource res = entry.getKey();
+            int count = entry.getValue();
+            player.getTokens().put(res, player.getTokens().get(res) - count);
+            bank.put(res, bank.getOrDefault(res, 0) + count);
+        }
+
+        // Khi đã trả đủ token để tổng số <= 10 -> Chính thức hoàn tất lượt chơi
+        if (player.getTotalTokensCount() <= 10) {
+            endTurn(game, playerId);
+        }
+    }
+
+    // =========================================================================
+    // EXTRA ACTION 2: TỰ ĐỘNG RƯỚC KHÁCH THĂM VƯỜN (Cuối lượt khi đủ điều kiện cây)
+    // Tối đa 1 lượt chỉ chiêu mộ thêm 1 khách
+    // =========================================================================
     private void checkAndClaimVisitors(Game game, Player player) {
         List<VisitorCard> visibleVisitors = game.getState().getVisibleVisitors();
         VisitorCard eligibleVisitor = null;
@@ -318,7 +375,7 @@ public class GameEngine {
             }
             if (eligible) {
                 eligibleVisitor = v;
-                break; // Chỉ nhận tối đa 1 Khách trong 1 lượt
+                break; // Mỗi lượt chỉ rước tối đa 1 Khách
             }
         }
 
@@ -329,13 +386,13 @@ public class GameEngine {
         }
     }
 
-    // ==========================================
+    // =========================================================================
     // CHUYỂN LƯỢT & XÁC ĐỊNH THẮNG CUỘC
-    // ==========================================
-    private void endTurn(Game game, String playerId) {
+    // =========================================================================
+    public void endTurn(Game game, String playerId) {
         Player player = getPlayer(game, playerId);
         
-        // 1. Tự động rước Khách nếu đủ điều kiện
+        // 1. Tự động rước Khách nếu đủ điều kiện (EXTRA ACTION 2)
         checkAndClaimVisitors(game, player);
 
         // 2. Kiểm tra kích hoạt Vòng chung kết (15 điểm)
@@ -384,9 +441,9 @@ public class GameEngine {
         }
     }
 
-    // ==========================================
+    // =========================================================================
     // HELPER METHODS
-    // ==========================================
+    // =========================================================================
     private void validateTurnAndActive(Game game, String playerId) {
         if (game.getState().isGameOver()) {
             throw new GameException("Trò chơi đã kết thúc.");

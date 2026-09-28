@@ -302,7 +302,7 @@ class GameEngineTest {
     }
 
     // ==========================================
-    // TEST 5: RƯỚC KHÁCH THĂM VƯỜN (VISITORS)
+    // TEST 5: EXTRA ACTION 2 — RƯỚC KHÁCH THĂM VƯỜN (VISITORS)
     // ==========================================
     @Test
     @DisplayName("Tự động rước Khách Thăm Vườn khi tích lũy đủ Bonus cây ở cuối lượt")
@@ -389,18 +389,40 @@ class GameEngineTest {
     }
 
     // ==========================================
-    // TEST 7: TRẢ LẠI TOKEN (RETURN TOKENS)
+    // TEST 7: EXTRA ACTION 1 — TRẢ LẠI TOKEN DƯ (KHI VÀ CHỈ KHI > 10 TOKEN)
     // ==========================================
     @Test
-    @DisplayName("Trả lại token dư thành công -> Token về Bank")
-    void testReturnTokens_Success() {
+    @DisplayName("Lấy token khiến tổng số > 10 -> Giữ nguyên lượt, chỉ chuyển lượt sau khi trả đủ token")
+    void testTakeTokens_Exceeds10Tokens_RequiresReturnTokens() {
         Game game = gameEngine.createNewGame("game_1", players2);
         Player p1 = gameEngine.getPlayer(game, "p1");
 
-        p1.getTokens().put(Resource.EARTH, 3);
-        gameEngine.returnTokens(game, "p1", Map.of(Resource.EARTH, 2));
+        // P1 đang có sẵn 8 token
+        p1.getTokens().put(Resource.EARTH, 4);
+        p1.getTokens().put(Resource.WATER, 4);
 
-        assertEquals(1, p1.getTokens().get(Resource.EARTH));
-        assertEquals(6, game.getState().getResourceBank().get(Resource.EARTH)); // 4 + 2 = 6
+        // P1 lấy thêm 3 token (SEED, SUNLIGHT, NUTRIENTS) -> Tổng 11 token (> 10)
+        gameEngine.takeTokens(game, "p1", Map.of(Resource.SEED, 1, Resource.SUNLIGHT, 1, Resource.NUTRIENTS, 1));
+
+        assertEquals(11, p1.getTotalTokensCount());
+        // Lượt CHƯA chuyển sang p2 vì p1 đang bị dư token
+        assertEquals("p1", game.getState().getCurrentTurnPlayerId());
+
+        // P1 thực hiện EXTRA ACTION 1: Trả lại 1 token EARTH
+        gameEngine.returnTokens(game, "p1", Map.of(Resource.EARTH, 1));
+
+        // Tổng token còn 10 -> Lượt chơi chính thức hoàn tất và chuyển sang p2
+        assertEquals(10, p1.getTotalTokensCount());
+        assertEquals("p2", game.getState().getCurrentTurnPlayerId());
+    }
+
+    @Test
+    @DisplayName("Trả lại token khi tổng số <= 10 bị từ chối vì không thỏa điều kiện")
+    void testReturnTokens_FailsWhenNotExceeding10() {
+        Game game = gameEngine.createNewGame("game_1", players2);
+        Player p1 = gameEngine.getPlayer(game, "p1");
+
+        p1.getTokens().put(Resource.EARTH, 3); // Chỉ có 3 token (<= 10)
+        assertThrows(GameException.class, () -> gameEngine.returnTokens(game, "p1", Map.of(Resource.EARTH, 1)));
     }
 }
