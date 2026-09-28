@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GardenEmpire - Trò chơi Chiến thuật Vườn Thượng Uyển</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+  <div class="index-container">
+    <div class="guest-card">
+      <h1 class="brand-title">🌿 GardenEmpire</h1>
+      <p class="brand-subtitle">Chiến thuật xây dựng đế chế thực vật lộng lẫy</p>
+      
+      <form id="guest-form">
+        <div class="form-group">
+          <label class="form-label" for="guest-name">Tên người chơi (Khách)</label>
+          <input 
+            type="text" 
+            id="guest-name" 
+            class="form-input" 
+            placeholder="Nhập biệt danh của bạn..." 
+            required 
+            maxlength="20"
+            autocomplete="off"
+          />
+        </div>
+        <button type="submit" id="btn-enter-lobby" class="btn-primary">Vào Sảnh Chờ (Lobby)</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

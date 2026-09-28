@@ -1,0 +1,77 @@
+/* Guest Login / Index Screen Styles */
+.index-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: radial-gradient(circle at center, #1a3325 0%, #0b140e 100%);
+  padding: 1.5rem;
+}
+
+.guest-card {
+  background: rgba(23, 42, 32, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.brand-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--color-accent-gold);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+.brand-subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-light);
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(15, 28, 21, 0.7);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-light);
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  border-color: var(--color-primary-green);
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 0.85rem;
+  background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.05rem;
+  border-radius: var(--radius-md);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow);
+}

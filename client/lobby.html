@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sảnh Chờ - GardenEmpire</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/lobby.css">
+</head>
+<body>
+  <div class="lobby-layout">
+    <header class="lobby-header">
+      <h2>🌿 GardenEmpire Lobby</h2>
+      <div class="lobby-user-info">
+        <span id="display-user-name">Khách: Nghệ nhân hoa</span>
+        <button id="btn-logout" class="btn-secondary">Đổi tên</button>
+      </div>
+    </header>
+
+    <main class="lobby-grid">
+      <section class="room-list-container">
+        <div class="room-list-header">
+          <h3>Danh sách phòng</h3>
+          <button id="btn-refresh-rooms" class="btn-secondary">Làm mới</button>
+        </div>
+        <div id="room-list" class="room-items">
+          <!-- Room items injected by LobbyUI.js -->
+        </div>
+      </section>
+
+      <aside class="create-room-sidebar">
+        <h3>Tạo phòng mới</h3>
+        <form id="create-room-form">
+          <div class="form-group">
+            <label class="form-label" for="room-name">Tên phòng</label>
+            <input type="text" id="room-name" class="form-input" placeholder="Vườn Thượng Uyển..." required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="max-players">Số lượng người chơi</label>
+            <select id="max-players" class="form-input">
+              <option value="2">2 Người</option>
+              <option value="3">3 Người</option>
+              <option value="4" selected>4 Người</option>
+            </select>
+          </div>
+          <button type="submit" id="btn-create-room" class="btn-primary">Tạo phòng</button>
+        </form>
+      </aside>
+    </main>
+  </div>
+
+  <script type="module" src="js/ui/LobbyUI.js"></script>
+</body>
+</html>

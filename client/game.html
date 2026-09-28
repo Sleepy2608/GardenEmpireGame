@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bàn chơi - GardenEmpire</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+  <div class="game-layout">
+    <!-- Left Panel: Other Players -->
+    <aside class="left-panel" id="opponents-panel">
+      <h3>Đối thủ</h3>
+      <div id="opponents-list"></div>
+    </aside>
+
+    <!-- Center Board: Visitors, Plant Cards Market, Token Bank -->
+    <main class="center-board">
+      <!-- Visitors (Nobles) -->
+      <section class="visitors-row" id="visitors-container">
+        <!-- Visitor cards injected by VisitorUI.js -->
+      </section>
+
+      <!-- Plant Market (Tiers 3, 2, 1) -->
+      <section class="plant-market" id="plant-market-container">
+        <!-- Plant cards tiers injected by PlantCardUI.js -->
+      </section>
+
+      <!-- Resource Bank (Earth, Water, Sunlight, Seeds, Nutrients, Wild Fertilizer) -->
+      <section class="resources-bank" id="resource-bank-container">
+        <!-- Tokens injected by ResourceUI.js -->
+      </section>
+    </main>
+
+    <!-- Right Panel: Current Player Info, Reserved Plants, Actions -->
+    <aside class="right-panel" id="my-player-panel">
+      <h3>Khu vườn của bạn</h3>
+      <div id="my-player-info"></div>
+      <div id="my-reserved-cards"></div>
+      <div id="action-controls"></div>
+    </aside>
+  </div>
+
+  <script type="module" src="js/ui/BoardUI.js"></script>
+</body>
+</html>
