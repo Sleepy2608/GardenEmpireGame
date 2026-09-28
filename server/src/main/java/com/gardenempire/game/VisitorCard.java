@@ -13,7 +13,15 @@ import java.util.Map;
 @AllArgsConstructor
 public class VisitorCard {
     private String id;
-    private int prestigePoints; // Usually 3 points
-    private Map<Resource, Integer> requirements; // Required plant bonuses
+    private String name;
+    private int prestigePoints; // Thường là 3 điểm
+    private Map<Resource, Integer> requirements; // Yêu cầu số lượng cây bonus
     private String imagePath;
+
+    public VisitorCard(String id, String name, int prestigePoints, Map<Resource, Integer> requirements) {
+        this.id = id;
+        this.name = name;
+        this.prestigePoints = prestigePoints;
+        this.requirements = requirements;
+    }
 }

@@ -20,7 +20,9 @@ public class GameState {
     @Builder.Default
     private List<Player> players = new ArrayList<>();
     
+    private String firstPlayerId;
     private String currentTurnPlayerId;
+    private boolean isFinalRound;
     private boolean isGameOver;
     private String winnerPlayerId;
     
