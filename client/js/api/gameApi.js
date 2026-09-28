@@ -1,17 +1,16 @@
-/**
- * REST API for Game actions
- */
-const API_BASE = '/api/game';
+import { CONFIG } from '../config.js';
+
+const getApiBase = () => `${CONFIG.API_BASE_URL}/api/game`;
 
 export const gameApi = {
   async getGameState(gameId) {
-    const res = await fetch(`${API_BASE}/${gameId}/state`);
+    const res = await fetch(`${getApiBase()}/${gameId}/state`);
     if (!res.ok) throw new Error('Không thể lấy trạng thái game');
     return await res.json();
   },
 
   async performAction(gameId, actionPayload) {
-    const res = await fetch(`${API_BASE}/${gameId}/action`, {
+    const res = await fetch(`${getApiBase()}/${gameId}/action`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(actionPayload)

@@ -1,3 +1,5 @@
+import { CONFIG } from '../config.js';
+
 /**
  * WebSocket handler for real-time multiplayer updates
  */
@@ -11,9 +13,8 @@ export class GameSocket {
   }
 
   connect() {
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const host = window.location.host || 'localhost:8080';
-    const url = `${protocol}//${host}/ws/game?gameId=${this.gameId}&playerId=${this.playerId}`;
+    const wsBase = CONFIG.WS_BASE_URL;
+    const url = `${wsBase}/ws/game?gameId=${this.gameId}&playerId=${this.playerId}`;
 
     this.socket = new WebSocket(url);
 

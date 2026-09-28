@@ -1,17 +1,16 @@
-/**
- * REST API for Room management
- */
-const API_BASE = '/api/rooms';
+import { CONFIG } from '../config.js';
+
+const getApiBase = () => `${CONFIG.API_BASE_URL}/api/rooms`;
 
 export const roomApi = {
   async getAllRooms() {
-    const res = await fetch(`${API_BASE}`);
+    const res = await fetch(`${getApiBase()}`);
     if (!res.ok) throw new Error('Không thể tải danh sách phòng');
     return await res.json();
   },
 
   async createRoom(roomName, maxPlayers, hostPlayer) {
-    const res = await fetch(`${API_BASE}`, {
+    const res = await fetch(`${getApiBase()}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ roomName, maxPlayers, hostPlayer })
@@ -21,7 +20,7 @@ export const roomApi = {
   },
 
   async joinRoom(roomId, player) {
-    const res = await fetch(`${API_BASE}/${roomId}/join`, {
+    const res = await fetch(`${getApiBase()}/${roomId}/join`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(player)
