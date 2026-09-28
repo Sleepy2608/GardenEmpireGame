@@ -1,10 +1,13 @@
 package com.gardenempire.game;
 
 public enum Resource {
-    EARTH,       // Đất
-    WATER,       // Nước
-    SUNLIGHT,    // Ánh sáng
-    SEED,        // Hạt giống
-    NUTRIENTS,   // Dinh dưỡng
-    WILD         // Phân bón vàng (vàng / token vạn năng)
+    //5 tài nguyên chính thay thế trong game
+    EARTH,       // Đất -> Black gems (emerald)
+    WATER,       // Nước -> Blue gems (sapphire)
+    SUNLIGHT,    // Ánh sáng -> Red gems (ruby)
+    SEED,        // Hạt giống -> White gems (diamond)
+    NUTRIENTS,   // Dinh dưỡng -> Green gems (topaz)
+
+    // xu vàng - thay thế các loại tài nguyên
+    WILD         // Phân bón vàng (gold)
 }
