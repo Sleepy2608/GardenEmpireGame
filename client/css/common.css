@@ -1,62 +1,369 @@
-/* GardenEmpire - Common Styles & Design System */
+/*
+   GARDEN EMPIRE — DESIGN SYSTEM & COMMON STYLES
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800;900&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 :root {
-  --font-primary: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  
-  /* Primary Garden Palette */
-  --color-bg-dark: #0f1c15;
-  --color-bg-surface: #172a20;
-  --color-bg-surface-elevated: #223c2e;
-  --color-primary-green: #38a169;
-  --color-accent-gold: #ecc94b;
-  
-  /* Resource Colors */
-  --color-res-earth: #8b5a2b;       /* Brown / Earth */
-  --color-res-water: #3182ce;       /* Blue / Water */
-  --color-res-sunlight: #dd6b20;    /* Amber / Sunlight */
-  --color-res-seed: #38a169;        /* Green / Seed */
-  --color-res-nutrients: #805ad5;   /* Purple / Nutrients */
-  --color-res-wild: #d69e2e;        /* Gold / Wild Fertilizer */
-  
-  /* Text & UI */
-  --color-text-light: #f7fafc;
-  --color-text-muted: #a0aec0;
-  --color-border: rgba(255, 255, 255, 0.12);
-  --color-border-focus: rgba(72, 187, 120, 0.6);
-  
-  --radius-sm: 6px;
+  /*
+     Typography
+  */
+  --font-display: 'Cinzel', 'Outfit', Georgia, serif;
+  --font-ui: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-stats: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, monospace;
+
+  /*
+     Background & Surface Hierarchy
+  */
+  --bg-deep-forest: #07100b;
+  --bg-forest-gradient: radial-gradient(circle at 50% 0%, #10291d 0%, #07100b 75%);
+  --bg-surface-glass: rgba(15, 35, 23, 0.75);
+  --bg-surface-glass-heavy: rgba(11, 26, 17, 0.88);
+  --bg-surface-elevated: #163321;
+  --bg-surface-card: #12281b;
+  --bg-overlay: rgba(3, 8, 5, 0.85);
+
+  /*
+     Borders & Glass Effects
+  */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-nature: rgba(74, 222, 128, 0.2);
+  --border-nature-focus: rgba(74, 222, 128, 0.6);
+  --border-gold: rgba(245, 158, 11, 0.4);
+  --border-gold-focus: rgba(251, 191, 36, 0.8);
+  --backdrop-blur: blur(14px);
+
+  /*
+     5 Botanical Energies + 1 Wild Gold
+  */
+  /* EARTH (Black / Onyx) */
+  --color-earth: #8b5a2b;
+  --color-earth-light: #b4743c;
+  --grad-earth: linear-gradient(135deg, #a4642f 0%, #5c3516 100%);
+  --glow-earth: 0 0 14px rgba(164, 100, 47, 0.45);
+
+  /* SEED (White / Diamond) */
+  --color-seed: #e2e8f0;
+  --color-seed-light: #ffffff;
+  --grad-seed: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+  --glow-seed: 0 0 14px rgba(241, 245, 249, 0.5);
+
+  /* SUNLIGHT (Red / Ruby) */
+  --color-sunlight: #f59e0b;
+  --color-sunlight-light: #fbbf24;
+  --grad-sunlight: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+  --glow-sunlight: 0 0 14px rgba(245, 158, 11, 0.5);
+
+  /* WATER (Blue / Sapphire) */
+  --color-water: #0ea5e9;
+  --color-water-light: #38bdf8;
+  --grad-water: linear-gradient(135deg, #38bdf8 0%, #0369a1 100%);
+  --glow-water: 0 0 14px rgba(14, 165, 233, 0.5);
+
+  /* NUTRIENTS (Green / Emerald) */
+  --color-nutrients: #10b981;
+  --color-nutrients-light: #34d399;
+  --grad-nutrients: linear-gradient(135deg, #34d399 0%, #047857 100%);
+  --glow-nutrients: 0 0 14px rgba(16, 185, 129, 0.5);
+
+  /* WILD FERTILIZER (Gold) */
+  --color-wild: #fbbf24;
+  --color-wild-light: #fef08a;
+  --grad-wild: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #b45309 100%);
+  --glow-wild: 0 0 18px rgba(251, 191, 36, 0.7);
+
+  /*
+     Tier Card Accents
+  */
+  --tier-1-color: #34d399;
+  --tier-1-border: rgba(52, 211, 153, 0.35);
+  --tier-1-bg: linear-gradient(180deg, rgba(16, 185, 129, 0.12) 0%, rgba(11, 26, 17, 0.9) 100%);
+
+  --tier-2-color: #38bdf8;
+  --tier-2-border: rgba(56, 189, 248, 0.4);
+  --tier-2-bg: linear-gradient(180deg, rgba(14, 165, 233, 0.14) 0%, rgba(11, 26, 17, 0.9) 100%);
+
+  --tier-3-color: #fbbf24;
+  --tier-3-border: rgba(251, 191, 36, 0.5);
+  --tier-3-bg: linear-gradient(180deg, rgba(245, 158, 11, 0.16) 0%, rgba(11, 26, 17, 0.9) 100%);
+
+  /*
+     Text Colors
+  */
+  --text-pure: #ffffff;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-gold: #fbbf24;
+  --text-emerald: #4ade80;
+
+  /*
+     Radii & Shadows
+  */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 20px;
-  
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --shadow-glow: 0 0 15px rgba(72, 187, 120, 0.35);
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.6);
+  --shadow-tactile: 0 4px 0 rgba(0, 0, 0, 0.4), 0 8px 20px rgba(0, 0, 0, 0.5);
+  --shadow-card-hover: 0 12px 28px rgba(0, 0, 0, 0.6), 0 0 20px rgba(74, 222, 128, 0.3);
+
+  /*
+     Transitions
+  */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/*
+   Base Styles & Reset
+*/
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
-  font-family: var(--font-primary);
-  background-color: var(--color-bg-dark);
-  color: var(--color-text-light);
+  font-family: var(--font-ui);
+  background-color: var(--bg-deep-forest);
+  background-image: var(--bg-forest-gradient);
+  background-attachment: fixed;
+  color: var(--text-primary);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+  line-height: 1.5;
 }
 
+/* Custom Botanical Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-deep-forest);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-nature);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-nutrients);
+}
+
+/*
+   Typography Utilities
+*/
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  letter-spacing: 0.03em;
+  color: var(--text-pure);
+}
+
+.text-gold {
+  color: var(--text-gold);
+}
+
+.text-emerald {
+  color: var(--text-emerald);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/*
+   Glassmorphic & Tactile Containers
+*/
+.glass-panel {
+  background: var(--bg-surface-glass);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: border-color var(--transition-normal);
+}
+
+.glass-panel:hover {
+  border-color: var(--border-nature);
+}
+
+.glass-card {
+  background: var(--bg-surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+}
+
+/*
+   Button System
+*/
 button {
-  font-family: inherit;
+  font-family: var(--font-ui);
   cursor: pointer;
   border: none;
-  border-radius: var(--radius-sm);
-  transition: all 0.2s ease;
+  outline: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all var(--transition-normal);
+  user-select: none;
 }
 
-input {
-  font-family: inherit;
-  outline: none;
-  border-radius: var(--radius-sm);
+button:active {
+  transform: translateY(1px);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.6);
+  transform: none !important;
+}
+
+.btn-nature-primary {
+  background: var(--grad-nutrients);
+  color: #032512;
+  font-weight: 700;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+.btn-nature-primary:hover:not(:disabled) {
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.55);
+  transform: translateY(-2px);
+}
+
+.btn-nature-gold {
+  background: var(--grad-wild);
+  color: #3b1e03;
+  font-weight: 800;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+}
+.btn-nature-gold:hover:not(:disabled) {
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.65);
+  transform: translateY(-2px);
+}
+
+.btn-nature-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-md);
+}
+.btn-nature-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: var(--border-nature);
+  color: var(--text-pure);
+}
+
+.btn-nature-danger {
+  background: linear-gradient(135deg, #ef4444, #991b1b);
+  color: #ffffff;
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+.btn-nature-danger:hover:not(:disabled) {
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.5);
+  transform: translateY(-2px);
+}
+
+/*
+   Resource Badges & 3D Tokens Orbs
+*/
+.resource-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+.badge-earth { background: var(--grad-earth); }
+.badge-seed { background: var(--grad-seed); color: #0f172a; }
+.badge-sunlight { background: var(--grad-sunlight); color: #1e1003; }
+.badge-water { background: var(--grad-water); }
+.badge-nutrients { background: var(--grad-nutrients); color: #022410; }
+.badge-wild { background: var(--grad-wild); color: #2e1602; }
+
+.token-orb {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-weight: 800;
+  box-shadow: var(--shadow-tactile);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  transition: transform var(--transition-spring), box-shadow var(--transition-normal);
+}
+.token-orb:hover {
+  transform: translateY(-4px) scale(1.06);
+}
+
+/*
+   Animations & Micro-interactions
+*/
+@keyframes pulse-emerald {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(74, 222, 128, 0);
+  }
+}
+
+@keyframes pulse-gold {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(251, 191, 36, 0);
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes float-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.anim-pulse-turn {
+  animation: pulse-emerald 2s infinite;
+  border-color: var(--border-nature-focus) !important;
+}
+
+.anim-pulse-final {
+  animation: pulse-gold 2s infinite;
+}
+
+.anim-float {
+  animation: float-subtle 3s ease-in-out infinite;
 }
