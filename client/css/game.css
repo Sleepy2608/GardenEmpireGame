@@ -1,65 +1,917 @@
-/* Game Board Styles */
-.game-layout {
-  display: grid;
-  grid-template-columns: 280px 1fr 280px;
-  min-height: 100vh;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: var(--color-bg-dark);
+/*
+   GARDEN EMPIRE — GAME BOARD & MASTER LAYOUT STYLES
+*/
+
+/*
+   Top Action Bar
+*/
+.top-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  margin: 0.75rem 1rem 0 1rem;
+  border-radius: var(--radius-lg);
+  z-index: 100;
+  position: relative;
 }
 
-.left-panel, .right-panel {
-  background: var(--color-bg-surface);
-  border-radius: var(--radius-md);
+.top-bar-left, .top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.game-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-pure);
+  text-shadow: 0 0 12px rgba(74, 222, 128, 0.4);
+}
+
+.logo-leaf {
+  font-size: 1.4rem;
+  animation: float-subtle 3s ease-in-out infinite;
+}
+
+.room-code-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border-nature);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.room-code-badge:hover {
+  background: rgba(74, 222, 128, 0.15);
+  border-color: var(--border-nature-focus);
+}
+
+.room-label {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.copy-icon {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/*
+   Turn Indicator Banner
+*/
+.top-bar-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.turn-indicator-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--border-subtle);
+  padding: 0.45rem 1.25rem;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-normal);
+}
+
+.turn-pulse-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.turn-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.turn-indicator-banner.my-turn {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: var(--border-nature-focus);
+  box-shadow: 0 0 16px rgba(74, 222, 128, 0.35);
+}
+
+.turn-indicator-banner.my-turn .turn-pulse-dot {
+  background: var(--color-nutrients-light);
+  box-shadow: 0 0 10px var(--color-nutrients);
+  animation: pulse-emerald 1.5s infinite;
+}
+
+.turn-indicator-banner.my-turn .turn-text {
+  color: #4ade80;
+  text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+}
+
+.turn-indicator-banner.final-round {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: var(--border-gold-focus);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+}
+
+.btn-sm {
+  padding: 0.45rem 0.85rem !important;
+  font-size: 0.85rem !important;
+}
+
+/*
+   Main Game Layout (3-Column Golden Grid)
+*/
+.game-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(680px, 1fr) 340px;
+  gap: 1rem;
   padding: 1rem;
-  border: 1px solid var(--color-border);
+  flex: 1;
+  min-height: calc(100vh - 80px);
+}
+
+/*
+   Left Panel: Opponents & Log
+*/
+.opponents-sidebar {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding: 1.1rem;
 }
 
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.6rem;
+}
+
+.sidebar-header h3 {
+  font-size: 1.05rem;
+}
+
+.badge-count {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.opponents-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.opponent-card {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.85rem;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.opponent-card.active-turn {
+  border-color: var(--border-nature-focus);
+  background: rgba(16, 185, 129, 0.12);
+  box-shadow: 0 0 14px rgba(74, 222, 128, 0.25);
+}
+
+.opponent-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.opponent-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-pure);
+}
+
+.opponent-score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid var(--border-gold);
+  color: var(--text-gold);
+  font-weight: 800;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+}
+
+.opponent-stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.opponent-bonuses-strip {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.mini-bonus-pill {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+/* Game Activity Log */
+.game-log-panel {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  height: 180px;
+}
+
+.log-header h4 {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.log-content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.log-item {
+  padding: 0.25rem 0.4rem;
+  border-radius: var(--radius-xs);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.log-item.highlight {
+  color: var(--text-gold);
+  background: rgba(245, 158, 11, 0.1);
+}
+
+/*
+   Center Board: Visitors, Plant Market & Token Bank
+*/
 .center-board {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding: 1.25rem;
 }
 
-/* Visitor Cards Area */
-.visitors-row {
+.section-title-row {
   display: flex;
-  gap: 1rem;
-  padding: 0.75rem;
-  background: var(--color-bg-surface);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  min-height: 110px;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
 }
 
-/* Plant Market Rows */
+.section-title-row h4 {
+  font-size: 1.05rem;
+  color: var(--text-pure);
+}
+
+.section-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Visitors (Nobles) Grid */
+.visitors-section {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+}
+
+.visitors-grid {
+  display: flex;
+  gap: 0.85rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.visitor-tile {
+  min-width: 130px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(11, 26, 17, 0.95) 100%);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+}
+
+.visitor-tile:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-gold-focus);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.35);
+}
+
+.visitor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.visitor-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-gold);
+  line-height: 1.2;
+}
+
+.visitor-score {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--text-gold);
+  text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+
+.visitor-req-chips {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.req-chip {
+  padding: 0.15rem 0.4rem;
+  border-radius: var(--radius-xs);
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Plant Market Section */
+.plant-market-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 .plant-market {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  background: var(--color-bg-surface);
-  padding: 1rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  flex-grow: 1;
+  gap: 0.85rem;
+  flex: 1;
 }
 
 .plant-tier-row {
   display: grid;
-  grid-template-columns: 100px repeat(4, 1fr);
-  gap: 0.75rem;
-  align-items: center;
+  grid-template-columns: 110px repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+  align-items: stretch;
 }
 
-/* Resources Token Area */
-.resources-bank {
-  display: flex;
-  justify-content: space-around;
-  padding: 1rem;
-  background: var(--color-bg-surface-elevated);
+/* Tier Deck Piles */
+.tier-deck-card {
+  background: rgba(0, 0, 0, 0.4);
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  position: relative;
+  box-shadow: var(--shadow-tactile);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.tier-deck-card:hover {
+  transform: translateY(-3px);
+}
+
+.tier-deck-card.tier-3 { border-color: var(--tier-3-border); background: var(--tier-3-bg); }
+.tier-deck-card.tier-2 { border-color: var(--tier-2-border); background: var(--tier-2-bg); }
+.tier-deck-card.tier-1 { border-color: var(--tier-1-border); background: var(--tier-1-bg); }
+
+.deck-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.deck-label {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.deck-count-pill {
+  margin-top: 0.35rem;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+/*
+   Tactile Plant Card Component
+*/
+.plant-card {
+  background: var(--bg-surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  cursor: pointer;
+  user-select: none;
+  min-height: 125px;
+}
+
+.plant-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--border-nature);
+  z-index: 10;
+}
+
+/* Tier Specific Themes */
+.plant-card.tier-1 {
+  border-color: var(--tier-1-border);
+  background: var(--tier-1-bg);
+}
+
+.plant-card.tier-2 {
+  border-color: var(--tier-2-border);
+  background: var(--tier-2-bg);
+}
+
+.plant-card.tier-3 {
+  border-color: var(--tier-3-border);
+  background: var(--tier-3-bg);
+}
+
+/* Card Affordability States */
+.plant-card.card-affordable {
+  border-color: var(--color-nutrients-light) !important;
+  box-shadow: 0 0 16px rgba(52, 211, 153, 0.45);
+}
+
+.plant-card.card-affordable::after {
+  content: '✨ CÓ THỂ TRỒNG';
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  background: var(--grad-nutrients);
+  color: #032512;
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+}
+
+.plant-card.card-locked {
+  opacity: 0.75;
+}
+
+/* Card Header */
+.card-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-prestige-badge {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--text-gold);
+  text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+  min-width: 24px;
+}
+
+.card-bonus-gem {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Card Body */
+.card-body-meta {
+  text-align: center;
+  margin: 0.2rem 0;
+}
+
+.card-plant-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-pure);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Card Footer Costs */
+.card-cost-strip {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.cost-chip {
+  padding: 0.15rem 0.4rem;
+  border-radius: var(--radius-xs);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+/*
+   Resource Bank Section (Tactile Orbs)
+*/
+.resource-bank-section {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.25rem;
+}
+
+.bank-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.resources-bank {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.85rem;
+}
+
+.bank-token-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.bank-token-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--border-nature);
+  transform: translateY(-3px);
+}
+
+.token-count-badge {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-pure);
+}
+
+.token-name-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+/*
+   Right Panel: Garden Studio
+*/
+.garden-studio {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 1.1rem;
+}
+
+.studio-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.75rem;
+}
+
+.player-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.player-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--grad-nutrients);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+.player-meta h3 {
+  font-size: 1rem;
+  color: var(--text-pure);
+}
+
+.player-role {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.prestige-score-badge {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid var(--border-gold);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+}
+
+.score-number {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--text-gold);
+}
+
+.score-target {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* Prestige Progress Goal */
+.prestige-progress-container {
+  margin-top: -0.5rem;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--grad-wild);
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+  transition: width 0.5s ease-out;
+}
+
+.studio-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.section-header-mini {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-header-mini h5 {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.token-limit-badge, .reserved-limit-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-full);
+}
+
+.token-limit-badge.warning {
+  background: rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+}
+
+/* Inventory Grids */
+.tokens-inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.inventory-token-slot {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bonuses-inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.4rem;
+}
+
+.inventory-bonus-slot {
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  font-weight: 800;
+  box-shadow: var(--shadow-sm);
+}
+
+.reserved-cards-tray {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.reserved-slot {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-md);
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/*
+   Modals & Overlays
+*/
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-overlay);
+  backdrop-filter: var(--backdrop-blur);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity var(--transition-normal);
+}
+
+.modal-backdrop.hidden {
+  opacity: 0;
+  pointer-events: none;
+  display: none;
+}
+
+.modal-card {
+  width: 90%;
+  max-width: 480px;
+  background: var(--bg-surface-glass-heavy);
+  border: 1px solid var(--border-nature);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: float-subtle 4s ease-in-out infinite;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.modal-close-btn {
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.modal-close-btn:hover {
+  color: var(--text-pure);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 2000;
+}
+
+.toast-msg {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-nature);
+  color: var(--text-pure);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: float-subtle 3s ease-in-out infinite;
+}
+
+/*
+   Responsive Breakpoints
+*/
+@media (max-width: 1280px) {
+  .game-layout {
+    grid-template-columns: 220px 1fr 300px;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .game-layout {
+    grid-template-columns: 1fr 320px;
+  }
+  .opponents-sidebar {
+    display: none;
+  }
 }
