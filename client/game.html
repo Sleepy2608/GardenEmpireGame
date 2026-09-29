@@ -3,47 +3,246 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bàn chơi - GardenEmpire</title>
+  <title>Bàn Chơi — Garden Empire</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="css/common.css">
   <link rel="stylesheet" href="css/game.css">
 </head>
 <body>
+  <!--
+     Top Action Bar
+  -->
+  <header class="top-action-bar glass-panel">
+    <div class="top-bar-left">
+      <div class="game-logo">
+        <span class="logo-leaf">🌿</span>
+        <span class="logo-text">GARDEN EMPIRE</span>
+      </div>
+      <div class="room-code-badge" id="room-code-display" title="Bấm để sao chép mã phòng">
+        <span class="room-label">PHÒNG:</span>
+        <strong id="room-id-text">------</strong>
+        <span class="copy-icon">📋</span>
+      </div>
+    </div>
+
+    <div class="top-bar-center">
+      <div class="turn-indicator-banner" id="turn-indicator-banner">
+        <span class="turn-pulse-dot"></span>
+        <span class="turn-text" id="turn-message">Đang đồng bộ ván đấu...</span>
+      </div>
+    </div>
+
+    <div class="top-bar-right">
+      <button class="btn-nature-secondary btn-sm" id="btn-game-rules" title="Xem luật game">
+        <span>📖</span> <span>Luật Chơi</span>
+      </button>
+      <button class="btn-nature-danger btn-sm" id="btn-leave-game" title="Rời ván đấu">
+        <span>🚪</span> <span>Rời Phòng</span>
+      </button>
+    </div>
+  </header>
+
+  <!--
+     Main Game Layout (3-Column Golden Grid)
+  -->
   <div class="game-layout">
-    <!-- Left Panel: Other Players -->
-    <aside class="left-panel" id="opponents-panel">
-      <h3>Đối thủ</h3>
-      <div id="opponents-list"></div>
+    <!--
+       Left Panel: Opponents & Game Log
+    -->
+    <aside class="opponents-sidebar glass-panel" id="opponents-panel">
+      <div class="sidebar-header">
+        <h3>👥 Đối Thủ</h3>
+        <span class="badge-count" id="opponents-count">0</span>
+      </div>
+
+      <div class="opponents-list" id="opponents-list">
+        <!-- Opponent mini-cards rendered by PlayerUI.js -->
+      </div>
+
+      <div class="game-log-panel">
+        <div class="log-header">
+          <h4>📜 Nhật Ký Ván Đấu</h4>
+        </div>
+        <div class="log-content" id="game-log-feed">
+          <div class="log-item initial">Ván đấu đã sẵn sàng!</div>
+        </div>
+      </div>
     </aside>
 
-    <!-- Center Board: Visitors, Plant Cards Market, Token Bank -->
-    <main class="center-board">
-      <!-- Visitors (Nobles) -->
-      <section class="visitors-row" id="visitors-container">
-        <!-- Visitor cards injected by VisitorUI.js -->
+    <!--
+       Center Board: Visitors, Plant Market & Token Bank
+    -->
+    <main class="center-board glass-panel">
+      <!-- Visitors (Nobles) Section -->
+      <section class="visitors-section">
+        <div class="section-title-row">
+          <h4>🦋 Khách Thăm Vườn (Garden Visitors)</h4>
+          <span class="section-hint">Tự động nhận khi đủ điều kiện cây trồng (+3★)</span>
+        </div>
+        <div class="visitors-grid" id="visitors-container">
+          <!-- Visitor cards rendered by VisitorUI.js -->
+        </div>
       </section>
 
-      <!-- Plant Market (Tiers 3, 2, 1) -->
-      <section class="plant-market" id="plant-market-container">
-        <!-- Plant cards tiers injected by PlantCardUI.js -->
+      <!-- Plant Cards Market (Tier 3 -> Tier 2 -> Tier 1) -->
+      <section class="plant-market-section">
+        <div class="section-title-row">
+          <h4>🌳 Chợ Cây Trồng (Plant Market)</h4>
+        </div>
+        <div class="plant-market" id="plant-market-container">
+          <!-- 3 Tiers rendered by PlantCardUI.js -->
+        </div>
       </section>
 
-      <!-- Resource Bank (Earth, Water, Sunlight, Seeds, Nutrients, Wild Fertilizer) -->
-      <section class="resources-bank" id="resource-bank-container">
-        <!-- Tokens injected by ResourceUI.js -->
+      <!-- Resource Bank Section -->
+      <section class="resource-bank-section">
+        <div class="bank-header-row">
+          <h4>🪙 Ngân Hàng Năng Lượng Thiên Nhiên</h4>
+          <div class="bank-action-buttons">
+            <button class="btn-nature-primary btn-sm" id="btn-open-token-selector">
+              <span>✨</span> <span>Lấy Tài Nguyên</span>
+            </button>
+          </div>
+        </div>
+        <div class="resources-bank" id="resource-bank-container">
+          <!-- 6 Token orbs rendered by ResourceUI.js -->
+        </div>
       </section>
     </main>
 
-    <!-- Right Panel: Current Player Info, Reserved Plants, Actions -->
-    <aside class="right-panel" id="my-player-panel">
-      <h3>Khu vườn của bạn</h3>
-      <div id="my-player-info"></div>
-      <div id="my-reserved-cards"></div>
-      <div id="action-controls"></div>
+    <!--
+       Right Panel: Your Garden Studio
+    -->
+    <aside class="garden-studio glass-panel" id="my-player-panel">
+      <div class="studio-header">
+        <div class="player-identity">
+          <div class="player-avatar">🌱</div>
+          <div class="player-meta">
+            <h3 id="my-player-name">Người Chơi</h3>
+            <span class="player-role" id="my-player-role">Khách Vườn</span>
+          </div>
+        </div>
+        <div class="prestige-score-badge" id="my-prestige-score" title="Điểm Uy Tín hiện tại">
+          <span class="star-icon">🏆</span>
+          <span class="score-number" id="my-score-num">0</span>
+          <span class="score-target">/ 15★</span>
+        </div>
+      </div>
+
+      <!-- 15-Point Prestige Progress Goal -->
+      <div class="prestige-progress-container">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="my-prestige-progress-bar" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Hand Tokens Section (Max 10) -->
+      <div class="studio-section">
+        <div class="section-header-mini">
+          <h5>📦 Tài Nguyên Cầm Tay</h5>
+          <span class="token-limit-badge" id="my-token-limit-indicator">0 / 10</span>
+        </div>
+        <div class="tokens-inventory-grid" id="my-tokens-grid">
+          <!-- 6 Token items rendered by PlayerUI.js -->
+        </div>
+      </div>
+
+      <!-- Permanent Plant Bonuses Section -->
+      <div class="studio-section">
+        <div class="section-header-mini">
+          <h5>🌿 Giảm Giá Thường Trực (Cây Đã Trồng)</h5>
+        </div>
+        <div class="bonuses-inventory-grid" id="my-bonuses-grid">
+          <!-- 5 Bonus counters rendered by PlayerUI.js -->
+        </div>
+      </div>
+
+      <!-- Reserved Cards Tray (Max 3) -->
+      <div class="studio-section">
+        <div class="section-header-mini">
+          <h5>📑 Thẻ Đang Đặt Chỗ (Tối Đa 3)</h5>
+          <span class="reserved-limit-badge" id="my-reserved-count">0 / 3</span>
+        </div>
+        <div class="reserved-cards-tray" id="my-reserved-cards-container">
+          <!-- 3 Reserved slots rendered by PlayerUI.js -->
+        </div>
+      </div>
     </aside>
   </div>
+
+  <!--
+     Modals & Interactive Overlays
+  -->
+  <!-- 1. Card Action Modal (Buy / Reserve) -->
+  <div class="modal-backdrop hidden" id="card-action-modal">
+    <div class="modal-card glass-panel">
+      <div class="modal-header">
+        <h3 id="modal-card-title">Chi Tiết Thẻ Cây</h3>
+        <button class="modal-close-btn" id="modal-card-close">✕</button>
+      </div>
+      <div class="modal-body" id="modal-card-body">
+        <!-- Injected card details & cost calculation -->
+      </div>
+      <div class="modal-footer" id="modal-card-footer">
+        <!-- Buy & Reserve buttons -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Token Selector Modal -->
+  <div class="modal-backdrop hidden" id="token-selector-modal">
+    <div class="modal-card glass-panel token-modal-card">
+      <div class="modal-header">
+        <h3>🪙 Lấy Tài Nguyên Từ Ngân Hàng</h3>
+        <button class="modal-close-btn" id="modal-token-close">✕</button>
+      </div>
+      <div class="modal-body" id="modal-token-body">
+        <p class="token-rules-hint">Chọn <strong>3 tài nguyên khác loại</strong> hoặc <strong>2 tài nguyên cùng loại</strong> (khi ngân hàng còn $\ge 4$).</p>
+        <div class="token-selection-grid" id="modal-token-selection-grid"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-nature-secondary" id="btn-reset-tokens">Đặt Lại</button>
+        <button class="btn-nature-primary" id="btn-confirm-take-tokens" disabled>Xác Nhận Lấy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Return Tokens Modal (When > 10) -->
+  <div class="modal-backdrop hidden" id="return-tokens-modal">
+    <div class="modal-card glass-panel">
+      <div class="modal-header">
+        <h3 class="text-gold">⚠️ Trả Lại Tài Nguyên Dư</h3>
+      </div>
+      <div class="modal-body" id="modal-return-body">
+        <p>Bạn đang cầm nhiều hơn 10 token trên tay. Vui lòng chọn số token cần trả về ngân hàng.</p>
+        <div class="return-tokens-grid" id="modal-return-tokens-grid"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-nature-gold" id="btn-confirm-return-tokens" disabled>Xác Nhận Trả</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Victory Podium Modal -->
+  <div class="modal-backdrop hidden" id="victory-modal">
+    <div class="modal-card glass-panel victory-card">
+      <div class="victory-header">
+        <h2>🏆 VÁN ĐẤU KẾT THÚC!</h2>
+        <p id="victory-announcement">Chúc mừng Tân Vương Đế Chế Vườn Sinh Thái!</p>
+      </div>
+      <div class="victory-podium" id="victory-podium-list"></div>
+      <div class="victory-footer">
+        <button class="btn-nature-gold" id="btn-back-to-lobby">Quay Về Sảnh</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
 
   <script type="module" src="js/ui/BoardUI.js"></script>
 </body>
