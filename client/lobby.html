@@ -59,25 +59,25 @@
         <!-- 1. Create Room Card -->
         <div class="action-card glass-panel">
           <div class="action-card-header">
-            <h3>🌱 Tạo Phòng Mới</h3>
+            <h3>🌳 Tạo Phòng Mới</h3>
           </div>
           <form id="create-room-form">
             <div class="form-group">
               <label class="form-label" for="room-name">Tên phòng:</label>
-              <input type="text" id="room-name" class="form-input" placeholder="Vườn Thượng Uyển..." required maxlength="25" />
+              <input type="text" id="room-name" class="form-input" placeholder="Nhập tên phòng..." required maxlength="25" />
             </div>
             
             <div class="form-group">
               <label class="form-label" for="max-players">Số lượng người chơi:</label>
               <select id="max-players" class="form-input form-select">
-                <option value="2">2 Người chơi (Tiêu chuẩn)</option>
-                <option value="3">3 Người chơi</option>
-                <option value="4" selected>4 Người chơi (Đầy đủ)</option>
+                <option value="2">2 người chơi</option>
+                <option value="3">3 người chơi</option>
+                <option value="4" selected>4 người chơi</option>  
               </select>
             </div>
 
             <button type="submit" id="btn-create-room" class="btn-nature-primary btn-block">
-              <span>✨</span> <span>Tạo Phòng & Bắt Đầu</span>
+              <span>Tạo Phòng & Bắt Đầu</span>
             </button>
           </form>
         </div>
@@ -85,14 +85,14 @@
         <!-- 2. Join by Code Card -->
         <div class="action-card glass-panel" style="margin-top: 1rem;">
           <div class="action-card-header">
-            <h3>🔑 Vào Bằng Mã Phòng</h3>
+            <h3>🏕️ Vào Bằng Mã Phòng</h3>
           </div>
           <form id="join-code-form">
             <div class="form-group">
               <input type="text" id="join-room-code" class="form-input" placeholder="Nhập mã code (VD: GARDEN-882)..." required />
             </div>
             <button type="submit" class="btn-nature-gold btn-block">
-              <span>🚪</span> <span>Vào Phòng Nhanh</span>
+              <span>Vào Phòng Nhanh</span>
             </button>
           </form>
         </div>
