@@ -3,53 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sảnh Chờ - GardenEmpire</title>
+  <title>Sảnh Chờ — Garden Empire</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="css/common.css">
   <link rel="stylesheet" href="css/lobby.css">
 </head>
 <body>
   <div class="lobby-layout">
-    <header class="lobby-header">
-      <h2>🌿 GardenEmpire Lobby</h2>
-      <div class="lobby-user-info">
-        <span id="display-user-name">Khách: </span>
-        <button id="btn-logout" class="btn-secondary">Đổi tên</button>
+    <!--
+       Top Lobby Header
+    -->
+    <header class="lobby-header glass-panel">
+      <div class="lobby-brand">
+        <span class="logo-leaf">🌿</span>
+        <h2>GARDEN EMPIRE — SẢNH CHỜ</h2>
+      </div>
+
+      <div class="lobby-user-profile">
+        <div class="user-avatar-badge" id="display-user-avatar">🌱</div>
+        <div class="user-meta">
+          <span class="user-label">Nghệ nhân vườn:</span>
+          <strong id="display-user-name">Khách</strong>
+        </div>
+        <button id="btn-logout" class="btn-nature-secondary btn-sm" title="Đổi tên biệt danh">Đổi Tên</button>
       </div>
     </header>
 
-    <main class="lobby-grid">
-      <section class="room-list-container">
-        <div class="room-list-header">
-          <h3>Danh sách phòng</h3>
-          <button id="btn-refresh-rooms" class="btn-secondary">⟳ Làm mới</button>
+    <!--
+       Main Lobby Grid
+    -->
+    <div class="lobby-grid">
+      <!-- Left: Room List -->
+      <section class="room-list-panel glass-panel">
+        <div class="panel-header-row">
+          <div class="panel-title-wrap">
+            <h3>🏡 Danh Sách Phòng Chờ</h3>
+            <span class="badge-count" id="active-rooms-count">0</span>
+          </div>
+          <button id="btn-refresh-rooms" class="btn-nature-secondary btn-sm">
+            <span>⟳</span> <span>Làm Mới</span>
+          </button>
         </div>
-        <div id="room-list" class="room-items">
-          <!-- Room items injected by LobbyUI.js -->
+
+        <div id="room-list" class="room-items-grid">
+          <!-- Room cards injected by LobbyUI.js -->
         </div>
       </section>
 
-      <aside class="create-room-sidebar">
-        <h3>Tạo phòng mới</h3>
-        <form id="create-room-form">
-          <div class="form-group">
-            <label class="form-label" for="room-name">Tên phòng:</label>
-            <input type="text" id="room-name" class="form-input" placeholder="Tên phòng của bạn" required />
+      <!-- Right: Action Sidebars (Create Room & Join by Code) -->
+      <aside class="lobby-actions-sidebar">
+        <!-- 1. Create Room Card -->
+        <div class="action-card glass-panel">
+          <div class="action-card-header">
+            <h3>🌱 Tạo Phòng Mới</h3>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="max-players">Số lượng người chơi:</label>
-            <select id="max-players" class="form-input">
-              <option value="2">2 Người</option>
-              <option value="3">3 Người</option>
-              <option value="4" selected>4 Người</option>
-            </select>
+          <form id="create-room-form">
+            <div class="form-group">
+              <label class="form-label" for="room-name">Tên phòng:</label>
+              <input type="text" id="room-name" class="form-input" placeholder="Vườn Thượng Uyển..." required maxlength="25" />
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="max-players">Số lượng người chơi:</label>
+              <select id="max-players" class="form-input form-select">
+                <option value="2">2 Người chơi (Tiêu chuẩn)</option>
+                <option value="3">3 Người chơi</option>
+                <option value="4" selected>4 Người chơi (Đầy đủ)</option>
+              </select>
+            </div>
+
+            <button type="submit" id="btn-create-room" class="btn-nature-primary btn-block">
+              <span>✨</span> <span>Tạo Phòng & Bắt Đầu</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- 2. Join by Code Card -->
+        <div class="action-card glass-panel" style="margin-top: 1rem;">
+          <div class="action-card-header">
+            <h3>🔑 Vào Bằng Mã Phòng</h3>
           </div>
-          <button type="submit" id="btn-create-room" class="btn-primary">Tạo phòng</button>
-        </form>
+          <form id="join-code-form">
+            <div class="form-group">
+              <input type="text" id="join-room-code" class="form-input" placeholder="Nhập mã code (VD: GARDEN-882)..." required />
+            </div>
+            <button type="submit" class="btn-nature-gold btn-block">
+              <span>🚪</span> <span>Vào Phòng Nhanh</span>
+            </button>
+          </form>
+        </div>
       </aside>
-    </main>
+    </div>
   </div>
 
   <script type="module" src="js/ui/LobbyUI.js"></script>
