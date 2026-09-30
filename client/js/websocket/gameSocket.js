@@ -21,6 +21,7 @@ export class GameSocket {
     this.socket.onopen = () => {
       this.isConnected = true;
       console.log('Đã kết nối WebSocket game:', this.gameId);
+      this.send('GET_STATE', {});
     };
 
     this.socket.onmessage = (event) => {
@@ -36,7 +37,10 @@ export class GameSocket {
 
     this.socket.onclose = () => {
       this.isConnected = false;
-      console.log('WebSocket đã đóng kết nối');
+      console.log('WebSocket đã đóng kết nối, thử kết nối lại sau 2 giây...');
+      if (!this.manualDisconnect) {
+        setTimeout(() => this.connect(), 2000);
+      }
     };
 
     this.socket.onerror = (error) => {
@@ -60,6 +64,7 @@ export class GameSocket {
   }
 
   disconnect() {
+    this.manualDisconnect = true;
     if (this.socket) {
       this.socket.close();
     }
