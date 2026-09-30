@@ -3,37 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GardenEmpire</title>
+  <title>Garden Empire</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="css/common.css">
   <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
   <div class="index-container">
-    <div class="guest-card">
-      <h1 class="brand-title">🌿 GardenEmpire</h1>
-      <p class="brand-subtitle">Thu thập tài nguyên - Trồng cây - Gây dựng uy tín</p>
+    <div class="guest-card glass-panel">
+      <div class="brand-hero">
+        <div class="brand-emblem anim-float">🌿</div>
+        <h1 class="brand-title">GARDEN EMPIRE</h1>
+        <p class="brand-subtitle">Thu thập tài nguyên • Trồng cây • Gây dựng uy tín</p>
+      </div>
       
       <form id="guest-form">
-        <div class="form-group">
-          <label class="form-label" for="guest-name"><b>Tên người chơi</b></label>
-          <input 
-            type="text" 
-            id="guest-name" 
-            class="form-input" 
-            placeholder="Nhập biệt danh của bạn..." 
-            required 
-            maxlength="20"
-            autocomplete="off"
-          />
+        <!-- Avatar Selection -->
+        <div class="form-group avatar-picker-group">
+          <label class="form-label"><b>Chọn Linh Vật Vườn:</b></label>
+          <div class="avatar-selection-row" id="avatar-selection-row">
+            <button type="button" class="avatar-option selected" data-avatar="🌱">🌱</button>
+            <button type="button" class="avatar-option" data-avatar="🌺">🌺</button>
+            <button type="button" class="avatar-option" data-avatar="🍄">🍄</button>
+            <button type="button" class="avatar-option" data-avatar="🌰">🌰</button>
+            <button type="button" class="avatar-option" data-avatar="🍀">🍀</button>
+          </div>
+          <input type="hidden" id="selected-avatar" value="🌱" />
         </div>
-        <button type="submit" id="btn-enter-lobby" class="btn-primary">Vào Sảnh Chờ</button>
+
+        <div class="form-group">
+          <label class="form-label" for="guest-name"><b>Tên người chơi:</b></label>
+          <div class="input-glow-wrapper">
+            <input 
+              type="text" 
+              id="guest-name" 
+              class="form-input" 
+              placeholder="Nhập biệt danh của bạn..." 
+              maxlength="20"
+              required 
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+        <button type="submit" id="btn-enter-lobby" class="btn-nature-primary btn-block">
+          <span>✨</span> <span>Vào Sảnh Chờ</span>
+        </button>
       </form>
     </div>
   </div>
 
-  <script type="module" src="js/main.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>

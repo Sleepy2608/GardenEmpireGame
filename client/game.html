@@ -7,7 +7,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="css/common.css">
   <link rel="stylesheet" href="css/game.css">
@@ -237,6 +237,36 @@
       <div class="victory-podium" id="victory-podium-list"></div>
       <div class="victory-footer">
         <button class="btn-nature-gold" id="btn-back-to-lobby">Quay Về Sảnh</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Game Rules Modal -->
+  <div class="modal-backdrop hidden" id="game-rules-modal">
+    <div class="modal-card glass-panel" style="max-width: 560px;">
+      <div class="modal-header">
+        <h3>📖 Hướng Dẫn Luật Chơi Garden Empire</h3>
+        <button class="modal-close-btn" id="modal-rules-close">✕</button>
+      </div>
+      <div class="modal-body" style="max-height: 420px; overflow-y: auto; font-size: 0.9rem; line-height: 1.6;">
+        <h4 style="color: var(--text-gold); margin-bottom: 0.3rem;">🎯 Mục tiêu:</h4>
+        <p style="margin-bottom: 0.8rem;">Người chơi đầu tiên đạt từ <strong>15 Điểm Uy Tín (★)</strong> sẽ kích hoạt Vòng Chung Kết. Hết vòng, người có nhiều điểm nhất sẽ chiến thắng!</p>
+        
+        <h4 style="color: var(--color-nutrients-light); margin-bottom: 0.3rem;">⚡ 3 Hành Động Chính (Chọn 1 trong 3 mỗi lượt):</h4>
+        <ol style="padding-left: 1.2rem; margin-bottom: 0.8rem;">
+          <li><strong>Lấy Tài Nguyên:</strong> Lấy 3 token khác loại hoặc 2 token cùng loại (khi ngân hàng còn $\ge 4$).</li>
+          <li><strong>Trồng Cây (Mua thẻ):</strong> Trả token tương ứng sau khi trừ giảm giá từ cây cũ, có thể bù bằng phân bón vàng (Wild).</li>
+          <li><strong>Giữ Cây:</strong> Giữ 1 thẻ bí mật (tối đa 3 thẻ trên tay) và nhận 1 token Wild từ ngân hàng.</li>
+        </ol>
+
+        <h4 style="color: var(--color-sunlight-light); margin-bottom: 0.3rem;">✨ 2 Hành Động Phụ Tự Động:</h4>
+        <ul style="padding-left: 1.2rem;">
+          <li><strong>Trả token dư:</strong> Bắt buộc trả bớt token về ngân hàng nếu tổng số trên tay vượt quá 10.</li>
+          <li><strong>Rước Khách Thăm Vườn:</strong> Tự động nhận thẻ Khách (+3★) ở cuối lượt khi sở hữu đủ số lượng cây yêu cầu.</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-nature-primary" id="btn-rules-got-it">Đã Hiểu</button>
       </div>
     </div>
   </div>

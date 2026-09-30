@@ -36,4 +36,19 @@ public class RoomController {
     public ResponseEntity<Room> joinRoom(@PathVariable String roomId, @RequestBody JoinRoomRequest request) {
         return ResponseEntity.ok(roomService.joinRoom(roomId, request));
     }
+
+    @PostMapping("/join-code")
+    public ResponseEntity<Room> joinRoomByCode(@RequestBody com.gardenempire.dto.JoinByCodeRequest request) {
+        return ResponseEntity.ok(roomService.joinRoomByCode(request));
+    }
+
+    @PostMapping("/{roomId}/leave")
+    public ResponseEntity<Room> leaveRoom(@PathVariable String roomId, @RequestParam String playerId) {
+        return ResponseEntity.ok(roomService.leaveRoom(roomId, playerId));
+    }
+
+    @PostMapping("/{roomId}/start")
+    public ResponseEntity<Room> startGame(@PathVariable String roomId, @RequestParam String hostId) {
+        return ResponseEntity.ok(roomService.startGame(roomId, hostId));
+    }
 }

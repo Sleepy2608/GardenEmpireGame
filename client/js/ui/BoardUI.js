@@ -80,6 +80,22 @@ export class BoardUI {
       closeTokenModal.addEventListener('click', () => this.closeModal('token-selector-modal'));
     }
 
+    // Open Game Rules Modal
+    const rulesBtn = document.getElementById('btn-game-rules');
+    const rulesModal = document.getElementById('game-rules-modal');
+    const closeRulesBtn = document.getElementById('modal-rules-close');
+    const gotItRulesBtn = document.getElementById('btn-rules-got-it');
+
+    if (rulesBtn && rulesModal) {
+      rulesBtn.addEventListener('click', () => rulesModal.classList.remove('hidden'));
+    }
+    if (closeRulesBtn) {
+      closeRulesBtn.addEventListener('click', () => this.closeModal('game-rules-modal'));
+    }
+    if (gotItRulesBtn) {
+      gotItRulesBtn.addEventListener('click', () => this.closeModal('game-rules-modal'));
+    }
+
     // Reset Tokens Button
     const resetTokensBtn = document.getElementById('btn-reset-tokens');
     if (resetTokensBtn) {

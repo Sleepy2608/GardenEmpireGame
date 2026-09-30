@@ -15,9 +15,14 @@ import java.util.List;
 @AllArgsConstructor
 public class Room {
     private String id;
+    private String code;
     private String name;
     private String hostId;
     private String hostName;
+    
+    @Builder.Default
+    private String hostAvatar = "🌱";
+    
     private int maxPlayers;
     
     @Builder.Default
