@@ -39,7 +39,35 @@ public class GameService {
 
     public GameState processAction(String gameId, GameActionRequest action) {
         Game game = getGame(gameId);
-        // Process turn actions: TAKE_TOKENS, BUY_CARD, RESERVE_CARD
+        String actionType = action.getResolvedActionType();
+        String playerId = action.getPlayerId();
+
+        switch (actionType) {
+            case "TAKE_RESOURCES", "TAKE_TOKENS" -> {
+                com.gardenempire.game.Resource.class.getName(); // touch
+                java.util.Map<com.gardenempire.game.Resource, Integer> tokens = action.getResolvedTokens();
+                gameEngine.takeTokens(game, playerId, tokens);
+            }
+            case "BUY_PLANT", "BUY_CARD" -> {
+                String cardId = action.getResolvedCardId();
+                boolean fromReserved = action.isResolvedFromReserved();
+                gameEngine.buyPlantCard(game, playerId, cardId, fromReserved);
+            }
+            case "RESERVE_PLANT", "RESERVE_CARD" -> {
+                String cardId = action.getResolvedCardId();
+                Integer tier = action.getResolvedFromDeckTier();
+                gameEngine.reservePlantCard(game, playerId, cardId, tier);
+            }
+            case "RETURN_TOKENS" -> {
+                java.util.Map<com.gardenempire.game.Resource, Integer> returnedTokens = action.getResolvedReturnedTokens();
+                gameEngine.returnTokens(game, playerId, returnedTokens);
+            }
+            case "GET_STATE" -> {
+                // Return current state unchanged
+            }
+            default -> throw new GameException("Loại hành động không hợp lệ: " + actionType);
+        }
+
         return game.getState();
     }
 }

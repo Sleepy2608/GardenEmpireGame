@@ -47,13 +47,22 @@ public class GameMessageHandler {
         }
     }
 
-    public void handleMessage(String gameId, String payload) {
+    public void handleMessage(WebSocketSession session, String gameId, String payload) {
         try {
             GameActionRequest action = objectMapper.readValue(payload, GameActionRequest.class);
+            if (action.getGameId() == null) {
+                action.setGameId(gameId);
+            }
             GameState updatedState = gameService.processAction(gameId, action);
             broadcastGameState(gameId, updatedState);
+        } catch (com.gardenempire.exception.GameException ge) {
+            log.warn("Lỗi logic game cho gameId={}: {}", gameId, ge.getMessage());
+            Map<String, Object> err = Map.of("type", "ERROR", "message", ge.getMessage());
+            sendToSession(session, err);
         } catch (Exception e) {
             log.error("Lỗi xử lý tin nhắn websocket: ", e);
+            Map<String, Object> err = Map.of("type", "ERROR", "message", "Hành động không hợp lệ: " + e.getMessage());
+            sendToSession(session, err);
         }
     }
 

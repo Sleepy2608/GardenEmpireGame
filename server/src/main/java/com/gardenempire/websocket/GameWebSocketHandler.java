@@ -31,7 +31,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
         String gameId = getQueryParam(session.getUri(), "gameId");
         if (gameId != null) {
-            gameMessageHandler.handleMessage(gameId, message.getPayload());
+            gameMessageHandler.handleMessage(session, gameId, message.getPayload());
         }
     }
 
