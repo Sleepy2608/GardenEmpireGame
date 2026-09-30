@@ -19,6 +19,7 @@ public class GameService {
     private final GameEngine gameEngine;
     private final com.gardenempire.room.RoomManager roomManager;
     private final Map<String, Game> activeGames = new ConcurrentHashMap<>();
+    private final Map<String, java.util.concurrent.locks.ReentrantLock> roomLocks = new ConcurrentHashMap<>();
 
     public String initGame(String roomId, List<Player> players) {
         Game game = gameEngine.createNewGame(roomId, players);
@@ -46,36 +47,51 @@ public class GameService {
     }
 
     public GameState processAction(String gameId, GameActionRequest action) {
-        Game game = getGame(gameId);
-        String actionType = action.getResolvedActionType();
-        String playerId = action.getPlayerId();
+        java.util.concurrent.locks.ReentrantLock lock = roomLocks.computeIfAbsent(gameId, k -> new java.util.concurrent.locks.ReentrantLock(true));
+        lock.lock();
+        try {
+            Game game = getGame(gameId);
+            String actionType = action.getResolvedActionType();
+            String playerId = action.getPlayerId();
 
-        switch (actionType) {
-            case "TAKE_RESOURCES", "TAKE_TOKENS" -> {
-                com.gardenempire.game.Resource.class.getName(); // touch
-                java.util.Map<com.gardenempire.game.Resource, Integer> tokens = action.getResolvedTokens();
-                gameEngine.takeTokens(game, playerId, tokens);
+            if (!"GET_STATE".equals(actionType)) {
+                if (game.getState().isGameOver()) {
+                    throw new GameException("Trận đấu đã kết thúc, không thể thực hiện thêm hành động.");
+                }
+                if (playerId != null && !playerId.equals(game.getState().getCurrentTurnPlayerId())) {
+                    throw new GameException("Chưa đến lượt của bạn.");
+                }
             }
-            case "BUY_PLANT", "BUY_CARD" -> {
-                String cardId = action.getResolvedCardId();
-                boolean fromReserved = action.isResolvedFromReserved();
-                gameEngine.buyPlantCard(game, playerId, cardId, fromReserved);
+
+            switch (actionType) {
+                case "TAKE_RESOURCES", "TAKE_TOKENS" -> {
+                    com.gardenempire.game.Resource.class.getName();
+                    java.util.Map<com.gardenempire.game.Resource, Integer> tokens = action.getResolvedTokens();
+                    gameEngine.takeTokens(game, playerId, tokens);
+                }
+                case "BUY_PLANT", "BUY_CARD" -> {
+                    String cardId = action.getResolvedCardId();
+                    boolean fromReserved = action.isResolvedFromReserved();
+                    gameEngine.buyPlantCard(game, playerId, cardId, fromReserved);
+                }
+                case "RESERVE_PLANT", "RESERVE_CARD" -> {
+                    String cardId = action.getResolvedCardId();
+                    Integer tier = action.getResolvedFromDeckTier();
+                    gameEngine.reservePlantCard(game, playerId, cardId, tier);
+                }
+                case "RETURN_TOKENS" -> {
+                    java.util.Map<com.gardenempire.game.Resource, Integer> returnedTokens = action.getResolvedReturnedTokens();
+                    gameEngine.returnTokens(game, playerId, returnedTokens);
+                }
+                case "GET_STATE" -> {
+                    // Return current state unchanged
+                }
+                default -> throw new GameException("Loại hành động không hợp lệ: " + actionType);
             }
-            case "RESERVE_PLANT", "RESERVE_CARD" -> {
-                String cardId = action.getResolvedCardId();
-                Integer tier = action.getResolvedFromDeckTier();
-                gameEngine.reservePlantCard(game, playerId, cardId, tier);
-            }
-            case "RETURN_TOKENS" -> {
-                java.util.Map<com.gardenempire.game.Resource, Integer> returnedTokens = action.getResolvedReturnedTokens();
-                gameEngine.returnTokens(game, playerId, returnedTokens);
-            }
-            case "GET_STATE" -> {
-                // Return current state unchanged
-            }
-            default -> throw new GameException("Loại hành động không hợp lệ: " + actionType);
+
+            return game.getState();
+        } finally {
+            lock.unlock();
         }
-
-        return game.getState();
     }
 }

@@ -24,25 +24,52 @@ public class GameMessageHandler {
     
     // Map gameId -> Map(sessionId -> WebSocketSession)
     private final Map<String, Map<String, WebSocketSession>> gameSessions = new ConcurrentHashMap<>();
+    // Map gameId -> Map(playerId -> sessionId)
+    private final Map<String, Map<String, String>> playerSessions = new ConcurrentHashMap<>();
 
-    public void registerSession(String gameId, WebSocketSession session) {
-        gameSessions.computeIfAbsent(gameId, k -> new ConcurrentHashMap<>()).put(session.getId(), session);
+    public void registerSession(String gameId, String playerId, WebSocketSession session) {
+        Map<String, WebSocketSession> sessions = gameSessions.computeIfAbsent(gameId, k -> new ConcurrentHashMap<>());
+        Map<String, String> players = playerSessions.computeIfAbsent(gameId, k -> new ConcurrentHashMap<>());
+
+        // If player previously had an active session (e.g. before F5 refresh), close and replace it
+        if (playerId != null) {
+            String oldSessionId = players.put(playerId, session.getId());
+            if (oldSessionId != null && !oldSessionId.equals(session.getId())) {
+                WebSocketSession oldSession = sessions.remove(oldSessionId);
+                if (oldSession != null && oldSession.isOpen()) {
+                    try {
+                        oldSession.close();
+                    } catch (Exception ignored) {}
+                }
+            }
+        }
+
+        sessions.put(session.getId(), session);
         
-        // Broadcast current game state upon join
+        // Immediately send current game state upon join / reconnect
         try {
             GameState state = gameService.getGameState(gameId);
             sendToSession(session, new GameStateResponse("GAME_STATE_UPDATE", state));
         } catch (Exception e) {
-            log.warn("Chưa có game state hoặc lỗi: {}", e.getMessage());
+            log.warn("Chưa có game state hoặc lỗi khi nạp: {}", e.getMessage());
         }
     }
 
-    public void removeSession(String gameId, String sessionId) {
+    public void removeSession(String gameId, String playerId, String sessionId) {
         Map<String, WebSocketSession> sessions = gameSessions.get(gameId);
         if (sessions != null) {
             sessions.remove(sessionId);
             if (sessions.isEmpty()) {
                 gameSessions.remove(gameId);
+            }
+        }
+        if (playerId != null) {
+            Map<String, String> players = playerSessions.get(gameId);
+            if (players != null) {
+                players.remove(playerId, sessionId);
+                if (players.isEmpty()) {
+                    playerSessions.remove(gameId);
+                }
             }
         }
     }

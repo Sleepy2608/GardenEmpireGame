@@ -21,9 +21,10 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         String gameId = getQueryParam(session.getUri(), "gameId");
+        String playerId = getQueryParam(session.getUri(), "playerId");
         if (gameId != null) {
-            gameMessageHandler.registerSession(gameId, session);
-            log.info("WebSocket kết nối: gameId={}, sessionId={}", gameId, session.getId());
+            gameMessageHandler.registerSession(gameId, playerId, session);
+            log.info("WebSocket kết nối: gameId={}, playerId={}, sessionId={}", gameId, playerId, session.getId());
         }
     }
 
@@ -38,9 +39,10 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         String gameId = getQueryParam(session.getUri(), "gameId");
+        String playerId = getQueryParam(session.getUri(), "playerId");
         if (gameId != null) {
-            gameMessageHandler.removeSession(gameId, session.getId());
-            log.info("WebSocket ngắt kết nối: gameId={}, sessionId={}", gameId, session.getId());
+            gameMessageHandler.removeSession(gameId, playerId, session.getId());
+            log.info("WebSocket ngắt kết nối: gameId={}, playerId={}, sessionId={}", gameId, playerId, session.getId());
         }
     }
 
