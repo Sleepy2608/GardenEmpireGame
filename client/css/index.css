@@ -1,37 +1,66 @@
-/* Guest Login / Index Screen Styles */
+/*
+   GARDEN EMPIRE — GUEST ENTRY & HERO SCREEN STYLES
+*/
+
 .index-container {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: radial-gradient(circle at center, #1a3325 0%, #0b140e 100%);
   padding: 1.5rem;
+  background: var(--bg-deep-forest);
+  background-image: var(--bg-forest-gradient);
 }
 
 .guest-card {
-  background: rgba(23, 42, 32, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--color-border);
-  padding: 2.5rem;
-  border-radius: var(--radius-lg);
-  max-width: 420px;
+  background: var(--bg-surface-glass-heavy);
+  backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--border-nature);
+  padding: 2.75rem 2.25rem;
+  border-radius: var(--radius-xl);
+  max-width: 440px;
   width: 100%;
   text-align: center;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg), 0 0 24px rgba(74, 222, 128, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.guest-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 50% 20%, rgba(74, 222, 128, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.brand-hero {
+  margin-bottom: 2rem;
+}
+
+.brand-emblem {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  text-shadow: 0 0 16px rgba(74, 222, 128, 0.5);
 }
 
 .brand-title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: var(--color-accent-gold);
-  margin-bottom: 0.5rem;
-  letter-spacing: -0.5px;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--text-pure);
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 16px rgba(251, 191, 36, 0.4);
 }
 
 .brand-subtitle {
-  color: var(--color-text-muted);
-  font-size: 0.95rem;
-  margin-bottom: 2rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
 }
 
 .form-group {
@@ -41,37 +70,70 @@
 
 .form-label {
   display: block;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   margin-bottom: 0.5rem;
-  color: var(--color-text-light);
+  color: var(--text-primary);
+}
+
+.avatar-selection-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.avatar-option {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border-subtle);
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.avatar-option:hover {
+  background: rgba(74, 222, 128, 0.15);
+  border-color: var(--border-nature);
+  transform: translateY(-2px);
+}
+
+.avatar-option.selected {
+  background: var(--grad-nutrients);
+  border-color: var(--color-nutrients-light);
+  box-shadow: 0 0 14px rgba(74, 222, 128, 0.5);
+  transform: translateY(-3px) scale(1.08);
+}
+
+.input-glow-wrapper {
+  position: relative;
 }
 
 .form-input {
   width: 100%;
-  padding: 0.75rem 1rem;
-  background: rgba(15, 28, 21, 0.7);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-light);
-  font-size: 1rem;
-  transition: border-color 0.2s;
+  padding: 0.85rem 1.1rem;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--border-nature);
+  border-radius: var(--radius-md);
+  color: var(--text-pure);
+  font-size: 0.95rem;
+  font-family: var(--font-ui);
+  transition: all var(--transition-normal);
 }
 
 .form-input:focus {
-  border-color: var(--color-primary-green);
-  box-shadow: var(--shadow-glow);
+  border-color: var(--color-nutrients-light);
+  box-shadow: 0 0 14px rgba(74, 222, 128, 0.4);
+  background: rgba(0, 0, 0, 0.6);
 }
 
-.btn-primary {
+.btn-block {
   width: 100%;
-  padding: 0.85rem;
-  background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
-  color: #fff;
-  font-weight: 600;
+  padding: 0.9rem;
   font-size: 1.05rem;
-  border-radius: var(--radius-md);
-}
-
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-glow);
+  margin-top: 0.5rem;
 }
