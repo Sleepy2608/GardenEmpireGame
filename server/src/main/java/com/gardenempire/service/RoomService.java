@@ -29,15 +29,20 @@ public class RoomService {
     }
 
     public Room createRoom(CreateRoomRequest request) {
-        String roomId = UUID.randomUUID().toString().substring(0, 8);
+        String roomId = "GARDEN-" + (int)(Math.random() * 9000 + 1000);
         Player host = request.getHostPlayer();
+        if (host.getAvatar() == null || host.getAvatar().isBlank()) {
+            host.setAvatar("🌱");
+        }
         host.setHost(true);
 
         Room room = Room.builder()
                 .id(roomId)
+                .code(roomId)
                 .name(request.getRoomName())
                 .hostId(host.getId())
                 .hostName(host.getName())
+                .hostAvatar(host.getAvatar())
                 .maxPlayers(request.getMaxPlayers())
                 .status(RoomStatus.WAITING)
                 .build();
@@ -64,18 +69,61 @@ public class RoomService {
             Player newPlayer = Player.builder()
                     .id(request.getId())
                     .name(request.getName())
+                    .avatar(request.getAvatar() != null && !request.getAvatar().isBlank() ? request.getAvatar() : "🌱")
                     .isHost(false)
                     .build();
             room.getPlayers().add(newPlayer);
         }
 
-        // If room is full, start the game
         if (room.getPlayers().size() == room.getMaxPlayers()) {
             room.setStatus(RoomStatus.PLAYING);
             String gameId = gameService.initGame(room.getId(), room.getPlayers());
             room.setGameId(gameId);
         }
 
+        return room;
+    }
+
+    public Room joinRoomByCode(com.gardenempire.dto.JoinByCodeRequest request) {
+        JoinRoomRequest joinRequest = new JoinRoomRequest();
+        joinRequest.setId(request.getId());
+        joinRequest.setName(request.getName());
+        joinRequest.setAvatar(request.getAvatar());
+        return joinRoom(request.getCode(), joinRequest);
+    }
+
+    public Room leaveRoom(String roomId, String playerId) {
+        Room room = getRoomById(roomId);
+        room.getPlayers().removeIf(p -> p.getId().equals(playerId));
+
+        if (room.getPlayers().isEmpty()) {
+            roomManager.removeRoom(roomId);
+            return null;
+        }
+
+        if (playerId.equals(room.getHostId())) {
+            Player newHost = room.getPlayers().get(0);
+            newHost.setHost(true);
+            room.setHostId(newHost.getId());
+            room.setHostName(newHost.getName());
+            room.setHostAvatar(newHost.getAvatar());
+        }
+
+        return room;
+    }
+
+    public Room startGame(String roomId, String hostId) {
+        Room room = getRoomById(roomId);
+        if (!room.getHostId().equals(hostId)) {
+            throw new GameException("Chỉ chủ phòng mới có quyền bắt đầu trận đấu");
+        }
+        if (room.getPlayers().size() < 2) {
+            throw new GameException("Cần ít nhất 2 người chơi để bắt đầu");
+        }
+
+        room.setStatus(RoomStatus.PLAYING);
+        String gameId = gameService.initGame(room.getId(), room.getPlayers());
+        room.setGameId(gameId);
         return room;
     }
 }
