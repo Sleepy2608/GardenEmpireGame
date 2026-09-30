@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class GameService {
     private final GameEngine gameEngine;
+    private final com.gardenempire.room.RoomManager roomManager;
     private final Map<String, Game> activeGames = new ConcurrentHashMap<>();
 
     public String initGame(String roomId, List<Player> players) {
@@ -28,6 +29,13 @@ public class GameService {
     public Game getGame(String gameId) {
         Game game = activeGames.get(gameId);
         if (game == null) {
+            var roomOpt = roomManager.getRoom(gameId);
+            if (roomOpt.isPresent()) {
+                var room = roomOpt.get();
+                game = gameEngine.createNewGame(room.getId(), room.getPlayers());
+                activeGames.put(room.getId(), game);
+                return game;
+            }
             throw new GameException("Không tìm thấy trận đấu với ID: " + gameId);
         }
         return game;

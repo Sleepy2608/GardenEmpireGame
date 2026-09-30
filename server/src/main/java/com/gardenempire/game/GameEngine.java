@@ -9,8 +9,8 @@ import java.util.*;
 public class GameEngine {
 
     public Game createNewGame(String gameId, List<Player> players) {
-        if (players == null || players.size() < 2 || players.size() > 4) {
-            throw new GameException("Số lượng người chơi phải từ 2 đến 4 người.");
+        if (players == null || players.isEmpty() || players.size() > 4) {
+            throw new GameException("Số lượng người chơi phải từ 1 đến 4 người.");
         }
 
         Game game = new Game(gameId, players);
@@ -27,7 +27,7 @@ public class GameEngine {
 
     private void initializeBank(Game game, int playerCount) {
         int tokenCount = switch (playerCount) {
-            case 2 -> 4;
+            case 1, 2 -> 4;
             case 3 -> 5;
             default -> 7;
         };

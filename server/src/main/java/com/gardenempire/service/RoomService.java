@@ -45,10 +45,13 @@ public class RoomService {
                 .hostAvatar(host.getAvatar())
                 .maxPlayers(request.getMaxPlayers())
                 .status(RoomStatus.WAITING)
+                .gameId(roomId)
                 .build();
 
         room.getPlayers().add(host);
-        return roomManager.addRoom(room);
+        roomManager.addRoom(room);
+        gameService.initGame(roomId, room.getPlayers());
+        return room;
     }
 
     public Room joinRoom(String roomId, JoinRoomRequest request) {
@@ -73,6 +76,13 @@ public class RoomService {
                     .isHost(false)
                     .build();
             room.getPlayers().add(newPlayer);
+
+            try {
+                com.gardenempire.game.Game activeGame = gameService.getGame(roomId);
+                if (activeGame != null && activeGame.getState().getPlayers().stream().noneMatch(p -> p.getId().equals(newPlayer.getId()))) {
+                    activeGame.getState().getPlayers().add(newPlayer);
+                }
+            } catch (Exception ignored) {}
         }
 
         if (room.getPlayers().size() == room.getMaxPlayers()) {
