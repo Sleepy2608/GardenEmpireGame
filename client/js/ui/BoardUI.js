@@ -372,25 +372,14 @@ export class BoardUI {
 
       const card = document.createElement('div');
       card.className = `token-select-option ${selectedCount > 0 ? 'selected' : ''}`;
-      card.style.cssText = `
-        background: rgba(0,0,0,0.3);
-        border: 1px solid ${selectedCount > 0 ? 'var(--border-nature-focus)' : 'var(--border-subtle)'};
-        border-radius: var(--radius-md);
-        padding: 0.85rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
-        cursor: pointer;
-      `;
 
       card.innerHTML = `
-        <div class="token-orb badge-${meta.class}" style="width: 50px; height: 50px; font-size: 1.2rem;">
+        <div class="token-orb badge-${meta.class}" style="width: 52px; height: 52px; font-size: 1.35rem;">
           ${meta.icon}
         </div>
-        <strong style="font-size: 0.9rem;">${meta.name}</strong>
-        <span style="font-size: 0.8rem; color: var(--text-muted);">Còn lại: ${inBank}</span>
-        <div style="font-size: 1.1rem; font-weight: 800; color: var(--text-gold);">+${selectedCount}</div>
+        <div class="token-select-name">${meta.name}</div>
+        <div class="token-select-stock">Còn: <strong>${inBank}</strong></div>
+        <div class="token-select-counter">${selectedCount > 0 ? `+${selectedCount}` : ''}</div>
       `;
 
       card.addEventListener('click', () => this.toggleSelectToken(res, inBank));
