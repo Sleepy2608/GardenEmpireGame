@@ -3,6 +3,7 @@
 */
 import { GameState } from '../game/GameState.js';
 import { GameSocket } from '../websocket/gameSocket.js';
+import { roomApi } from '../api/roomApi.js';
 import { PlantCardUI } from './PlantCardUI.js';
 import { VisitorUI } from './VisitorUI.js';
 import { ResourceUI } from './ResourceUI.js';
@@ -56,8 +57,14 @@ export class BoardUI {
     // Leave Game
     const leaveBtn = document.getElementById('btn-leave-game');
     if (leaveBtn) {
-      leaveBtn.addEventListener('click', () => {
+      leaveBtn.addEventListener('click', async () => {
         if (confirm('Bạn có chắc chắn muốn rời ván đấu?')) {
+          try {
+            await roomApi.leaveRoom(this.roomId, this.guestId);
+          } catch (e) {
+            // Ignore if already disconnected
+          }
+          this.socket.disconnect();
           window.location.href = 'lobby.html';
         }
       });
