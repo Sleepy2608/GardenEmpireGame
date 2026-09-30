@@ -948,6 +948,112 @@
   }
 }
 
+/* Victory Podium Modal */
+.victory-card {
+  max-width: 580px;
+  width: 95%;
+  text-align: center;
+  border-color: var(--border-gold);
+  box-shadow: 0 0 35px rgba(245, 158, 11, 0.35);
+}
+
+.victory-header {
+  padding: 1.75rem 1.5rem 1rem;
+  background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.25) 0%, transparent 70%);
+}
+
+.victory-crown {
+  font-size: 3.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 20px rgba(245, 158, 11, 0.8);
+}
+
+.victory-header h2 {
+  font-size: 1.75rem;
+  color: var(--text-pure);
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 16px rgba(245, 158, 11, 0.5);
+}
+
+.victory-header p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-top: 0.4rem;
+}
+
+.victory-podium {
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.podium-rank-card {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all var(--transition-normal);
+}
+
+.podium-rank-card.rank-1 {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(251, 191, 36, 0.1) 100%);
+  border: 1.5px solid var(--border-gold-focus);
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.3);
+  transform: scale(1.02);
+}
+
+.podium-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.podium-badge {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.podium-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-pure);
+}
+
+.podium-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+}
+
+.podium-score {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--text-gold);
+}
+
+.podium-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.victory-tiebreaker-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding: 0 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.victory-footer {
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
 /* Toast Notifications */
 .toast-container {
   position: fixed;

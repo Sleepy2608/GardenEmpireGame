@@ -37,6 +37,9 @@
     </div>
 
     <div class="top-bar-right">
+      <button class="btn-nature-secondary btn-sm" id="btn-toggle-sound" title="Bật/Tắt âm thanh">
+        <span id="sound-icon">🔊</span>
+      </button>
       <button class="btn-nature-secondary btn-sm" id="btn-game-rules" title="Xem luật game">
         <span>📖</span> <span>Luật Chơi</span>
       </button>
@@ -81,7 +84,7 @@
       <section class="visitors-section">
         <div class="section-title-row">
           <h4>🦋 Khách Thăm Vườn</h4>
-          <span class="section-hint">Tự động nhận khi đủ điều kiện cây trồng (+3 uy tín)</span>
+          <span class="section-hint">Tự động nhận khi đủ điều kiện cây trồng (+3★)</span>
         </div>
         <div class="visitors-grid" id="visitors-container">
           <!-- Visitor cards rendered by VisitorUI.js -->
@@ -231,12 +234,16 @@
   <div class="modal-backdrop hidden" id="victory-modal">
     <div class="modal-card glass-panel victory-card">
       <div class="victory-header">
-        <h2>🏆 VÁN ĐẤU KẾT THÚC!</h2>
+        <div class="victory-crown anim-float">👑</div>
+        <h2>VÁN ĐẤU KẾT THÚC!</h2>
         <p id="victory-announcement">Chúc mừng Tân Vương Đế Chế Vườn Sinh Thái!</p>
       </div>
       <div class="victory-podium" id="victory-podium-list"></div>
+      <p class="victory-tiebreaker-hint">⚖️ *Khi bằng điểm uy tín, người có ít thẻ cây trồng hơn sẽ giành chiến thắng.*</p>
       <div class="victory-footer">
-        <button class="btn-nature-gold" id="btn-back-to-lobby">Quay Về Sảnh</button>
+        <button class="btn-nature-primary" id="btn-back-to-lobby">
+          <span>🏡</span> <span>Quay Về Sảnh Chờ</span>
+        </button>
       </div>
     </div>
   </div>
@@ -254,7 +261,7 @@
         
         <h4 style="color: var(--color-nutrients-light); margin-bottom: 0.3rem;">⚡ 3 Hành Động Chính (Chọn 1 trong 3 mỗi lượt):</h4>
         <ol style="padding-left: 1.2rem; margin-bottom: 0.8rem;">
-          <li><strong>Lấy Tài Nguyên:</strong> Lấy 3 token khác loại hoặc 2 token cùng loại (khi ngân hàng còn $\ge 4$).</li>
+          <li><strong>Lấy Tài Nguyên:</strong> Lấy 3 token khác loại hoặc 2 token cùng loại (khi ngân hàng còn ≥ 4).</li>
           <li><strong>Trồng Cây (Mua thẻ):</strong> Trả token tương ứng sau khi trừ giảm giá từ cây cũ, có thể bù bằng phân bón vàng (Wild).</li>
           <li><strong>Giữ Cây:</strong> Giữ 1 thẻ bí mật (tối đa 3 thẻ trên tay) và nhận 1 token Wild từ ngân hàng.</li>
         </ol>

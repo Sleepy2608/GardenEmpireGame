@@ -1,9 +1,7 @@
-/*
-   GARDEN EMPIRE — MAIN BOARD ORCHESTRATOR & INTERACTION MANAGER
-*/
 import { GameState } from '../game/GameState.js';
 import { GameSocket } from '../websocket/gameSocket.js';
 import { roomApi } from '../api/roomApi.js';
+import { SoundFX } from './SoundFX.js';
 import { PlantCardUI } from './PlantCardUI.js';
 import { VisitorUI } from './VisitorUI.js';
 import { ResourceUI } from './ResourceUI.js';
@@ -29,6 +27,8 @@ export class BoardUI {
     this.selectedTokens = {};
     this.selectedCard = null;
     this.isCardFromReserved = false;
+    this.hasPlayedVictorySound = false;
+    this.lastClaimedVisitorCount = 0;
 
     this.init();
   }
@@ -42,9 +42,25 @@ export class BoardUI {
   initStaticDOMElements() {
     const roomTextEl = document.getElementById('room-id-text');
     if (roomTextEl) roomTextEl.textContent = this.roomId;
+
+    const soundIcon = document.getElementById('sound-icon');
+    if (soundIcon) {
+      soundIcon.textContent = SoundFX.isMuted() ? '🔇' : '🔊';
+    }
   }
 
   initEventListeners() {
+    // Sound Mute Toggle
+    const soundBtn = document.getElementById('btn-toggle-sound');
+    const soundIcon = document.getElementById('sound-icon');
+    if (soundBtn && soundIcon) {
+      soundBtn.addEventListener('click', () => {
+        const isMuted = SoundFX.toggleMute();
+        soundIcon.textContent = isMuted ? '🔇' : '🔊';
+        this.showToast(isMuted ? '🔇 Đã tắt âm thanh' : '🔊 Đã bật âm thanh');
+      });
+    }
+
     // Copy Room Code
     const roomBadge = document.getElementById('room-code-display');
     if (roomBadge) {
@@ -127,9 +143,19 @@ export class BoardUI {
   handleSocketMessage(message) {
     if (message.type === 'GAME_STATE_UPDATE') {
       this.gameState.updateFromDto(message.payload);
+
+      const myPlayer = this.gameState.players.find(p => p.id === this.guestId);
+      const currentVisitorCount = myPlayer?.claimedVisitors?.length || 0;
+      if (currentVisitorCount > this.lastClaimedVisitorCount) {
+        SoundFX.playVisitorSound();
+        this.showToast('🦋 Bạn đã đón một Khách Thăm Vườn mới (+3★)!');
+      }
+      this.lastClaimedVisitorCount = currentVisitorCount;
+
       this.render();
       this.checkSpecialGameStates();
     } else if (message.type === 'ERROR') {
+      SoundFX.playErrorSound();
       this.showToast(`⚠️ ${message.message || 'Hành động không hợp lệ'}`);
     }
   }
@@ -306,6 +332,7 @@ export class BoardUI {
   }
 
   onBuyCard(card, fromReserved) {
+    SoundFX.playBuySound();
     this.socket.send('BUY_PLANT', {
       cardId: card.id,
       fromReserved: fromReserved
@@ -313,6 +340,7 @@ export class BoardUI {
   }
 
   onReserveCard(card) {
+    SoundFX.playReserveSound();
     this.socket.send('RESERVE_PLANT', {
       cardId: card.id,
       fromDeckTier: null
@@ -326,6 +354,7 @@ export class BoardUI {
       return;
     }
     if (confirm(`Bạn có muốn giữ 1 thẻ bí mật từ đầu chồng bài Tier ${tier}?`)) {
+      SoundFX.playReserveSound();
       this.socket.send('RESERVE_PLANT', {
         cardId: null,
         fromDeckTier: tier
@@ -437,6 +466,7 @@ export class BoardUI {
   }
 
   onConfirmTakeTokens() {
+    SoundFX.playTokenSound();
     this.socket.send('TAKE_RESOURCES', {
       tokens: this.selectedTokens
     });
@@ -464,6 +494,10 @@ export class BoardUI {
     // 2. Victory Modal on Game Over
     const victoryModal = document.getElementById('victory-modal');
     if (this.gameState.isGameOver && victoryModal) {
+      if (!this.hasPlayedVictorySound) {
+        this.hasPlayedVictorySound = true;
+        SoundFX.playVictorySound();
+      }
       victoryModal.classList.remove('hidden');
       this.renderVictoryPodium();
     }
@@ -513,30 +547,41 @@ export class BoardUI {
     if (!list) return;
 
     list.innerHTML = '';
-    const sorted = [...this.gameState.players].sort((a, b) => (b.prestigePoints || 0) - (a.prestigePoints || 0));
+    const sorted = [...this.gameState.players].sort((a, b) => {
+      if ((b.prestigePoints || 0) !== (a.prestigePoints || 0)) {
+        return (b.prestigePoints || 0) - (a.prestigePoints || 0);
+      }
+      return (a.purchasedCards?.length || 0) - (b.purchasedCards?.length || 0);
+    });
     const winner = sorted[0];
 
     if (announcement && winner) {
-      announcement.textContent = `Chúc mừng ${winner.name} đã giành chiến thắng với ${winner.prestigePoints} Điểm Uy Tín!`;
+      announcement.textContent = `★ Chúc mừng ${winner.name} đã giành chiến thắng với ${winner.prestigePoints} Điểm Uy Tín ★!`;
     }
 
+    const rankIcons = ['🥇', '🥈', '🥉', '4️⃣'];
+
     sorted.forEach((p, idx) => {
-      const item = document.createElement('div');
-      item.style.cssText = `
-        background: ${idx === 0 ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255,255,255,0.05)'};
-        border: 1px solid ${idx === 0 ? 'var(--border-gold)' : 'var(--border-subtle)'};
-        padding: 0.75rem 1.25rem;
-        border-radius: var(--radius-md);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.5rem;
+      const rankIcon = rankIcons[idx] || `#${idx + 1}`;
+      const card = document.createElement('div');
+      card.className = `podium-rank-card ${idx === 0 ? 'rank-1' : ''}`;
+
+      const avatar = p.avatar || '🌿';
+      const cardCount = p.purchasedCards?.length || 0;
+      const visitorCount = p.claimedVisitors?.length || 0;
+
+      card.innerHTML = `
+        <div class="podium-left">
+          <span class="podium-badge">${rankIcon}</span>
+          <span style="font-size: 1.4rem;">${avatar}</span>
+          <span class="podium-name">${p.name} ${idx === 0 ? '👑' : ''}</span>
+        </div>
+        <div class="podium-right">
+          <span class="podium-score">★ ${p.prestigePoints || 0} Uy Tín</span>
+          <span class="podium-meta">${cardCount} cây trồng • ${visitorCount} khách</span>
+        </div>
       `;
-      item.innerHTML = `
-        <div><strong>#${idx + 1} ${p.name}</strong> ${idx === 0 ? '👑' : ''}</div>
-        <div class="text-gold" style="font-weight: 800; font-size: 1.1rem;">★ ${p.prestigePoints || 0} Điểm (${p.purchasedCards?.length || 0} cây)</div>
-      `;
-      list.appendChild(item);
+      list.appendChild(card);
     });
   }
 
