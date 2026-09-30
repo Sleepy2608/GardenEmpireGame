@@ -18,7 +18,12 @@ public class RoomManager {
     }
 
     public Optional<Room> getRoom(String roomId) {
-        return Optional.ofNullable(rooms.get(roomId));
+        if (roomId == null) return Optional.empty();
+        Room r = rooms.get(roomId);
+        if (r != null) return Optional.of(r);
+        return rooms.values().stream()
+                .filter(room -> roomId.equalsIgnoreCase(room.getId()) || (room.getCode() != null && roomId.equalsIgnoreCase(room.getCode())))
+                .findFirst();
     }
 
     public Room addRoom(Room room) {

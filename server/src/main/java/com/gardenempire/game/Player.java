@@ -17,6 +17,10 @@ import java.util.Map;
 public class Player {
     private String id;
     private String name;
+    
+    @Builder.Default
+    private String avatar = "🌱";
+    
     private boolean isHost;
     
     @Builder.Default
