@@ -79,8 +79,9 @@ export class LobbyUI {
       listContainer.innerHTML = '';
       rooms.forEach(room => {
         const isFull = (room.players?.length || 0) >= (room.maxPlayers || 4);
+        const isPlaying = room.status === 'PLAYING';
         const card = document.createElement('div');
-        card.className = 'room-card is-waiting';
+        card.className = `room-card ${isPlaying ? 'is-playing' : 'is-waiting'}`;
 
         card.innerHTML = `
           <div class="room-card-left">

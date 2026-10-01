@@ -41,6 +41,8 @@ services:
       - garden-network
     ports:
       - "3000:80"          # Access game at http://localhost:3000
+    volumes:
+      - ./client:/usr/share/nginx/html:ro
     depends_on:
       backend:
         condition: service_healthy   # Wait until backend passes healthcheck
