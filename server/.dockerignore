@@ -1,0 +1,24 @@
+# Exclude build artifacts (rebuilt inside Docker)
+target/
+
+# Git metadata
+.git/
+.gitignore
+.gitattributes
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+
+# Test scripts
+test_multi_tab.js
+*.test.js
+
+# Docs & plans
+*.md
+.plan/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
