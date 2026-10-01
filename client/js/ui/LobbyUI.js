@@ -81,23 +81,33 @@ export class LobbyUI {
         const isFull = (room.players?.length || 0) >= (room.maxPlayers || 4);
         const isPlaying = room.status === 'PLAYING';
         const card = document.createElement('div');
-        card.className = 'room-card';
+        card.className = `room-card ${isPlaying ? 'is-playing' : 'is-waiting'}`;
 
         card.innerHTML = `
-          <div class="room-card-header">
-            <span class="room-title">${room.name || 'Vườn Thượng Uyển'}</span>
-            <span class="room-status-badge ${isPlaying ? 'status-playing' : 'status-waiting'}">
-              ${isPlaying ? 'ĐANG CHƠI' : 'ĐANG CHỜ'}
-            </span>
+          <div class="room-card-left">
+            <div class="room-host-avatar" title="Chủ phòng">${room.hostAvatar || '🏡'}</div>
+            <div class="room-info">
+              <div class="room-title-row">
+                <span class="room-title">${room.name || 'Vườn Thượng Uyển'}</span>
+                <span class="room-status-badge ${isPlaying ? 'status-playing' : 'status-waiting'}">
+                  ${isPlaying ? 'ĐANG CHƠI' : 'ĐANG CHỜ'}
+                </span>
+              </div>
+              <div class="room-meta-row">
+                <span>👑 Chủ phòng: <strong>${room.hostName || 'Nghệ nhân'}</strong></span>
+                <span class="meta-dot">•</span>
+                <span>🔑 Mã: <code>${room.code || room.id}</code></span>
+              </div>
+            </div>
           </div>
-          <div class="room-card-body">
-            <div>👑 Chủ phòng: <strong>${room.hostName || 'Nghệ nhân'}</strong></div>
-            <div>🔑 Mã phòng: <code>${room.code || room.id}</code></div>
-          </div>
-          <div class="room-card-footer">
-            <span class="room-players-count">👥 ${room.players?.length || 0}/${room.maxPlayers || 4}</span>
+
+          <div class="room-card-right">
+            <div class="room-players-pill" title="Số người chơi hiện tại">
+              <span>👥</span>
+              <strong>${room.players?.length || 0}/${room.maxPlayers || 4}</strong>
+            </div>
             <button class="btn-nature-primary btn-sm btn-join" ${isFull || isPlaying ? 'disabled' : ''}>
-              ${isPlaying ? 'Đang Chơi' : isFull ? 'Đã Đầy' : 'Tham Gia'}
+              ${isPlaying ? 'Đang Chơi' : isFull ? 'Đã Đầy' : 'Tham Gia ➔'}
             </button>
           </div>
         `;
