@@ -18,6 +18,7 @@ import java.util.UUID;
 public class RoomService {
     private final RoomManager roomManager;
     private final GameService gameService;
+    private final RoomCleanupService cleanupService;
 
     public List<Room> getAllRooms() {
         return roomManager.getAllRooms().stream()
@@ -53,6 +54,7 @@ public class RoomService {
         room.getPlayers().add(host);
         roomManager.addRoom(room);
         gameService.initGame(roomId, room.getPlayers());
+        cleanupService.recordActivity(roomId);
         return room;
     }
 
@@ -91,8 +93,10 @@ public class RoomService {
             room.setStatus(RoomStatus.PLAYING);
             String gameId = gameService.initGame(room.getId(), room.getPlayers());
             room.setGameId(gameId);
+            cleanupService.recordActivity(roomId);
         }
 
+        cleanupService.recordActivity(roomId);
         return room;
     }
 
@@ -109,7 +113,7 @@ public class RoomService {
         room.getPlayers().removeIf(p -> p.getId().equals(playerId));
 
         if (room.getPlayers().isEmpty()) {
-            roomManager.removeRoom(roomId);
+            cleanupService.deleteRoomCompletely(roomId);
             return null;
         }
 
@@ -121,6 +125,7 @@ public class RoomService {
             room.setHostAvatar(newHost.getAvatar());
         }
 
+        cleanupService.recordActivity(roomId);
         return room;
     }
 
@@ -136,6 +141,7 @@ public class RoomService {
         room.setStatus(RoomStatus.PLAYING);
         String gameId = gameService.initGame(room.getId(), room.getPlayers());
         room.setGameId(gameId);
+        cleanupService.recordActivity(roomId);
         return room;
     }
 }

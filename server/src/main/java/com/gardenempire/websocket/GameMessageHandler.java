@@ -101,6 +101,26 @@ public class GameMessageHandler {
         }
     }
 
+    public int getActiveSessionCount(String gameId) {
+        Map<String, WebSocketSession> sessions = gameSessions.get(gameId);
+        if (sessions == null) return 0;
+        return (int) sessions.values().stream().filter(WebSocketSession::isOpen).count();
+    }
+
+    public void cleanRoom(String gameId) {
+        Map<String, WebSocketSession> sessions = gameSessions.remove(gameId);
+        if (sessions != null) {
+            sessions.values().forEach(s -> {
+                if (s.isOpen()) {
+                    try {
+                        s.close();
+                    } catch (Exception ignored) {}
+                }
+            });
+        }
+        playerSessions.remove(gameId);
+    }
+
     private void sendToSession(WebSocketSession session, Object message) {
         if (session != null && session.isOpen()) {
             try {

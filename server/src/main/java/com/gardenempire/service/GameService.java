@@ -89,9 +89,19 @@ public class GameService {
                 default -> throw new GameException("Loại hành động không hợp lệ: " + actionType);
             }
 
+            if (game.getState().isGameOver()) {
+                var roomOpt = roomManager.getRoom(gameId);
+                roomOpt.ifPresent(r -> r.setStatus(com.gardenempire.room.RoomStatus.FINISHED));
+            }
+
             return game.getState();
         } finally {
             lock.unlock();
         }
+    }
+
+    public void removeGame(String gameId) {
+        activeGames.remove(gameId);
+        roomLocks.remove(gameId);
     }
 }
