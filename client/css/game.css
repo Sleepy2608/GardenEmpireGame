@@ -227,22 +227,87 @@
   color: var(--text-secondary);
 }
 
+.opponent-section-label {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 0.45rem;
+  margin-bottom: 0.2rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.opponent-tokens-strip {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.mini-token-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  min-width: 28px;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.15s ease;
+}
+
+.mini-token-pill.zero-token {
+  opacity: 0.3;
+}
+
+.mini-token-pill.has-token {
+  opacity: 1;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.25);
+  transform: scale(1.02);
+}
+
+.mini-token-pill.badge-seed,
+.mini-bonus-pill.badge-seed {
+  color: #0f172a !important;
+}
+
+.mini-token-pill .pill-icon {
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.mini-token-pill .pill-count {
+  font-family: var(--font-stats);
+  line-height: 1;
+}
+
 .opponent-bonuses-strip {
   display: flex;
-  gap: 0.35rem;
-  margin-top: 0.5rem;
+  gap: 0.25rem;
+  flex-wrap: wrap;
 }
 
 .mini-bonus-pill {
-  width: 22px;
-  height: 22px;
+  min-width: 26px;
+  height: 20px;
+  padding: 0 0.25rem;
   border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 800;
   color: #fff;
+  transition: all 0.15s ease;
+}
+
+.mini-bonus-pill.zero-bonus {
+  opacity: 0.3;
+}
+
+.mini-bonus-pill.has-bonus {
+  opacity: 1;
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.4);
 }
 
 /* Game Activity Log */

@@ -109,17 +109,36 @@ export class PlayerUI {
     const el = document.createElement('div');
     el.className = `opponent-card ${isCurrentTurn ? 'active-turn' : ''}`;
 
+    const tokens = opponent.tokens || {};
     const bonuses = opponent.bonuses || {};
     const totalPlants = opponent.purchasedCards?.length || 0;
     const totalReserved = opponent.reservedCards?.length || 0;
-    const totalTokens = Object.values(opponent.tokens || {}).reduce((a, b) => a + b, 0);
+    const totalTokens = Object.values(tokens).reduce((a, b) => a + b, 0);
 
-    const bonusPillsHtml = ['EARTH', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS']
-      .map(res => {
-        const cnt = bonuses[res] || 0;
-        const meta = ResourceUI.getResourceMeta(res);
-        return `<div class="mini-bonus-pill badge-${meta.class}" title="${meta.name}: +${cnt}">${cnt}</div>`;
-      }).join('');
+    // 1. Tokens cầm tay (Đất, Nước, Ánh Sáng, Hạt Giống, Dinh Dưỡng, Vàng Wild)
+    const tokenOrder = ['EARTH', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS', 'WILD'];
+    const tokenPillsHtml = tokenOrder.map(res => {
+      const cnt = tokens[res] || 0;
+      const meta = ResourceUI.getResourceMeta(res);
+      return `
+        <div class="mini-token-pill badge-${meta.class} ${cnt > 0 ? 'has-token' : 'zero-token'}" title="${meta.name}: ${cnt} token">
+          <span class="pill-icon">${meta.icon}</span>
+          <span class="pill-count">${cnt}</span>
+        </div>
+      `;
+    }).join('');
+
+    // 2. Giảm giá vĩnh viễn từ cây đã trồng
+    const bonusOrder = ['EARTH', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS'];
+    const bonusPillsHtml = bonusOrder.map(res => {
+      const cnt = bonuses[res] || 0;
+      const meta = ResourceUI.getResourceMeta(res);
+      return `
+        <div class="mini-bonus-pill badge-${meta.class} ${cnt > 0 ? 'has-bonus' : 'zero-bonus'}" title="Giảm giá vĩnh viễn ${meta.name}: +${cnt}">
+          +${cnt}
+        </div>
+      `;
+    }).join('');
 
     el.innerHTML = `
       <div class="opponent-card-header">
@@ -129,8 +148,15 @@ export class PlayerUI {
       <div class="opponent-stats-row">
         <span>🌳 Cây: <strong>${totalPlants}</strong></span>
         <span>📑 Giữ: <strong>${totalReserved}</strong></span>
-        <span>🪙 Token: <strong>${totalTokens}</strong></span>
+        <span>🪙 Token: <strong>${totalTokens}/10</strong></span>
       </div>
+
+      <div class="opponent-section-label">🪙 Tài nguyên cầm tay:</div>
+      <div class="opponent-tokens-strip">
+        ${tokenPillsHtml}
+      </div>
+
+      <div class="opponent-section-label">🌿 Giảm giá vĩnh viễn:</div>
       <div class="opponent-bonuses-strip">
         ${bonusPillsHtml}
       </div>
