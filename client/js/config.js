@@ -11,19 +11,15 @@ const protocol  = window.location.protocol;          // 'http:' | 'https:'
 const wsProto   = protocol === 'https:' ? 'wss:' : 'ws:';
 const port      = window.location.port;
 
-/** Running on localhost WITHOUT Nginx (direct dev server, e.g. port 5500 or file://) */
-const isDirectLocalDev = Boolean(
-  hostname === 'localhost' ||
-  hostname === '[::1]' ||
-  hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
-) && port !== '3000';  // port 3000 = running through Docker/Nginx
+/** Running on localhost direct backend without Nginx (e.g. port 8080) */
+const isDirectLocalDev = (hostname === 'localhost' || hostname === '127.0.0.1') && port === '8080';
 
 /**
  * Running behind Nginx Reverse Proxy (Docker):
- * - http://localhost:3000  → Nginx serves static + proxies /api and /ws
- * - In this case, use RELATIVE paths — Nginx handles routing, zero CORS.
+ * - If running on localhost on port 3000 (or any web port other than 8080)
+ * - Nginx serves static assets and proxies /api and /ws cleanly with zero CORS
  */
-const isNginxProxy = hostname === 'localhost' && port === '3000';
+const isNginxProxy = (hostname === 'localhost' || hostname === '127.0.0.1') && port !== '8080';
 
 // ─── Cloud URLs (update when deploying to Render / Railway / VPS) ────────────
 const CLOUD_HTTP = 'https://garden-empire-server.onrender.com';
@@ -53,7 +49,7 @@ export const CONFIG = {
   get WS_BASE_URL() {
     const custom = localStorage.getItem('garden_empire_ws_url');
     if (custom) return custom;
-    if (isNginxProxy) return `${wsProto}//${hostname}:3000`; // via Nginx
+    if (isNginxProxy) return `${wsProto}//${window.location.host}`; // Dynamic host:port via Nginx
     if (isDirectLocalDev) return 'ws://localhost:8080';
     return CLOUD_WS;
   }
