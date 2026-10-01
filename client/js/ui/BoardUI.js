@@ -134,7 +134,13 @@ export class BoardUI {
     // Back to Lobby on Game Over
     const backToLobbyBtn = document.getElementById('btn-back-to-lobby');
     if (backToLobbyBtn) {
-      backToLobbyBtn.addEventListener('click', () => {
+      backToLobbyBtn.addEventListener('click', async () => {
+        try {
+          await roomApi.leaveRoom(this.roomId, this.guestId);
+        } catch (e) {
+          // Ignore if already cleaned up
+        }
+        this.socket.disconnect();
         window.location.href = 'lobby.html';
       });
     }
