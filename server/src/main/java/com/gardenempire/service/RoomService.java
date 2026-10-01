@@ -20,7 +20,9 @@ public class RoomService {
     private final GameService gameService;
 
     public List<Room> getAllRooms() {
-        return roomManager.getAllRooms();
+        return roomManager.getAllRooms().stream()
+                .filter(r -> r.getStatus() == RoomStatus.WAITING)
+                .toList();
     }
 
     public Room getRoomById(String roomId) {

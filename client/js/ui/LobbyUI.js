@@ -62,13 +62,14 @@ export class LobbyUI {
 
     try {
       listContainer.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center; padding: 2rem;">Đang tải danh sách phòng...</p>';
-      const rooms = await roomApi.getAllRooms();
+      const allRooms = await roomApi.getAllRooms();
+      const rooms = (allRooms || []).filter(r => r.status === 'WAITING' || !r.status);
 
-      if (countBadge) countBadge.textContent = rooms?.length || 0;
+      if (countBadge) countBadge.textContent = rooms.length;
 
-      if (!rooms || rooms.length === 0) {
+      if (rooms.length === 0) {
         listContainer.innerHTML = `
-          <div style="grid-column: 1/-1; text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+          <div style="text-column: 1/-1; text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
             <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🍃</div>
             <p>Chưa có phòng nào đang mở. Hãy là người đầu tiên tạo phòng!</p>
           </div>
@@ -79,9 +80,8 @@ export class LobbyUI {
       listContainer.innerHTML = '';
       rooms.forEach(room => {
         const isFull = (room.players?.length || 0) >= (room.maxPlayers || 4);
-        const isPlaying = room.status === 'PLAYING';
         const card = document.createElement('div');
-        card.className = `room-card ${isPlaying ? 'is-playing' : 'is-waiting'}`;
+        card.className = 'room-card is-waiting';
 
         card.innerHTML = `
           <div class="room-card-left">
