@@ -1,0 +1,9 @@
+# Exclude non-web files from Docker build context
+Dockerfile
+.dockerignore
+nginx.conf
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+*.log
