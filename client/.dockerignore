@@ -1,7 +1,7 @@
 # Exclude non-web files from Docker build context
+# NOTE: nginx.conf MUST stay in build context (Dockerfile copies it explicitly)
 Dockerfile
 .dockerignore
-nginx.conf
 
 # OS artifacts
 .DS_Store
