@@ -25,11 +25,10 @@ export class LobbyUI {
     if (displayUserName) displayUserName.textContent = this.guestName;
     if (displayUserAvatar) displayUserAvatar.textContent = this.guestAvatar;
 
-    // Logout / Change Name
-    const btnLogout = document.getElementById('btn-logout');
-    if (btnLogout) {
-      btnLogout.addEventListener('click', () => {
-        localStorage.removeItem('garden_empire_guest_name');
+    // Return to Home / Index
+    const btnHome = document.getElementById('btn-home') || document.getElementById('btn-logout');
+    if (btnHome) {
+      btnHome.addEventListener('click', () => {
         window.location.href = 'index.html';
       });
     }

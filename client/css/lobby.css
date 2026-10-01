@@ -20,6 +20,28 @@
   margin-bottom: 1.25rem;
 }
 
+.lobby-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.btn-nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.95rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-nav-back:hover {
+  transform: translateX(-3px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
 .lobby-brand {
   display: flex;
   align-items: center;
