@@ -13,6 +13,8 @@ services:
       - garden-network
     ports:
       - "8080:8080"        # Direct access for debugging (optional)
+    env_file:
+      - .env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - SERVER_PORT=8080

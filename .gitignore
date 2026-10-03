@@ -24,5 +24,10 @@ Thumbs.db
 # Logs
 *.log
 
+# Environment variables & Secrets
+.env
+.env.local
+.env.*.local
+
 # own plan implemetation/docs files
 .plan/
