@@ -21,9 +21,9 @@ const isDirectLocalDev = (hostname === 'localhost' || hostname === '127.0.0.1') 
  */
 const isNginxProxy = (hostname === 'localhost' || hostname === '127.0.0.1') && port !== '8080';
 
-// ─── Cloud URLs (update when deploying to Render / Railway / VPS) ────────────
-const CLOUD_HTTP = 'https://garden-empire-server.onrender.com';
-const CLOUD_WS   = 'wss://garden-empire-server.onrender.com';
+// ─── Cloud URLs (Production Backend on Render) ──────────────────────────────
+const CLOUD_HTTP = 'https://gardenempiregame.onrender.com';
+const CLOUD_WS   = 'wss://gardenempiregame.onrender.com';
 
 export const CONFIG = {
   /**
