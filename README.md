@@ -2,12 +2,13 @@
 
 > **Một trò chơi bàn cờ chiến thuật thời gian thực lấy cảm hứng từ kiệt tác Splendor, kết hợp chủ đề xây dựng vườn sinh thái, tối ưu hóa tài nguyên và tranh đoạt điểm danh tiếng vĩnh viễn.**
 
-[![Live Frontend](https://img.shields.io/badge/Vercel-Frontend%20Live-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://garden-empire-game.vercel.app)
-[![Live Backend](https://img.shields.io/badge/Render-Backend%20Live-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://gardenempiregame.onrender.com)
-[![Database](https://img.shields.io/badge/Clever--Cloud-PostgreSQL%2015-2C3E50?style=for-the-badge&logo=postgresql&logoColor=white)](https://console.clever-cloud.com)
-[![Java Version](https://img.shields.io/badge/Java-21%20LTS-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.4-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
-[![Docker](https://img.shields.io/badge/Docker-Multi--Stage%20Container-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+<div align="center">
+
+[![Version](https://img.shields.io/badge/Version-v1.0.0-10B981?style=for-the-badge&logo=semver&logoColor=white)](https://garden-empire-game.vercel.app)
+
+[![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://garden-empire-game.vercel.app) [![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://gardenempiregame.onrender.com) [![Clever Cloud](https://img.shields.io/badge/Clever%20Cloud-2C3E50?style=for-the-badge&logo=clevercloud&logoColor=white)](https://console.clever-cloud.com) [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://console.clever-cloud.com) [![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/) [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot) [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+
+</div>
 
 ---
 
@@ -16,13 +17,12 @@
 1. [Giới Thiệu Trò Chơi](#-1-giới-thiệu-trò-chơi)
 2. [Cốt Truyện & Luật Chơi Cốt Lõi](#-2-cốt-truyện--luật-chơi-cốt-lõi)
 3. [Kiến Trúc Kỹ Thuật (Tech Stack)](#-3-kiến-trúc-kỹ-thuật-tech-stack)
-4. [Các Tính Năng Đã Hoàn Thiện (Changelog & Git Log)](#-4-các-tính-năng-đã-hoàn-thiện-changelog--git-log)
-5. [Cấu Trúc Thư Mục Dự Án](#-5-cấu-trúc-thư-mục-dự-án)
-6. [Hướng Dẫn Cài Đặt & Chạy Môi Trường Local](#-6-hướng-dẫn-cài-đặt--chạy-môi-trường-local)
+4. [Cấu Trúc Thư Mục Dự Án](#-4-cấu-trúc-thư-mục-dự-án)
+5. [Hướng Dẫn Cài Đặt & Chạy Môi Trường Local](#-5-hướng-dẫn-cài-đặt--chạy-môi-trường-local)
    - [Chạy với Docker Compose (Khuyên dùng)](#cách-1-chạy-1-click-bằng-docker-compose-khuyên-dùng)
    - [Chạy thủ công không dùng Docker](#cách-2-chạy-thủ-công-không-dùng-docker)
-7. [Triển Khai Production & Cloud Hosting](#-7-triển-khai-production--cloud-hosting)
-8. [Kiểm Thử Tự Động (Testing & E2E)](#-8-kiểm-thử-tự-động-testing--e2e)
+6. [Triển Khai Production & Cloud Hosting](#-6-triển-khai-production--cloud-hosting)
+7. [Kiểm Thử Tự Động (Testing & E2E)](#-7-kiểm-thử-tự-động-testing--e2e)
 
 ---
 
@@ -92,28 +92,7 @@ graph TD
 - **Containerization:** Docker Multi-stage build (Maven 3.9 builder $\rightarrow$ Eclipse Temurin 21 JRE Alpine), Nginx Alpine Reverse Proxy.
 - **Audio Engine:** Web Audio API tự động tổng hợp sóng âm thanh thiên nhiên thời gian thực (không phụ thuộc file media ngoài).
 
----
-
-## 🚀 4. Các Tính Năng Đã Hoàn Thiện (Changelog & Git Log)
-
-Hệ thống được phát triển và kiểm thử liên tục qua các giai đoạn:
-
-| Commit / Phase | Phân Hệ | Nội Dung Đã Triển Khai |
-|---|:---:|---|
-| `9e8336a` | **Vercel** | Sửa schema `vercel.json`, loại bỏ trường `public` cũ và kích hoạt rewrites định tuyến tĩnh chuẩn. |
-| `c9dc54d` | **Cloud** | Deploy thành công Backend lên **Render.com** (`https://gardenempiregame.onrender.com`), tinh chỉnh HikariCP pool size = 3 cho Clever Cloud. |
-| `bd7fee8` / `6fde383` | **Database** | Tích hợp **PostgreSQL Clever Cloud** qua Spring Data JPA; cấu hình bảo mật biến môi trường với `.env` và cập nhật `.gitignore`. |
-| `d2eefa2` / `025b7ff` | **Docker** | Xây dựng Dockerfile Multi-stage build cho Spring Boot (Java 21, ZGC, non-root user `garden`); cấu hình Nginx Alpine Reverse Proxy và `docker-compose.yml`. |
-| `0ef86d7` / `02b8a07` | **Dọn Dẹp** | Xây dựng `RoomCleanupService` với `@EnableScheduling`: Tự động giải phóng phòng khi ván cờ kết thúc và dọn sạch phòng bỏ hoang sau **5 phút** không có kết nối. |
-| `ec0d7eb` / `06d6b50` | **Sảnh Chờ** | Tái thiết kế giao diện danh sách phòng thành dạng thẻ ngang (Horizontal Row Cards); lọc chỉ hiển thị các phòng đang ở trạng thái `WAITING`. |
-| `7554165` | **Concurrency** | Kiểm soát luồng với `ReentrantLock` theo từng phòng, chống xung đột tài nguyên khi nhiều người bấm cùng lúc; tự động khôi phục phiên khi F5 / reconnect. |
-| `7b79cea` | **Âm Thanh** | Tích hợp **Web Audio API** tổng hợp tiếng chim hót, tiếng suối chảy, âm thanh nhặt ngọc và chuông báo khi đến lượt đi. |
-| `c02c5d8` | **Vinh Danh** | Giao diện Bảng Vàng Chiến Thắng (Victory Podium), xếp hạng thứ bậc danh dự và hiển thị điểm số tổng kết. |
-| `64f0c98` | **E2E Test** | Bộ kịch bản kiểm thử tự động đa tab giả lập (`test_multi_tab.js`) bao phủ 100% vòng đời một ván đấu Splendor. |
-
----
-
-## 📂 5. Cấu Trúc Thư Mục Dự Án
+## 📂 4. Cấu Trúc Thư Mục Dự Án
 
 ```text
 GardenEmpireGame/
@@ -124,13 +103,21 @@ GardenEmpireGame/
 ├── README.md                        # Tài liệu hướng dẫn toàn diện dự án
 │
 ├── client/                          # Giao diện Frontend (Vanilla Web)
-│   ├── index.html                   # Trang chủ: Đặt tên biệt danh & chọn linh vật vườn
-│   ├── lobby.html                   # Sảnh chờ: Duyệt phòng, tạo phòng, vào bằng mã code
+│   ├── index.html                   # Trang chủ: Đặt tên biệt danh, chọn linh vật vườn & badge v1.0.0
+│   ├── lobby.html                   # Sảnh chờ: Duyệt phòng, tạo phòng, vào bằng mã code & badge v1.0.0
 │   ├── game.html                    # Bàn cờ chính: Hiển thị chợ cây, ngân hàng, thẻ đối thủ
+│   ├── favicon.svg                  # Biểu tượng Favicon SVG vector 1:1 sắc nét
+│   ├── favicon.png                  # Biểu tượng Favicon PNG 512x512
+│   ├── robots.txt                   # Điều hướng bot tìm kiếm (Google, Bing)
+│   ├── sitemap.xml                  # Sơ đồ trang web chuẩn SEO
 │   ├── Dockerfile                   # Nginx Alpine phục vụ static files & reverse proxy
 │   ├── nginx.conf                   # Cấu hình reverse proxy /api và /ws
+│   ├── assets/
+│   │   └── images/
+│   │       ├── garden_empire.jpg    # Banner xem trước chuẩn 1200x675 (~250KB) cho Zalo, Facebook
+│   │       └── garden_empire.png    # Ảnh poster sinh thái chất lượng cao
 │   ├── css/
-│   │   ├── common.css               # Hệ màu thiên nhiên, tokens, animations, layout glassmorphism
+│   │   ├── common.css               # Hệ màu thiên nhiên, tokens, version badge, layout glassmorphism
 │   │   ├── index.css                # Style thẻ đăng nhập & avatar picker
 │   │   ├── lobby.css                # Style thẻ phòng ngang, bảng điều khiển sảnh
 │   │   └── game.css                 # Bàn cờ, thẻ cây 3 tầng, ngân hàng ngọc, bảng đối thủ
@@ -161,7 +148,7 @@ GardenEmpireGame/
 
 ---
 
-## 💻 6. Hướng Dẫn Cài Đặt & Chạy Môi Trường Local
+## 💻 5. Hướng Dẫn Cài Đặt & Chạy Môi Trường Local
 
 ### Yêu Cầu Tiên Quyết:
 - **Git** đã cài đặt.
@@ -203,7 +190,7 @@ Truy cập [http://localhost:3000](http://localhost:3000) để trải nghiệm 
 
 ---
 
-## 🌐 7. Triển Khai Production & Cloud Hosting
+## 🌐 6. Triển Khai Production & Cloud Hosting
 
 Dự án hiện đã được đóng gói và triển khai thành công trên môi trường đám mây:
 
@@ -221,7 +208,7 @@ Dự án hiện đã được đóng gói và triển khai thành công trên m�
 
 ---
 
-## 🧪 8. Kiểm Thử Tự Động (Testing & E2E)
+## 🧪 7. Kiểm Thử Tự Động (Testing & E2E)
 
 Dự án bao gồm bộ kiểm thử tự động toàn diện:
 
@@ -244,3 +231,9 @@ node server/test_multi_tab.js
 
 Dự án được xây dựng phục vụ mục đích học tập và nghiên cứu công nghệ game thời gian thực.
 **Tác giả:** [Nguyen Le Huy Tam (@Sleepy2608)](https://github.com/Sleepy2608)
+
+---
+
+<div align="center">
+   🌿<b> Garden Empire Game </b>🌿
+</div>
