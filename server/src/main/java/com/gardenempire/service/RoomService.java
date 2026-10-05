@@ -7,10 +7,12 @@ import com.gardenempire.game.Player;
 import com.gardenempire.room.Room;
 import com.gardenempire.room.RoomManager;
 import com.gardenempire.room.RoomStatus;
+import com.gardenempire.websocket.GameMessageHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -19,6 +21,7 @@ public class RoomService {
     private final RoomManager roomManager;
     private final GameService gameService;
     private final RoomCleanupService cleanupService;
+    private final GameMessageHandler messageHandler;
 
     public List<Room> getAllRooms() {
         return roomManager.getAllRooms().stream()
@@ -89,14 +92,9 @@ public class RoomService {
             } catch (Exception ignored) {}
         }
 
-        if (room.getPlayers().size() == room.getMaxPlayers()) {
-            room.setStatus(RoomStatus.PLAYING);
-            String gameId = gameService.initGame(room.getId(), room.getPlayers());
-            room.setGameId(gameId);
-            cleanupService.recordActivity(roomId);
-        }
-
         cleanupService.recordActivity(roomId);
+        // Broadcast cập nhật danh sách người chơi cho phòng chờ
+        messageHandler.broadcastRoomUpdate(roomId, room);
         return room;
     }
 
@@ -117,6 +115,7 @@ public class RoomService {
             return null;
         }
 
+        // Nếu chủ phòng rời, chuyển giao quyền cho người tiếp theo
         if (playerId.equals(room.getHostId())) {
             Player newHost = room.getPlayers().get(0);
             newHost.setHost(true);
@@ -126,6 +125,7 @@ public class RoomService {
         }
 
         cleanupService.recordActivity(roomId);
+        messageHandler.broadcastRoomUpdate(roomId, room);
         return room;
     }
 
@@ -142,6 +142,8 @@ public class RoomService {
         String gameId = gameService.initGame(room.getId(), room.getPlayers());
         room.setGameId(gameId);
         cleanupService.recordActivity(roomId);
+        // Broadcast GAME_STARTED cho toàn bộ người trong phòng chờ
+        messageHandler.broadcastGameStarted(roomId, gameId);
         return room;
     }
 }

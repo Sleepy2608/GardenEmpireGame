@@ -107,6 +107,37 @@ public class GameMessageHandler {
         return (int) sessions.values().stream().filter(WebSocketSession::isOpen).count();
     }
 
+    /**
+     * Broadcast cập nhật danh sách phòng (khi có người vào/ra/rời phòng)
+     * Frontend lắng nghe type = "ROOM_UPDATE"
+     */
+    public void broadcastRoomUpdate(String roomId, com.gardenempire.room.Room room) {
+        Map<String, Object> message = new java.util.LinkedHashMap<>();
+        message.put("type", "ROOM_UPDATE");
+        message.put("room", room);
+        broadcastToRoom(roomId, message);
+    }
+
+    /**
+     * Broadcast sự kiện bắt đầu game cho toàn bộ client trong phòng chờ
+     * Frontend lắng nghe type = "GAME_STARTED"
+     */
+    public void broadcastGameStarted(String roomId, String gameId) {
+        Map<String, Object> message = new java.util.LinkedHashMap<>();
+        message.put("type", "GAME_STARTED");
+        message.put("roomId", roomId);
+        message.put("gameId", gameId);
+        broadcastToRoom(roomId, message);
+    }
+
+    /** Gửi 1 message tới tất cả sessions đang mở trong 1 game/room */
+    private void broadcastToRoom(String roomId, Object message) {
+        Map<String, WebSocketSession> sessions = gameSessions.get(roomId);
+        if (sessions != null) {
+            sessions.values().forEach(session -> sendToSession(session, message));
+        }
+    }
+
     public void cleanRoom(String gameId) {
         Map<String, WebSocketSession> sessions = gameSessions.remove(gameId);
         if (sessions != null) {
