@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phòng Chờ — Garden Empire</title>
+  <meta name="robots" content="noindex">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="alternate icon" type="image/png" href="favicon.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/waiting-room.css">
+</head>
+<body>
+
+  <!-- Ambient background particles -->
+  <div class="ambient-bg" aria-hidden="true">
+    <span class="leaf-particle">🍃</span>
+    <span class="leaf-particle">🌿</span>
+    <span class="leaf-particle">🌸</span>
+    <span class="leaf-particle">🍀</span>
+    <span class="leaf-particle">🌺</span>
+  </div>
+
+  <div class="wr-container">
+
+    <!-- Header -->
+    <header class="wr-header">
+      <div class="wr-logo">
+        <span class="wr-logo-icon">🌿</span>
+        <span class="wr-logo-text">Garden Empire</span>
+      </div>
+      <div class="wr-self-badge" id="self-badge">
+        <span id="self-avatar" class="self-avatar">🌱</span>
+        <span id="self-name" class="self-name">Nghệ nhân</span>
+      </div>
+    </header>
+
+    <!-- Main card -->
+    <main class="wr-main">
+
+      <!-- Room Info Panel -->
+      <section class="wr-room-info glass-panel">
+        <div class="room-info-row">
+          <div class="room-name-block">
+            <span class="room-label">PHÒNG</span>
+            <h1 id="room-name" class="room-name">Đang tải...</h1>
+          </div>
+          <div class="room-code-block">
+            <span class="room-label">MÃ PHÒNG</span>
+            <div class="room-code-row">
+              <code id="room-code" class="room-code">------</code>
+              <button id="btn-copy-code" class="btn-copy" title="Sao chép mã phòng" aria-label="Sao chép mã phòng">
+                📋
+              </button>
+            </div>
+          </div>
+          <div class="room-count-block">
+            <span class="room-label">NGƯỜI CHƠI</span>
+            <div class="room-count">
+              <span id="player-count">0</span>/<span id="max-players">4</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Player List -->
+      <section class="wr-players glass-panel">
+        <h2 class="wr-section-title">👥 Danh Sách Người Chơi</h2>
+        <div id="player-list" class="player-grid">
+          <!-- JS will render player cards here -->
+          <div class="player-skeleton"></div>
+          <div class="player-skeleton"></div>
+        </div>
+      </section>
+
+      <!-- Control Area -->
+      <section class="wr-controls">
+
+        <!-- Host view: Start button -->
+        <div id="host-controls" class="host-controls hidden">
+          <p class="hint-text" id="start-hint">⚠️ Cần ít nhất 2 người chơi để bắt đầu</p>
+          <button id="btn-start-game" class="btn-start-game" disabled>
+            <span class="btn-start-icon">✨</span>
+            <span>Bắt Đầu Trò Chơi</span>
+          </button>
+        </div>
+
+        <!-- Guest view: Waiting status -->
+        <div id="guest-controls" class="guest-controls hidden">
+          <div class="waiting-status">
+            <span class="waiting-dot"></span>
+            <span>Đang chờ chủ phòng bắt đầu trò chơi...</span>
+          </div>
+        </div>
+
+        <!-- Leave Room -->
+        <button id="btn-leave-room" class="btn-leave">
+          🚪 Rời Phòng
+        </button>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
+
+  <script type="module" src="js/ui/WaitingRoomUI.js"></script>
+</body>
+</html>

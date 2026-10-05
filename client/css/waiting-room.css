@@ -1,0 +1,414 @@
+/* ================================================================
+   GARDEN EMPIRE — WAITING ROOM CSS
+   Glassmorphism · Nature Emerald Theme
+   ================================================================ */
+
+/* ---------- Ambient Background ---------- */
+.ambient-bg {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 20% 30%, hsl(145 60% 8%) 0%, hsl(160 40% 5%) 50%, hsl(200 30% 4%) 100%);
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.leaf-particle {
+  position: absolute;
+  font-size: clamp(1.2rem, 3vw, 2.5rem);
+  opacity: 0.06;
+  animation: floatLeaf 18s ease-in-out infinite;
+  user-select: none;
+}
+.leaf-particle:nth-child(1) { top: 10%; left: 5%;  animation-duration: 20s; animation-delay: 0s; }
+.leaf-particle:nth-child(2) { top: 60%; left: 15%; animation-duration: 25s; animation-delay: 3s; }
+.leaf-particle:nth-child(3) { top: 30%; left: 85%; animation-duration: 22s; animation-delay: 6s; }
+.leaf-particle:nth-child(4) { top: 80%; left: 75%; animation-duration: 18s; animation-delay: 9s; }
+.leaf-particle:nth-child(5) { top: 50%; left: 50%; animation-duration: 30s; animation-delay: 12s; }
+
+@keyframes floatLeaf {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.06; }
+  50%       { transform: translateY(-30px) rotate(20deg); opacity: 0.12; }
+}
+
+/* ---------- Layout ---------- */
+body {
+  font-family: 'Outfit', 'Be Vietnam Pro', sans-serif;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+.wr-container {
+  width: 100%;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------- Header ---------- */
+.wr-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+
+.wr-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: hsl(145 80% 72%);
+  letter-spacing: -0.01em;
+}
+.wr-logo-icon { font-size: 1.5rem; }
+
+.wr-self-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: hsla(145 40% 20% / 0.4);
+  border: 1px solid hsla(145 60% 40% / 0.25);
+  border-radius: 50px;
+  padding: 0.35rem 0.85rem 0.35rem 0.5rem;
+  backdrop-filter: blur(10px);
+}
+.self-avatar { font-size: 1.3rem; }
+.self-name { font-size: 0.85rem; font-weight: 600; color: hsl(145 60% 80%); }
+
+/* ---------- Glass Panel ---------- */
+.glass-panel {
+  background: hsla(145 30% 12% / 0.6);
+  border: 1px solid hsla(145 60% 40% / 0.2);
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px hsla(145 60% 5% / 0.4),
+              inset 0 1px 0 hsla(145 60% 80% / 0.05);
+  padding: 1.5rem;
+}
+
+/* ---------- Room Info ---------- */
+.wr-room-info { padding: 1.25rem 1.5rem; }
+
+.room-info-row {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.room-label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: hsl(145 50% 50%);
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+}
+
+.room-name {
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  font-weight: 800;
+  color: hsl(145 80% 90%);
+  margin: 0;
+}
+
+.room-code-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.room-code {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: hsl(45 90% 75%);
+  background: hsla(45 80% 50% / 0.1);
+  border: 1px solid hsla(45 80% 50% / 0.2);
+  border-radius: 8px;
+  padding: 0.2rem 0.6rem;
+}
+
+.btn-copy {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.2rem;
+  border-radius: 6px;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.btn-copy:hover {
+  background: hsla(145 60% 50% / 0.15);
+  transform: scale(1.15);
+}
+.btn-copy.copied { animation: copyPop 0.35s ease; }
+@keyframes copyPop {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.3); }
+}
+
+.room-count {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: hsl(145 80% 80%);
+}
+
+/* ---------- Player Grid ---------- */
+.wr-section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: hsl(145 60% 70%);
+  margin: 0 0 1rem;
+  letter-spacing: 0.04em;
+}
+
+.player-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.85rem;
+}
+
+/* Skeleton loaders */
+.player-skeleton {
+  height: 120px;
+  border-radius: 16px;
+  background: linear-gradient(90deg,
+    hsla(145 30% 15% / 0.5) 25%,
+    hsla(145 40% 20% / 0.5) 50%,
+    hsla(145 30% 15% / 0.5) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ---------- Player Card ---------- */
+.player-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0.75rem;
+  background: hsla(145 30% 15% / 0.5);
+  border: 1px solid hsla(145 50% 40% / 0.2);
+  border-radius: 16px;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: cardIn 0.4s ease;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.player-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px hsla(145 60% 5% / 0.4); }
+
+/* Host card highlight */
+.player-card.is-host {
+  border-color: hsla(45 90% 60% / 0.4);
+  background: hsla(45 60% 15% / 0.3);
+  box-shadow: 0 0 0 1px hsla(45 90% 60% / 0.15), 0 4px 20px hsla(45 60% 5% / 0.3);
+}
+
+.player-avatar {
+  font-size: 2.2rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 6px hsla(145 60% 5% / 0.4));
+}
+
+.player-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: hsl(145 70% 88%);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.player-badge {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 50px;
+  text-transform: uppercase;
+}
+.player-badge.host-badge {
+  background: hsla(45 90% 60% / 0.2);
+  color: hsl(45 90% 75%);
+  border: 1px solid hsla(45 90% 60% / 0.3);
+}
+.player-badge.guest-badge {
+  background: hsla(145 60% 40% / 0.15);
+  color: hsl(145 60% 70%);
+  border: 1px solid hsla(145 60% 40% / 0.2);
+}
+
+/* ---------- Empty Slots ---------- */
+.player-slot-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 1rem;
+  min-height: 120px;
+  border: 2px dashed hsla(145 40% 35% / 0.25);
+  border-radius: 16px;
+  color: hsl(145 30% 45%);
+  font-size: 0.8rem;
+}
+.player-slot-empty-icon { font-size: 1.5rem; opacity: 0.4; }
+
+/* ---------- Controls ---------- */
+.wr-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hidden { display: none !important; }
+
+/* Host controls */
+.host-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.hint-text {
+  font-size: 0.82rem;
+  color: hsl(145 40% 60%);
+  margin: 0;
+  text-align: center;
+}
+
+.btn-start-game {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 800;
+  font-family: inherit;
+  letter-spacing: 0.02em;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background: linear-gradient(135deg, hsl(145 70% 40%), hsl(160 65% 35%));
+  color: hsl(145 80% 95%);
+  box-shadow: 0 4px 24px hsla(145 70% 30% / 0.4);
+}
+.btn-start-game:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px hsla(145 70% 30% / 0.6);
+  background: linear-gradient(135deg, hsl(145 75% 45%), hsl(160 70% 40%));
+}
+.btn-start-game:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(40%);
+}
+.btn-start-icon { font-size: 1.2rem; }
+
+/* Guest controls */
+.guest-controls { width: 100%; display: flex; justify-content: center; }
+
+.waiting-status {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: hsla(145 30% 12% / 0.6);
+  border: 1px solid hsla(145 60% 40% / 0.2);
+  border-radius: 50px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  color: hsl(145 50% 70%);
+  backdrop-filter: blur(10px);
+}
+
+.waiting-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: hsl(145 70% 55%);
+  flex-shrink: 0;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* Leave room button */
+.btn-leave {
+  background: none;
+  border: 1px solid hsla(0 70% 50% / 0.3);
+  color: hsl(0 70% 70%);
+  padding: 0.5rem 1.25rem;
+  border-radius: 50px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-leave:hover {
+  background: hsla(0 70% 50% / 0.1);
+  border-color: hsla(0 70% 50% / 0.5);
+  color: hsl(0 80% 80%);
+  transform: translateY(-1px);
+}
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  background: hsl(145 50% 20%);
+  border: 1px solid hsla(145 60% 50% / 0.3);
+  color: hsl(145 80% 90%);
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  backdrop-filter: blur(20px);
+  z-index: 9999;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.toast.hidden {
+  display: none !important;
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+}
+.toast.error { background: hsl(0 50% 20%); border-color: hsla(0 70% 50% / 0.3); color: hsl(0 80% 90%); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 500px) {
+  .room-info-row { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .player-grid { grid-template-columns: repeat(2, 1fr); }
+}

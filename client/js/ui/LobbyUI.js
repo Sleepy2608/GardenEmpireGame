@@ -138,7 +138,7 @@ export class LobbyUI {
         name: this.guestName,
         avatar: this.guestAvatar
       });
-      window.location.href = `game.html?roomId=${room.id}`;
+      window.location.href = `waiting-room.html?roomId=${room.id}`;
     } catch (err) {
       alert(`Lỗi tạo phòng: ${err.message}`);
     }
@@ -156,7 +156,7 @@ export class LobbyUI {
         name: this.guestName,
         avatar: this.guestAvatar
       });
-      window.location.href = `game.html?roomId=${room.id}`;
+      window.location.href = `waiting-room.html?roomId=${room.id}`;
     } catch (err) {
       alert(`Lỗi vào phòng: ${err.message}`);
     }
@@ -169,7 +169,7 @@ export class LobbyUI {
         name: this.guestName,
         avatar: this.guestAvatar
       });
-      window.location.href = `game.html?roomId=${roomId}`;
+      window.location.href = `waiting-room.html?roomId=${roomId}`;
     } catch (err) {
       alert(`Lỗi tham gia phòng: ${err.message}`);
     }
