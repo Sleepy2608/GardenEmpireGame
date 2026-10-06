@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,9 @@ public class RoomService {
     private final GameService gameService;
     private final RoomCleanupService cleanupService;
     private final GameMessageHandler messageHandler;
+
+    // Map<RoomId, Map<PlayerId, ExpireTimestamp>> — kick cooldown 2 phút
+    private final Map<String, Map<String, Long>> kickedCooldownMap = new ConcurrentHashMap<>();
 
     public List<Room> getAllRooms() {
         return roomManager.getAllRooms().stream()
@@ -63,6 +67,18 @@ public class RoomService {
 
     public Room joinRoom(String roomId, JoinRoomRequest request) {
         Room room = getRoomById(roomId);
+
+        // Kiểm tra cooldown 2 phút nếu người chơi đã bị kick
+        Long expireTime = kickedCooldownMap
+                .getOrDefault(roomId, Map.of())
+                .get(request.getId());
+        if (expireTime != null && System.currentTimeMillis() < expireTime) {
+            long remainingSec = (expireTime - System.currentTimeMillis()) / 1000;
+            long mins = remainingSec / 60;
+            long secs = remainingSec % 60;
+            String timeStr = mins > 0 ? mins + " phút " + secs + " giây" : secs + " giây";
+            throw new GameException("Bạn đã bị chủ phòng mời ra. Vui lòng chờ thêm " + timeStr + " để vào lại phòng này.");
+        }
 
         if (room.getStatus() != RoomStatus.WAITING) {
             throw new GameException("Phòng đã bắt đầu hoặc đã kết thúc");
@@ -144,6 +160,40 @@ public class RoomService {
         cleanupService.recordActivity(roomId);
         // Broadcast GAME_STARTED cho toàn bộ người trong phòng chờ
         messageHandler.broadcastGameStarted(roomId, gameId);
+        return room;
+    }
+
+    /**
+     * Chủ phòng kick người chơi khác ra khỏi phòng chờ.
+     * Người bị kick bị chặn vào lại phòng trong 2 phút.
+     */
+    public Room kickPlayer(String roomId, String hostId, String targetPlayerId) {
+        Room room = getRoomById(roomId);
+
+        if (!room.getHostId().equals(hostId)) {
+            throw new GameException("Chỉ chủ phòng mới có quyền đuổi người chơi");
+        }
+        if (hostId.equals(targetPlayerId)) {
+            throw new GameException("Không thể tự đuổi chính mình");
+        }
+
+        boolean existed = room.getPlayers().removeIf(p -> p.getId().equals(targetPlayerId));
+        if (!existed) {
+            throw new GameException("Người chơi không tồn tại trong phòng");
+        }
+
+        // Ghi nhớ cooldown 2 phút (120 000ms)
+        kickedCooldownMap
+                .computeIfAbsent(roomId, k -> new ConcurrentHashMap<>())
+                .put(targetPlayerId, System.currentTimeMillis() + 120_000L);
+
+        cleanupService.recordActivity(roomId);
+
+        // Broadcast cho tất cả người trong phòng cập nhật danh sách
+        messageHandler.broadcastRoomUpdate(roomId, room);
+        // Broadcast riêng cho người bị kick biết mình bị đuổi
+        messageHandler.broadcastPlayerKicked(roomId, targetPlayerId);
+
         return room;
     }
 }

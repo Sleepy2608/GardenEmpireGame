@@ -108,21 +108,39 @@ class WaitingRoomUI {
     const grid = document.getElementById('player-list');
     if (!grid) return;
 
+    const isHost = hostId === this.myId;
     grid.innerHTML = '';
 
     // Filled slots
     players.forEach(player => {
-      const isHost  = player.id === hostId;
+      const playerIsHost = player.id === hostId;
       const card = document.createElement('div');
-      card.className = `player-card${isHost ? ' is-host' : ''}`;
+      card.className = `player-card${playerIsHost ? ' is-host' : ''}`;
       card.dataset.playerId = player.id;
+
+      // Nút Kick: chỉ hiển thị cho chủ phòng, và không hiển thị trên card của chủ phòng
+      const kickBtn = isHost && !playerIsHost
+        ? `<button class="btn-kick" data-target="${player.id}" title="Đuổi người chơi này" aria-label="Kick ${this._escape(player.name)}">🚫</button>`
+        : '';
+
       card.innerHTML = `
+        ${kickBtn}
         <div class="player-avatar">${player.avatar || '🌱'}</div>
         <div class="player-name">${this._escape(player.name)}</div>
-        <div class="player-badge ${isHost ? 'host-badge' : 'guest-badge'}">
-          ${isHost ? '👑 Chủ Phòng' : '🌿 Sẵn Sàng'}
+        <div class="player-badge ${playerIsHost ? 'host-badge' : 'guest-badge'}">
+          ${playerIsHost ? '👑 Chủ Phòng' : '🌿 Sẵn Sàng'}
         </div>
       `;
+
+      // Bind kick button
+      const btn = card.querySelector('.btn-kick');
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this._kickPlayer(player.id, player.name);
+        });
+      }
+
       grid.appendChild(card);
     });
 
@@ -158,6 +176,15 @@ class WaitingRoomUI {
         }, 800);
         break;
 
+      case 'YOU_ARE_KICKED':
+        // Người chơi bị kick → thông báo và chuyển về lobby
+        if (this.socket) this.socket.disconnect();
+        this._showToast('🚫 Bạn đã bị chủ phòng mời ra khỏi phòng.', 'error');
+        setTimeout(() => {
+          window.location.href = 'lobby.html';
+        }, 2000);
+        break;
+
       case 'ERROR':
         this._showToast(msg.message || 'Lỗi không xác định', 'error');
         break;
@@ -177,6 +204,16 @@ class WaitingRoomUI {
     } catch (err) {
       this._showToast(err.message || 'Không thể bắt đầu trò chơi', 'error');
       if (btn) { btn.disabled = false; btn.innerHTML = '<span class="btn-start-icon">✨</span><span>Bắt Đầu Trò Chơi</span>'; }
+    }
+  }
+
+  async _kickPlayer(targetId, targetName) {
+    if (!confirm(`Đuổi "${targetName}" ra khỏi phòng? Họ sẽ bị khóa vào lại trong 2 phút.`)) return;
+    try {
+      await roomApi.kickPlayer(this.roomId, this.myId, targetId);
+      // Server sẽ broadcast ROOM_UPDATE + YOU_ARE_KICKED → _onMessage xử lý
+    } catch (err) {
+      this._showToast(err.message || 'Không thể đuổi người chơi', 'error');
     }
   }
 

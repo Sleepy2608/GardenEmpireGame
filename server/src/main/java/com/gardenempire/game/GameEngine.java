@@ -17,8 +17,9 @@ public class GameEngine {
         initializeDecksAndMarket(game);
         initializeBank(game, players.size());
         
-        // Thiết lập người chơi đầu tiên
-        String firstPlayerId = players.get(0).getId();
+        // Chọn ngẫu nhiên người đi đầu tiên (không phải lúc nào cũng là host)
+        int randomIndex = new Random().nextInt(players.size());
+        String firstPlayerId = players.get(randomIndex).getId();
         game.getState().setFirstPlayerId(firstPlayerId);
         game.getState().setCurrentTurnPlayerId(firstPlayerId);
         

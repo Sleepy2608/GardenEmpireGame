@@ -74,5 +74,18 @@ export const roomApi = {
       throw new Error(err.message || 'Không thể bắt đầu trận đấu');
     }
     return await res.json();
+  },
+
+  async kickPlayer(roomId, hostId, targetPlayerId) {
+    const res = await fetch(`${getApiBase()}/${roomId}/kick`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ hostId, targetPlayerId })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'Không thể đuổi người chơi');
+    }
+    return await res.json();
   }
 };

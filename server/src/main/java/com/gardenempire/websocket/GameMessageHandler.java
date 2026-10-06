@@ -130,6 +130,25 @@ public class GameMessageHandler {
         broadcastToRoom(roomId, message);
     }
 
+    /**
+     * Gửi sự kiện YOU_ARE_KICKED đến đúng session của người bị kick.
+     * Những người khác đã nhận ROOM_UPDATE trước đó.
+     */
+    public void broadcastPlayerKicked(String roomId, String kickedPlayerId) {
+        Map<String, String> players = playerSessions.get(roomId);
+        Map<String, WebSocketSession> sessions = gameSessions.get(roomId);
+        if (players == null || sessions == null) return;
+
+        String sessionId = players.get(kickedPlayerId);
+        if (sessionId == null) return;
+
+        WebSocketSession session = sessions.get(sessionId);
+        Map<String, Object> message = new java.util.LinkedHashMap<>();
+        message.put("type", "YOU_ARE_KICKED");
+        message.put("roomId", roomId);
+        sendToSession(session, message);
+    }
+
     /** Gửi 1 message tới tất cả sessions đang mở trong 1 game/room */
     private void broadcastToRoom(String roomId, Object message) {
         Map<String, WebSocketSession> sessions = gameSessions.get(roomId);
