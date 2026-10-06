@@ -24,7 +24,8 @@ public class RoomService {
     private final RoomCleanupService cleanupService;
     private final GameMessageHandler messageHandler;
 
-    // Map<RoomId, Map<PlayerId, ExpireTimestamp>> — kick cooldown 2 phút
+    // Map<RoomId, Map<PlayerId, ExpireTimestamp>> — dùng cho kick ng khác
+    // kick cooldown: 2 phút
     private final Map<String, Map<String, Long>> kickedCooldownMap = new ConcurrentHashMap<>();
 
     public List<Room> getAllRooms() {
@@ -182,7 +183,7 @@ public class RoomService {
             throw new GameException("Người chơi không tồn tại trong phòng");
         }
 
-        // Ghi nhớ cooldown 2 phút (120 000ms)
+        // Ghi nhớ cooldown 2 phút (120000ms)
         kickedCooldownMap
                 .computeIfAbsent(roomId, k -> new ConcurrentHashMap<>())
                 .put(targetPlayerId, System.currentTimeMillis() + 120_000L);
