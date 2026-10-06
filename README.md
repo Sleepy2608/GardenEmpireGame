@@ -4,7 +4,7 @@
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/Version-v1.0.0-10B981?style=for-the-badge&logo=semver&logoColor=white)](https://garden-empire-game.vercel.app)
+[![Version](https://img.shields.io/badge/Version-v1.0.1-10B981?style=for-the-badge&logo=semver&logoColor=white)](https://garden-empire-game.vercel.app)
 
 [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://garden-empire-game.vercel.app) [![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://gardenempiregame.onrender.com) [![Clever Cloud](https://img.shields.io/badge/Clever%20Cloud-2C3E50?style=for-the-badge&logo=clevercloud&logoColor=white)](https://console.clever-cloud.com) [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://console.clever-cloud.com) [![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/) [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot) [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
@@ -32,6 +32,7 @@
 - **Thu thập năng lượng thiên nhiên** (Đất, Nước, Ánh Sáng, Hạt Giống, Dinh Dưỡng, Phân Bón Vàng).
 - **Nuôi trồng thẻ cây** thuộc 3 cấp độ (Tier 1, Tier 2, Tier 3) để tích lũy điểm uy tín vĩnh viễn và tạo hiệu ứng giảm giá mua cây tiếp theo.
 - **Rước các Vị Khách Quý Tộc & Linh Vật** (Chim én, Bọ rùa, Nhà thực vật học...) khi khu vườn hội tụ đủ các tiêu chí thực vật đặc sắc.
+- **Phòng chờ & Quản lý chủ phòng (Waiting Room):** Quản lý chủ phòng (Room Host), chỉ chủ phòng có quyền bắt đầu trận đấu khi đủ 2–4 người chơi, tính năng kick người chơi kèm lệnh cấm 2 phút (cooldown ban) và chọn ngẫu nhiên lượt đi đầu tiên.
 - **Đồng bộ đa người chơi thời gian thực (Real-time Multiplayer)** với độ trễ thấp thông qua WebSocket Native.
 
 ---
@@ -103,8 +104,9 @@ GardenEmpireGame/
 ├── README.md                        # Tài liệu hướng dẫn toàn diện dự án
 │
 ├── client/                          # Giao diện Frontend (Vanilla Web)
-│   ├── index.html                   # Trang chủ: Đặt tên biệt danh, chọn linh vật vườn & badge v1.0.0
-│   ├── lobby.html                   # Sảnh chờ: Duyệt phòng, tạo phòng, vào bằng mã code & badge v1.0.0
+│   ├── index.html                   # Trang chủ: Đặt tên biệt danh, chọn linh vật vườn
+│   ├── lobby.html                   # Sảnh chờ: Duyệt phòng, tạo phòng, vào bằng mã code
+│   ├── waiting-room.html            # Phòng chờ: Danh sách thành viên, quyền chủ phòng, kick & bắt đầu
 │   ├── game.html                    # Bàn cờ chính: Hiển thị chợ cây, ngân hàng, thẻ đối thủ
 │   ├── favicon.svg                  # Biểu tượng Favicon SVG vector 1:1 sắc nét
 │   ├── favicon.png                  # Biểu tượng Favicon PNG 512x512
@@ -120,14 +122,16 @@ GardenEmpireGame/
 │   │   ├── common.css               # Hệ màu thiên nhiên, tokens, version badge, layout glassmorphism
 │   │   ├── index.css                # Style thẻ đăng nhập & avatar picker
 │   │   ├── lobby.css                # Style thẻ phòng ngang, bảng điều khiển sảnh
+│   │   ├── waiting-room.css         # Style phòng chờ: Danh sách người chơi, huy hiệu chủ phòng
 │   │   └── game.css                 # Bàn cờ, thẻ cây 3 tầng, ngân hàng ngọc, bảng đối thủ
 │   └── js/
 │       ├── config.js                # Tự động nhận diện môi trường (Local / Docker / Render Cloud)
 │       ├── main.js                  # Xử lý đăng nhập khách & lưu trữ linh vật
-│       ├── api/roomApi.js           # Giao tiếp REST API tạo phòng, vào phòng, rời phòng
+│       ├── api/roomApi.js           # Giao tiếp REST API tạo phòng, vào phòng, kick, rời phòng
 │       └── ui/
 │           ├── BoardUI.js           # Điều phối toàn bộ sự kiện và hoạt ảnh bàn cờ
 │           ├── LobbyUI.js           # Render danh sách phòng và cập nhật sảnh chờ
+│           ├── WaitingRoomUI.js     # Điều khiển phòng chờ: Host controls, kick ban, WebSocket sync
 │           ├── PlayerUI.js          # Render kho thẻ, token cầm tay và điểm số người chơi
 │           └── ResourceUI.js        # Render ngân hàng ngọc & trạng thái chip năng lượng
 │
@@ -139,7 +143,7 @@ GardenEmpireGame/
         ├── GardenEmpireApplication.java # Entry point & kích hoạt @EnableScheduling
         ├── config/                  # Cấu hình WebSocket, CORS, Jackson
         ├── controller/              # REST Endpoints: /api/rooms, /api/games
-        ├── dto/                     # Data Transfer Objects cho API & WebSocket
+        ├── dto/                     # Data Transfer Objects: CreateRoomRequest, KickRequest...
         ├── game/                    # GameEngine, CardCatalog, Deck, Player, TokenBank
         ├── room/                    # Room, RoomManager, RoomStatus
         ├── service/                 # GameService, RoomService, RoomCleanupService
