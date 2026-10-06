@@ -20,6 +20,12 @@ class GameEngineTest {
     @BeforeEach
     void setUp() {
         gameEngine = new GameEngine();
+        gameEngine.setRandom(new java.util.Random() {
+            @Override
+            public int nextInt(int bound) {
+                return 0; // Luôn chọn người chơi đầu tiên p1 trong các unit test hiện có
+            }
+        });
 
         players2 = List.of(
                 Player.builder().id("p1").name("Alice").build(),

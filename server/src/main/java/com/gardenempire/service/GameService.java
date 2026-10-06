@@ -33,6 +33,9 @@ public class GameService {
             var roomOpt = roomManager.getRoom(gameId);
             if (roomOpt.isPresent()) {
                 var room = roomOpt.get();
+                if (room.getStatus() == com.gardenempire.room.RoomStatus.WAITING) {
+                    throw new GameException("Trận đấu chưa bắt đầu. Vui lòng đợi chủ phòng bắt đầu ở phòng chờ.");
+                }
                 game = gameEngine.createNewGame(room.getId(), room.getPlayers());
                 activeGames.put(room.getId(), game);
                 return game;

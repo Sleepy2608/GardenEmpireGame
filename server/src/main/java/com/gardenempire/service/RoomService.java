@@ -47,6 +47,11 @@ public class RoomService {
         }
         host.setHost(true);
 
+        int maxPlayers = request.getMaxPlayers();
+        if (maxPlayers < 2 || maxPlayers > 4) {
+            maxPlayers = 4;
+        }
+
         Room room = Room.builder()
                 .id(roomId)
                 .code(roomId)
@@ -54,14 +59,13 @@ public class RoomService {
                 .hostId(host.getId())
                 .hostName(host.getName())
                 .hostAvatar(host.getAvatar())
-                .maxPlayers(request.getMaxPlayers())
+                .maxPlayers(maxPlayers)
                 .status(RoomStatus.WAITING)
                 .gameId(roomId)
                 .build();
 
         room.getPlayers().add(host);
         roomManager.addRoom(room);
-        gameService.initGame(roomId, room.getPlayers());
         cleanupService.recordActivity(roomId);
         return room;
     }
@@ -153,6 +157,9 @@ public class RoomService {
         }
         if (room.getPlayers().size() < 2) {
             throw new GameException("Cần ít nhất 2 người chơi để bắt đầu");
+        }
+        if (room.getPlayers().size() > 4) {
+            throw new GameException("Số lượng người chơi không được vượt quá 4 người");
         }
 
         room.setStatus(RoomStatus.PLAYING);

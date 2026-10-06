@@ -67,7 +67,10 @@ class MultiPlayerGameFlowIntegrationTest {
         GameState state = gameService.getGameState(roomId);
         assertNotNull(state);
         assertEquals(3, state.getPlayers().size());
-        assertEquals("p1", state.getCurrentTurnPlayerId());
+        assertTrue(List.of("p1", "p2", "p3").contains(state.getCurrentTurnPlayerId()));
+        // Đặt lượt về p1 để tiếp tục kịch bản tuần tự của integration test
+        state.setCurrentTurnPlayerId("p1");
+        state.setFirstPlayerId("p1");
         // For 3 players: Bank has 5 of each base resource and 5 Wilds
         assertEquals(5, state.getResourceBank().get(Resource.EARTH));
         assertEquals(5, state.getResourceBank().get(Resource.NUTRIENTS));

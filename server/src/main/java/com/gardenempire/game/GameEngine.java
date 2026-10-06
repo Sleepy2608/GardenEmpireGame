@@ -8,17 +8,23 @@ import java.util.*;
 @Component
 public class GameEngine {
 
+    private Random random = new Random();
+
+    public void setRandom(Random random) {
+        this.random = random;
+    }
+
     public Game createNewGame(String gameId, List<Player> players) {
-        if (players == null || players.isEmpty() || players.size() > 4) {
-            throw new GameException("Số lượng người chơi phải từ 1 đến 4 người.");
+        if (players == null || players.size() < 2 || players.size() > 4) {
+            throw new GameException("Số lượng người chơi phải từ 2 đến 4 người để bắt đầu trò chơi.");
         }
 
         Game game = new Game(gameId, players);
         initializeDecksAndMarket(game);
         initializeBank(game, players.size());
         
-        // Chọn ngẫu nhiên người đi đầu tiên (không phải lúc nào cũng là host)
-        int randomIndex = new Random().nextInt(players.size());
+        // Chọn ngẫu nhiên người đi đầu tiên
+        int randomIndex = this.random.nextInt(players.size());
         String firstPlayerId = players.get(randomIndex).getId();
         game.getState().setFirstPlayerId(firstPlayerId);
         game.getState().setCurrentTurnPlayerId(firstPlayerId);
@@ -28,7 +34,7 @@ public class GameEngine {
 
     private void initializeBank(Game game, int playerCount) {
         int tokenCount = switch (playerCount) {
-            case 1, 2 -> 4;
+            case 2 -> 4;
             case 3 -> 5;
             default -> 7;
         };
