@@ -44,4 +44,5 @@ public class GameState {
     private int tier1DeckCount;
     private int tier2DeckCount;
     private int tier3DeckCount;
+    private int visitorDeckCount;
 }
