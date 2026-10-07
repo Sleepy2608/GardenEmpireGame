@@ -4,7 +4,7 @@
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/Version-v1.0.2-10B981?style=for-the-badge&logo=semver&logoColor=white)](https://garden-empire-game.vercel.app)
+[![Version](https://img.shields.io/badge/Version-v1.0.3-10B981?style=for-the-badge&logo=semver&logoColor=white)](https://garden-empire-game.vercel.app)
 
 [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://garden-empire-game.vercel.app) [![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://gardenempiregame.onrender.com) [![Clever Cloud](https://img.shields.io/badge/Clever%20Cloud-2C3E50?style=for-the-badge&logo=clevercloud&logoColor=white)](https://console.clever-cloud.com) [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://console.clever-cloud.com) [![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/) [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot) [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
@@ -42,11 +42,11 @@
 ### 🔹 Hệ Thống Tài Nguyên (6 Loại Năng Lượng)
 | Tài Nguyên | Biểu Tượng | Mô Tả |
 |---|:---:|---|
-| **Đất (Earth)** | 🟫 | Đất phù sa màu mỡ nuôi dưỡng rễ cây |
+| **Đất (Dirt)** | 🟫 | Đất phù sa màu mỡ nuôi dưỡng rễ cây |
 | **Nước (Water)** | 💧 | Nguồn tưới tiêu trong lành duy trì sinh khí |
 | **Ánh Sáng (Sunlight)** | ☀️ | Năng lượng quang hợp giúp cây vươn cao |
 | **Hạt Giống (Seed)** | 🌰 | Mầm sống thuần khiết bắt đầu sự sống |
-| **Dinh Dưỡng (Nutrients)** | 🧪 | Khoáng chất vi lượng tối ưu hóa sinh trưởng |
+| **Chất Dinh Dưỡng (Nutrient)** | 🧪 | Khoáng chất vi lượng tối ưu hóa sinh trưởng |
 | **Phân Bón Vàng (Wild)** | ⭐ | Năng lượng đa năng (vàng) thay thế cho bất kỳ tài nguyên nào |
 
 ### 🔹 3 Hành Động Trong Lượt (Mỗi lượt chỉ chọn 1):

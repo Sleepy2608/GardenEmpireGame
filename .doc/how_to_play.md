@@ -29,11 +29,11 @@ Trong trò chơi gốc **Splendor**, người chơi khai thác các mỏ đá qu
 
 | Thành Phần Trong Splendor | Tương Đương Trong Garden Empire | Biểu Tượng | Vai Trò & Chức Năng |
 |:---|:---|:---:|:---|
-| **Onyx (Đá Mã Não Đen)** | **Đất (Earth)** | 🟫 | Tài nguyên nuôi dưỡng rễ cây |
+| **Onyx (Đá Mã Não Đen)** | **Đất (Dirt)** | 🟫 | Tài nguyên nuôi dưỡng rễ cây |
 | **Sapphire (Đá Lam Ngọc)** | **Nước (Water)** | 💧 | Nguồn tưới tiêu duy trì sinh khí |
 | **Ruby (Đá Hồng Ngọc)** | **Ánh Sáng (Sunlight)** | ☀️ | Năng lượng quang hợp giúp cây nở hoa |
 | **Diamond (Đá Kim Cương Trắng)** | **Hạt Giống (Seed)** | 🌰 | Mầm sống thuần khiết bắt đầu sự sống |
-| **Emerald (Đá Ngọc Lục Bảo)** | **Dinh Dưỡng (Nutrients)** | 🧪 | Khoáng chất vi lượng tối ưu hóa sinh trưởng |
+| **Emerald (Đá Ngọc Lục Bảo)** | **Chất Dinh Dưỡng (Nutrient)** | 🧪 | Khoáng chất vi lượng tối ưu hóa sinh trưởng |
 | **Gold Wild Token (Vàng Tự Do)** | **Phân Bón Vàng (WILD)** | ⭐ | Token vạn năng, thay thế cho bất kỳ loại tài nguyên nào |
 | **Development Cards (Thẻ Phát Triển)** | **Thẻ Cây Trồng (Plant Cards)** | 🌱 / 🌿 / 🌳 | Cung cấp Điểm Uy Tín (★) và mức giảm giá vĩnh viễn |
 | **Noble Tiles (Quý Tộc Quý Phái)** | **Khách Thăm Vườn (Visitors)** | 🦋 / 🐦 / 🐿️ | Tự động ghé thăm mang lại **+3 Điểm Uy Tín** |
