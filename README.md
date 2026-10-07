@@ -66,6 +66,15 @@
 - Vòng đấu sẽ tiếp tục cho đến khi người chơi cuối cùng trong chu kỳ hoàn thành lượt đi (đảm bảo tất cả người chơi đều có số lượt đánh ngang nhau).
 - Người có điểm uy tín cao nhất sẽ giành chiến thắng. Trường hợp hòa điểm, người trồng ít cây hơn (tối ưu chi phí hơn) sẽ giành cúp vô địch 🏆.
 
+### 🔹 Thiết Lập Bàn Cờ Theo Số Người Chơi:
+| Số Người Chơi | Token Thường Mỗi Loại | Token Vàng (WILD ⭐) | Khách Thăm Vườn Lộ Diện | Thẻ Cây Mở Ngửa |
+|:---:|:---:|:---:|:---:|:---:|
+| **2 Người** | 4 viên (tổng 20) | 5 viên | 3 khách | 4 thẻ / Tier (tổng 12) |
+| **3 Người** | 5 viên (tổng 25) | 5 viên | 4 khách | 4 thẻ / Tier (tổng 12) |
+| **4 Người** | 7 viên (tổng 35) | 5 viên | 5 khách | 4 thẻ / Tier (tổng 12) |
+
+> 📖 **Xem cẩm nang luật chơi và hướng dẫn chiến thuật chi tiết tại:** [.doc/how_to_play.md](.doc/how_to_play.md)
+
 ---
 
 ## ⚙️ 3. Kiến Trúc Kỹ Thuật (Tech Stack)
@@ -97,6 +106,9 @@ graph TD
 
 ```text
 GardenEmpireGame/
+├── .doc/                            # Tài liệu dự án & hướng dẫn chi tiết
+│   ├── how_to_play.md               # Cẩm nang luật chơi Splendor & cơ chế Garden Empire
+│   └── revelant_links.md            # Tổng hợp liên kết tham khảo & tài nguyên
 ├── .env.example                     # File mẫu biến môi trường (Database, Port)
 ├── .gitignore                       # Loại trừ build artifacts, IDE, .env
 ├── docker-compose.yml               # Cấu hình khởi chạy trọn gói Backend + Frontend Nginx
