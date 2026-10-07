@@ -42,11 +42,11 @@
   --grad-earth: linear-gradient(135deg, #a4642f 0%, #5c3516 100%);
   --glow-earth: 0 0 14px rgba(164, 100, 47, 0.45);
 
-  /* SEED (White / Diamond) */
-  --color-seed: #e2e8f0;
-  --color-seed-light: #ffffff;
-  --grad-seed: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
-  --glow-seed: 0 0 14px rgba(241, 245, 249, 0.5);
+  /* SEED (White / Diamond -> Silver Slate Grey) */
+  --color-seed: #64748b;
+  --color-seed-light: #94a3b8;
+  --grad-seed: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  --glow-seed: 0 0 14px rgba(100, 116, 139, 0.45);
 
   /* SUNLIGHT (Red / Ruby) */
   --color-sunlight: #f59e0b;
@@ -388,7 +388,7 @@ button:disabled {
   box-shadow: var(--shadow-sm);
 }
 .badge-earth { background: var(--grad-earth); }
-.badge-seed { background: var(--grad-seed); color: #0f172a; }
+.badge-seed { background: var(--grad-seed); color: #ffffff; }
 .badge-sunlight { background: var(--grad-sunlight); color: #1e1003; }
 .badge-water { background: var(--grad-water); }
 .badge-nutrients { background: var(--grad-nutrients); color: #022410; }

@@ -98,7 +98,7 @@ export class LobbyUI {
       coldStartTimer = setTimeout(() => {
         const hint = listContainer.querySelector('.loading-hint');
         if (hint) {
-          hint.innerHTML = `☕ <em>Máy chủ đám mây đang thức dậy (Cold Start ~30s), vui lòng đợi giây lát...</em>`;
+          hint.innerHTML = `<em>Vui lòng đợi giây lát...</em>`;
         }
       }, 3500);
     }
