@@ -6,11 +6,13 @@ export class ResourceUI {
 
   static getResourceMeta(type) {
     const meta = {
-      'EARTH': { icon: '🟫', name: 'Đất', class: 'earth' },
-      'WATER': { icon: '💧', name: 'Nước', class: 'water' },
-      'SUNLIGHT': { icon: '☀️', name: 'Ánh Sáng', class: 'sunlight' },
-      'SEED': { icon: '🌰', name: 'Hạt Giống', class: 'seed' },
-      'NUTRIENTS': { icon: '🧪', name: 'Dinh Dưỡng', class: 'nutrients' },
+      'EARTH': { icon: '🟫', name: 'Đất', class: 'earth', img: 'assets/icons/dirt.png' },
+      'DIRT': { icon: '🟫', name: 'Đất', class: 'earth', img: 'assets/icons/dirt.png' },
+      'WATER': { icon: '💧', name: 'Nước', class: 'water', img: 'assets/icons/water.png' },
+      'SUNLIGHT': { icon: '☀️', name: 'Ánh Sáng', class: 'sunlight', img: 'assets/icons/sunlight.png' },
+      'SEED': { icon: '🌰', name: 'Hạt Giống', class: 'seed', img: 'assets/icons/seed.png' },
+      'NUTRIENTS': { icon: '🧪', name: 'Chất Dinh Dưỡng', class: 'nutrients', img: 'assets/icons/nutrient.png' },
+      'NUTRIENT': { icon: '🧪', name: 'Chất Dinh Dưỡng', class: 'nutrients', img: 'assets/icons/nutrient.png' },
       'WILD': { icon: '⭐', name: 'Vàng Wild', class: 'wild' }
     };
     return meta[type] || { icon: '🌿', name: type, class: 'nutrients' };
@@ -22,9 +24,13 @@ export class ResourceUI {
     tokenCard.className = `bank-token-card token-card-${meta.class}`;
     tokenCard.dataset.resourceType = type;
 
+    const iconContent = meta.img
+      ? `<img src="${meta.img}" alt="${meta.name}" class="token-img-icon" onerror="this.replaceWith(document.createTextNode('${meta.icon}'))" />`
+      : `<span>${meta.icon}</span>`;
+
     tokenCard.innerHTML = `
       <div class="token-orb badge-${meta.class}">
-        <span>${meta.icon}</span>
+        ${iconContent}
       </div>
       <div class="token-count-badge">${count}</div>
       <div class="token-name-label">${meta.name}</div>

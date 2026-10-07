@@ -417,9 +417,13 @@ export class BoardUI {
       const card = document.createElement('div');
       card.className = `token-select-option ${selectedCount > 0 ? 'selected' : ''}`;
 
+      const iconDisplay = meta.img
+        ? `<img src="${meta.img}" alt="${meta.name}" class="token-img-icon" style="width: 34px; height: 34px;" onerror="this.replaceWith(document.createTextNode('${meta.icon}'))" />`
+        : meta.icon;
+
       card.innerHTML = `
         <div class="token-orb badge-${meta.class}" style="width: 52px; height: 52px; font-size: 1.35rem;">
-          ${meta.icon}
+          ${iconDisplay}
         </div>
         <div class="token-select-name">${meta.name}</div>
         <div class="token-select-stock">Còn: <strong>${inBank}</strong></div>
@@ -531,8 +535,11 @@ export class BoardUI {
         const meta = ResourceUI.getResourceMeta(res);
         const row = document.createElement('div');
         row.style.cssText = 'display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;';
+        const iconDisplay = meta.img
+          ? `<img src="${meta.img}" alt="${meta.name}" class="token-mini-icon" onerror="this.replaceWith(document.createTextNode('${meta.icon}'))" />`
+          : meta.icon;
         row.innerHTML = `
-          <span>${meta.icon} ${meta.name} (Đang có: ${count})</span>
+          <span>${iconDisplay} ${meta.name} (Đang có: ${count})</span>
           <input type="number" min="0" max="${count}" value="0" style="width: 60px; padding: 0.3rem; background: #000; color: #fff; border: 1px solid var(--border-nature);" />
         `;
 
