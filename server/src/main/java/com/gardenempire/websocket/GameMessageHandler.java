@@ -26,22 +26,41 @@ public class GameMessageHandler {
     private final Map<String, Map<String, WebSocketSession>> gameSessions = new ConcurrentHashMap<>();
     // Map gameId -> Map(playerId -> sessionId)
     private final Map<String, Map<String, String>> playerSessions = new ConcurrentHashMap<>();
+    // Quản lý phiên toàn cục theo playerId để phát hiện người chơi đăng nhập ở nhiều nơi
+    record GlobalSessionInfo(String gameId, String sessionId, WebSocketSession session) {}
+    private final Map<String, GlobalSessionInfo> globalPlayerSessions = new ConcurrentHashMap<>();
 
     public void registerSession(String gameId, String playerId, WebSocketSession session) {
         Map<String, WebSocketSession> sessions = gameSessions.computeIfAbsent(gameId, k -> new ConcurrentHashMap<>());
         Map<String, String> players = playerSessions.computeIfAbsent(gameId, k -> new ConcurrentHashMap<>());
 
-        // If player previously had an active session (e.g. before F5 refresh), close and replace it
+        // Nếu người chơi đã có phiên hoạt động từ trước (tab khác hoặc thiết bị khác)
         if (playerId != null) {
-            String oldSessionId = players.put(playerId, session.getId());
-            if (oldSessionId != null && !oldSessionId.equals(session.getId())) {
-                WebSocketSession oldSession = sessions.remove(oldSessionId);
+            GlobalSessionInfo oldInfo = globalPlayerSessions.put(playerId, new GlobalSessionInfo(gameId, session.getId(), session));
+            if (oldInfo != null && !oldInfo.sessionId().equals(session.getId())) {
+                WebSocketSession oldSession = oldInfo.session();
                 if (oldSession != null && oldSession.isOpen()) {
                     try {
+                        Map<String, Object> kickMsg = Map.of(
+                            "type", "SESSION_TERMINATED",
+                            "reason", "DUPLICATE_LOGIN",
+                            "message", "Đã đăng nhập ở một tab hoặc thiết bị khác."
+                        );
+                        sendToSession(oldSession, kickMsg);
                         oldSession.close();
-                    } catch (Exception ignored) {}
+                        log.info("Đã ngắt phiên WebSocket cũ do trùng lặp: playerId={}, oldSessionId={}, newSessionId={}",
+                                playerId, oldInfo.sessionId(), session.getId());
+                    } catch (Exception e) {
+                        log.warn("Lỗi khi ngắt phiên cũ: {}", e.getMessage());
+                    }
+                }
+                // Dọn session cũ khỏi game cũ nếu khác gameId
+                Map<String, WebSocketSession> oldGameSessions = gameSessions.get(oldInfo.gameId());
+                if (oldGameSessions != null) {
+                    oldGameSessions.remove(oldInfo.sessionId());
                 }
             }
+            players.put(playerId, session.getId());
         }
 
         sessions.put(session.getId(), session);
@@ -64,6 +83,9 @@ public class GameMessageHandler {
             }
         }
         if (playerId != null) {
+            globalPlayerSessions.computeIfPresent(playerId, (id, info) ->
+                info.sessionId().equals(sessionId) ? null : info
+            );
             Map<String, String> players = playerSessions.get(gameId);
             if (players != null) {
                 players.remove(playerId, sessionId);
