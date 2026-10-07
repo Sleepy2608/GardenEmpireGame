@@ -218,6 +218,12 @@ export class BoardUI {
     // 5. Current Player (Garden Studio)
     const myPlayerPanel = document.getElementById('my-player-panel');
     if (myPlayerPanel && myPlayer) {
+      const isMyTurn = this.gameState.currentTurnPlayerId === this.guestId;
+      if (isMyTurn) {
+        myPlayerPanel.classList.add('my-turn-active');
+      } else {
+        myPlayerPanel.classList.remove('my-turn-active');
+      }
       PlayerUI.renderCurrentPlayer(myPlayerPanel, myPlayer, (card) => this.onOpenCardActionModal(card, true));
     }
 
