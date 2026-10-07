@@ -300,3 +300,42 @@
     justify-content: space-between;
   }
 }
+
+/* Skeleton Shimmer Loading */
+.room-skeleton-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.room-card-skeleton {
+  height: 68px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite ease-in-out;
+  border: 1px solid var(--border-subtle);
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.loading-hint {
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  animation: pulse-hint 2s infinite ease-in-out;
+}
+
+@keyframes pulse-hint {
+  0%, 100% { opacity: 0.75; }
+  50%      { opacity: 1; }
+}

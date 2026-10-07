@@ -52,76 +52,136 @@ export class LobbyUI {
     }
 
     this.loadRooms();
+    // Tự động làm mới danh sách phòng mỗi 7 giây (chạy ngầm)
+    this.pollInterval = setInterval(() => this.loadRooms(true), 7000);
+    window.addEventListener('beforeunload', () => clearInterval(this.pollInterval));
   }
 
-  async loadRooms() {
+  async loadRooms(isSilent = false) {
     const listContainer = document.getElementById('room-list');
     const countBadge = document.getElementById('active-rooms-count');
     if (!listContainer) return;
 
+    // 1. SWR Cache: Render ngay lập tức danh sách phòng từ sessionStorage (0ms)
+    let hasRenderedCache = false;
+    const cachedData = sessionStorage.getItem('garden_empire_cached_rooms');
+    if (cachedData && !isSilent && listContainer.children.length === 0) {
+      try {
+        const cachedRooms = JSON.parse(cachedData);
+        if (Array.isArray(cachedRooms)) {
+          this._renderRoomsList(cachedRooms, listContainer, countBadge);
+          hasRenderedCache = true;
+        }
+      } catch (_) {}
+    }
+
+    // 2. Nếu chưa có cache và không phải silent refresh: Hiển thị Skeleton Shimmer
+    let coldStartTimer = null;
+    if (!hasRenderedCache && !isSilent) {
+      listContainer.innerHTML = `
+        <div class="room-skeleton-wrap">
+          <div class="room-card-skeleton"></div>
+          <div class="room-card-skeleton"></div>
+        </div>
+        <p class="loading-hint">🌱 Đang kết nối danh sách phòng...</p>
+      `;
+
+      // Sau 3.5s nếu chưa xong -> Máy chủ Render đang khởi động (Cold Start)
+      coldStartTimer = setTimeout(() => {
+        const hint = listContainer.querySelector('.loading-hint');
+        if (hint) {
+          hint.innerHTML = `☕ <em>Máy chủ đám mây đang thức dậy (Cold Start ~30s), vui lòng đợi giây lát...</em>`;
+        }
+      }, 3500);
+    }
+
     try {
-      listContainer.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center; padding: 2rem;">Đang tải danh sách phòng...</p>';
       const allRooms = await roomApi.getAllRooms();
+      if (coldStartTimer) clearTimeout(coldStartTimer);
+
       const rooms = (allRooms || []).filter(r => r.status === 'WAITING' || !r.status);
-
-      if (countBadge) countBadge.textContent = rooms.length;
-
-      if (rooms.length === 0) {
+      sessionStorage.setItem('garden_empire_cached_rooms', JSON.stringify(rooms));
+      this._renderRoomsList(rooms, listContainer, countBadge);
+    } catch (err) {
+      if (coldStartTimer) clearTimeout(coldStartTimer);
+      if (!isSilent || listContainer.children.length === 0) {
         listContainer.innerHTML = `
-          <div style="text-column: 1/-1; text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
-            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🍃</div>
-            <p>Chưa có phòng nào đang mở. Hãy là người đầu tiên tạo phòng!</p>
+          <div style="text-align: center; padding: 2rem 1rem;">
+            <p class="text-gold" style="margin-bottom: 0.75rem;">⚠️ Lỗi kết nối sảnh: ${err.message}</p>
+            <button id="btn-retry-load" class="btn-nature-secondary btn-sm">Thử lại</button>
           </div>
         `;
-        return;
+        document.getElementById('btn-retry-load')?.addEventListener('click', () => this.loadRooms());
+      }
+    }
+  }
+
+  _renderRoomsList(rooms, listContainer, countBadge) {
+    if (countBadge) countBadge.textContent = rooms.length;
+
+    if (rooms.length === 0) {
+      listContainer.innerHTML = `
+        <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🍃</div>
+          <p>Chưa có phòng nào đang mở. Hãy là người đầu tiên tạo phòng!</p>
+        </div>
+      `;
+      return;
+    }
+
+    listContainer.innerHTML = '';
+    rooms.forEach(room => {
+      const isFull = (room.players?.length || 0) >= (room.maxPlayers || 4);
+      const isPlaying = room.status === 'PLAYING';
+      const card = document.createElement('div');
+      card.className = `room-card ${isPlaying ? 'is-playing' : 'is-waiting'}`;
+
+      card.innerHTML = `
+        <div class="room-card-left">
+          <div class="room-host-avatar" title="Chủ phòng">${room.hostAvatar || '🏡'}</div>
+          <div class="room-info">
+            <div class="room-title-row">
+              <span class="room-title">${this._escape(room.name || 'Vườn Thượng Uyển')}</span>
+              <span class="room-status-badge ${isPlaying ? 'status-playing' : 'status-waiting'}">
+                ${isPlaying ? 'ĐANG CHƠI' : 'ĐANG CHỜ'}
+              </span>
+            </div>
+            <div class="room-meta-row">
+              <span>👑 Chủ phòng: <strong>${this._escape(room.hostName || 'Nghệ nhân')}</strong></span>
+              <span class="meta-dot">•</span>
+              <span>🔑 Mã: <code>${room.code || room.id}</code></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="room-card-right">
+          <div class="room-players-pill" title="Số người chơi hiện tại">
+            <span>👥</span>
+            <strong>${room.players?.length || 0}/${room.maxPlayers || 4}</strong>
+          </div>
+          <button class="btn-nature-primary btn-sm btn-join" ${isFull || isPlaying ? 'disabled' : ''}>
+            ${isPlaying ? 'Đang Chơi' : isFull ? 'Đã Đầy' : 'Tham Gia ➔'}
+          </button>
+        </div>
+      `;
+
+      const joinBtn = card.querySelector('.btn-join');
+      if (joinBtn && !isFull && !isPlaying) {
+        joinBtn.addEventListener('click', () => this.handleJoinRoom(room.id));
       }
 
-      listContainer.innerHTML = '';
-      rooms.forEach(room => {
-        const isFull = (room.players?.length || 0) >= (room.maxPlayers || 4);
-        const isPlaying = room.status === 'PLAYING';
-        const card = document.createElement('div');
-        card.className = `room-card ${isPlaying ? 'is-playing' : 'is-waiting'}`;
+      listContainer.appendChild(card);
+    });
+  }
 
-        card.innerHTML = `
-          <div class="room-card-left">
-            <div class="room-host-avatar" title="Chủ phòng">${room.hostAvatar || '🏡'}</div>
-            <div class="room-info">
-              <div class="room-title-row">
-                <span class="room-title">${room.name || 'Vườn Thượng Uyển'}</span>
-                <span class="room-status-badge ${isPlaying ? 'status-playing' : 'status-waiting'}">
-                  ${isPlaying ? 'ĐANG CHƠI' : 'ĐANG CHỜ'}
-                </span>
-              </div>
-              <div class="room-meta-row">
-                <span>👑 Chủ phòng: <strong>${room.hostName || 'Nghệ nhân'}</strong></span>
-                <span class="meta-dot">•</span>
-                <span>🔑 Mã: <code>${room.code || room.id}</code></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="room-card-right">
-            <div class="room-players-pill" title="Số người chơi hiện tại">
-              <span>👥</span>
-              <strong>${room.players?.length || 0}/${room.maxPlayers || 4}</strong>
-            </div>
-            <button class="btn-nature-primary btn-sm btn-join" ${isFull || isPlaying ? 'disabled' : ''}>
-              ${isPlaying ? 'Đang Chơi' : isFull ? 'Đã Đầy' : 'Tham Gia ➔'}
-            </button>
-          </div>
-        `;
-
-        const joinBtn = card.querySelector('.btn-join');
-        if (joinBtn && !isFull && !isPlaying) {
-          joinBtn.addEventListener('click', () => this.handleJoinRoom(room.id));
-        }
-
-        listContainer.appendChild(card);
-      });
-    } catch (err) {
-      listContainer.innerHTML = `<p class="text-gold" style="grid-column: 1/-1; text-align: center;">Lỗi kết nối sảnh: ${err.message}</p>`;
-    }
+  _escape(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   async handleCreateRoom(e) {

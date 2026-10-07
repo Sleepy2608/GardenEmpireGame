@@ -3,6 +3,15 @@
 */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Pre-warm backend: Đánh thức Render server ngay khi người dùng mở trang chủ
+  try {
+    const customApi = localStorage.getItem('garden_empire_api_url');
+    const targetApi = customApi || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : 'https://gardenempiregame.onrender.com');
+    if (targetApi) {
+      fetch(`${targetApi}/api/rooms`, { method: 'GET', mode: 'cors' }).catch(() => {});
+    }
+  } catch (_) {}
+
   const guestForm = document.getElementById('guest-form');
   const guestNameInput = document.getElementById('guest-name');
   const avatarButtons = document.querySelectorAll('.avatar-option');
