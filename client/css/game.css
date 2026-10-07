@@ -129,8 +129,250 @@
 }
 
 /*
-   Main Game Layout (3-Column Golden Grid)
+   =============================================================================
+   TABLETOP 3D ARENA LAYOUT (Virtual Tabletop Simulator)
+   =============================================================================
 */
+.tabletop-arena {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: calc(100vh - 72px);
+  padding: 0.4rem 1rem 0.6rem;
+  perspective: 1200px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* Seats Around The Table */
+.opponent-seat-pod {
+  transition: all var(--transition-normal);
+  z-index: 10;
+}
+
+.seat-top {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+}
+
+.tabletop-middle-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 1.25rem;
+  flex: 1;
+  max-width: 1520px;
+}
+
+.seat-left,
+.seat-right {
+  width: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Central Board Mat (Chiếu Bàn Cờ 3D) */
+.tabletop-mat {
+  background: linear-gradient(145deg, #0e2417 0%, #06150c 50%, #0a1c12 100%);
+  border: 5px solid #4a301a;
+  outline: 2px solid #785028;
+  border-radius: 18px;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.75),
+    inset 0 0 35px rgba(0, 0, 0, 0.55),
+    0 0 30px rgba(74, 222, 128, 0.08);
+  padding: 0.85rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 960px;
+  width: 100%;
+  flex: 1;
+  transform: rotateX(6deg);
+  transform-style: preserve-3d;
+  transition: transform var(--transition-normal);
+}
+
+.tabletop-mat:hover {
+  transform: rotateX(1deg);
+}
+
+/* Visitors Row on Mat */
+.visitors-mat-section {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.75rem;
+}
+
+.visitors-row-wrapper {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 0.85rem;
+  align-items: center;
+}
+
+.visitor-deck-card {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(20, 15, 8, 0.95) 100%);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  height: 82px;
+  box-shadow: 
+    0 1px 0 #fbbf24,
+    0 3px 0 #b45309,
+    0 5px 0 #78350f,
+    0 8px 16px rgba(0, 0, 0, 0.6);
+  user-select: none;
+  cursor: default;
+}
+
+.visitor-deck-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.2rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.visitor-deck-label {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-gold);
+}
+
+.visitor-deck-count-pill {
+  margin-top: 0.25rem;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--text-gold);
+}
+
+.visitors-revealed-row {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  align-items: center;
+}
+
+/* Resource Bank Strip on Mat */
+.resource-bank-mat-section {
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.85rem;
+}
+
+.bank-strip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
+}
+
+.bank-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+/* Master Player Dashboard (Bottom) */
+.player-master-dashboard {
+  display: grid;
+  grid-template-columns: 240px minmax(280px, 1.2fr) minmax(220px, 1fr) 260px;
+  gap: 0.85rem;
+  width: 100%;
+  max-width: 1480px;
+  padding: 0.6rem 1rem;
+  background: rgba(6, 20, 12, 0.92);
+  backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--border-nature);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.45);
+  box-sizing: border-box;
+  z-index: 20;
+}
+
+.dashboard-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 0.4rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dashboard-col:last-child {
+  border-right: none;
+}
+
+.dashboard-profile-col {
+  gap: 0.4rem;
+}
+
+.dashboard-profile-col .player-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dashboard-profile-col .prestige-score-badge {
+  align-self: flex-start;
+  font-size: 0.95rem;
+  padding: 0.25rem 0.75rem;
+}
+
+/* Game Log Side Drawer */
+.game-log-drawer {
+  position: fixed;
+  right: 1.25rem;
+  top: 75px;
+  width: 320px;
+  max-height: 480px;
+  background: rgba(8, 24, 15, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  padding: 0.85rem;
+  transition: all var(--transition-normal);
+}
+
+.game-log-drawer.hidden {
+  display: none;
+}
+
+.log-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.log-drawer-header h4 {
+  font-size: 0.95rem;
+  color: var(--text-gold);
+}
+
+/* Legacy Layout Fallback */
 .game-layout {
   display: grid;
   grid-template-columns: 260px minmax(680px, 1fr) 340px;
