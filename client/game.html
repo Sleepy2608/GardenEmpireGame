@@ -45,6 +45,9 @@
       <button class="btn-nature-secondary btn-sm" id="btn-toggle-sound" title="Bật/Tắt âm thanh">
         <span id="sound-icon">🔊</span>
       </button>
+      <button class="btn-nature-secondary btn-sm" id="btn-toggle-game-log" title="Nhật ký ván đấu">
+        <span>📜</span> <span>Nhật Ký</span>
+      </button>
       <button class="btn-nature-secondary btn-sm" id="btn-game-rules" title="Xem luật game">
         <span>📖</span> <span>Luật Chơi</span>
       </button>
@@ -55,80 +58,57 @@
   </header>
 
   <!--
-     Main Game Layout (3-Column Golden Grid)
+     Tabletop 3D Arena Layout (Around-The-Table Metaphor)
   -->
-  <div class="game-layout">
-    <!--
-       Left Panel: Opponents & Game Log
-    -->
-    <aside class="opponents-sidebar glass-panel" id="opponents-panel">
-      <div class="sidebar-header">
-        <h3>👥 Đối Thủ</h3>
-        <span class="badge-count" id="opponents-count">0</span>
-      </div>
+  <div class="tabletop-arena" id="tabletop-arena">
+    <!-- Top Seat: Player 3 (Opponent Top) -->
+    <div class="seat-top opponent-seat-pod hidden" id="seat-top"></div>
 
-      <div class="opponents-list" id="opponents-list">
-        <!-- Opponent mini-cards rendered by PlayerUI.js -->
-      </div>
+    <!-- Middle Row: Left Seat + Center Mat + Right Seat -->
+    <div class="tabletop-middle-row">
+      <!-- Left Seat: Player 2 (Opponent Left) -->
+      <div class="seat-left opponent-seat-pod hidden" id="seat-left"></div>
 
-      <div class="game-log-panel">
-        <div class="log-header">
-          <h4>📜 Nhật Ký Ván Đấu</h4>
-        </div>
-        <div class="log-content" id="game-log-feed">
-          <div class="log-item initial">Ván đấu đã sẵn sàng!</div>
-        </div>
-      </div>
-    </aside>
+      <!-- Center Board: Playing Mat (Chiếu Bàn Cờ 3D) -->
+      <main class="tabletop-mat" id="tabletop-mat">
+        <!-- Visitors Section (Visitor Deck Pile on left + Revealed Visitors) -->
+        <section class="visitors-mat-section">
+          <div class="visitors-row-wrapper" id="visitors-container">
+            <!-- Rendered by VisitorUI.js: Visitor Deck Stack on left + Revealed Visitors -->
+          </div>
+        </section>
 
-    <!--
-       Center Board: Visitors, Plant Market & Token Bank
-    -->
-    <main class="center-board glass-panel">
-      <!-- Visitors (Nobles) Section -->
-      <section class="visitors-section">
-        <div class="section-title-row">
-          <h4>🦋 Khách Thăm Vườn</h4>
-          <span class="section-hint">Tự động nhận khi đủ điều kiện cây trồng (+3★)</span>
-        </div>
-        <div class="visitors-grid" id="visitors-container">
-          <!-- Visitor cards rendered by VisitorUI.js -->
-        </div>
-      </section>
+        <!-- Plant Market Section (Tier 3 -> Tier 2 -> Tier 1 with Draw Piles on Left) -->
+        <section class="plant-market-mat-section">
+          <div class="plant-market" id="plant-market-container">
+            <!-- 3 Tiers rendered by PlantCardUI.js (Each tier has its deck pile on left) -->
+          </div>
+        </section>
 
-      <!-- Plant Cards Market (Tier 3 -> Tier 2 -> Tier 1) -->
-      <section class="plant-market-section">
-        <div class="section-title-row">
-          <h4>🌳 Chợ Cây Trồng</h4>
-        </div>
-        <div class="plant-market" id="plant-market-container">
-          <!-- 3 Tiers rendered by PlantCardUI.js -->
-        </div>
-      </section>
-
-      <!-- Resource Bank Section -->
-      <section class="resource-bank-section">
-        <div class="bank-header-row">
-          <h4>🪙 Ngân Hàng Năng Lượng Thiên Nhiên</h4>
-          <div class="bank-action-buttons">
+        <!-- Resource Bank Section (At bottom of mat) -->
+        <section class="resource-bank-mat-section">
+          <div class="bank-strip-header">
+            <span class="bank-title">🪙 Ngân Hàng Năng Lượng Thiên Nhiên</span>
             <button class="btn-nature-primary btn-sm" id="btn-open-token-selector">
               <span>✨</span> <span>Lấy Tài Nguyên</span>
             </button>
           </div>
-        </div>
-        <div class="resources-bank" id="resource-bank-container">
-          <!-- 6 Token orbs rendered by ResourceUI.js -->
-        </div>
-      </section>
-    </main>
+          <div class="resources-bank" id="resource-bank-container">
+            <!-- 6 Token orbs rendered by ResourceUI.js -->
+          </div>
+        </section>
+      </main>
 
-    <!--
-       Right Panel: Your Garden Studio
-    -->
-    <aside class="garden-studio glass-panel" id="my-player-panel">
-      <div class="studio-header">
+      <!-- Right Seat: Player 4 (Opponent Right) -->
+      <div class="seat-right opponent-seat-pod hidden" id="seat-right"></div>
+    </div>
+
+    <!-- Bottom Seat: Player 1 (You - Master Player Dashboard) -->
+    <footer class="seat-bottom player-master-dashboard" id="my-player-panel">
+      <!-- Dashboard Col 1: Profile & 15★ Goal -->
+      <div class="dashboard-col dashboard-profile-col">
         <div class="player-identity">
-          <div class="player-avatar">🌱</div>
+          <div class="player-avatar" id="my-player-avatar">🌱</div>
           <div class="player-meta">
             <h3 id="my-player-name">Người Chơi</h3>
             <span class="player-role" id="my-player-role">Khách Vườn</span>
@@ -139,17 +119,15 @@
           <span class="score-number" id="my-score-num">0</span>
           <span class="score-target">/ 15★</span>
         </div>
-      </div>
-
-      <!-- 15-Point Prestige Progress Goal -->
-      <div class="prestige-progress-container">
-        <div class="progress-bar-track">
-          <div class="progress-bar-fill" id="my-prestige-progress-bar" style="width: 0%;"></div>
+        <div class="prestige-progress-container">
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="my-prestige-progress-bar" style="width: 0%;"></div>
+          </div>
         </div>
       </div>
 
-      <!-- Hand Tokens Section (Max 10) -->
-      <div class="studio-section">
+      <!-- Dashboard Col 2: Hand Tokens (Max 10) -->
+      <div class="dashboard-col dashboard-tokens-col">
         <div class="section-header-mini">
           <h5>📦 Tài Nguyên Cầm Tay</h5>
           <span class="token-limit-badge" id="my-token-limit-indicator">0 / 10</span>
@@ -159,8 +137,8 @@
         </div>
       </div>
 
-      <!-- Permanent Plant Bonuses Section -->
-      <div class="studio-section">
+      <!-- Dashboard Col 3: Permanent Plant Bonuses (5 Types) -->
+      <div class="dashboard-col dashboard-bonuses-col">
         <div class="section-header-mini">
           <h5>🌿 Giảm Giá Thường Trực</h5>
         </div>
@@ -169,18 +147,29 @@
         </div>
       </div>
 
-      <!-- Reserved Cards Tray (Max 3) -->
-      <div class="studio-section">
+      <!-- Dashboard Col 4: Reserved Cards Tray (Max 3) -->
+      <div class="dashboard-col dashboard-reserved-col">
         <div class="section-header-mini">
-          <h5>📑 Thẻ Đang Đặt Chỗ (Tối Đa 3)</h5>
+          <h5>📑 Thẻ Đang Giữ Chỗ</h5>
           <span class="reserved-limit-badge" id="my-reserved-count">0 / 3</span>
         </div>
         <div class="reserved-cards-tray" id="my-reserved-cards-container">
           <!-- 3 Reserved slots rendered by PlayerUI.js -->
         </div>
       </div>
-    </aside>
+    </footer>
   </div>
+
+  <!-- Collapsible Game Log Drawer -->
+  <aside class="game-log-drawer hidden" id="game-log-drawer">
+    <div class="log-drawer-header">
+      <h4>📜 Nhật Ký Ván Đấu</h4>
+      <button class="modal-close-btn" id="btn-close-game-log">✕</button>
+    </div>
+    <div class="log-content" id="game-log-feed">
+      <div class="log-item initial">Ván đấu đã sẵn sàng!</div>
+    </div>
+  </aside>
 
   <!--
      Modals & Interactive Overlays
