@@ -6,6 +6,7 @@ import { PlantCardUI } from './PlantCardUI.js';
 import { VisitorUI } from './VisitorUI.js';
 import { ResourceUI } from './ResourceUI.js';
 import { PlayerUI } from './PlayerUI.js';
+import { sessionGuard } from '../utils/sessionGuard.js';
 
 export class BoardUI {
   constructor() {
@@ -19,6 +20,14 @@ export class BoardUI {
       window.location.href = 'lobby.html';
       return;
     }
+
+    sessionGuard.init({
+      onConflict: () => {
+        if (this.socket) {
+          this.socket.disconnect();
+        }
+      }
+    });
 
     this.gameState = new GameState();
     this.socket = new GameSocket(this.roomId, this.guestId, (data) => this.handleSocketMessage(data));
