@@ -22,9 +22,7 @@ public class GameMessageHandler {
     private final GameService gameService;
     private final ObjectMapper objectMapper;
     
-    // Map gameId -> Map(sessionId -> WebSocketSession)
     private final Map<String, Map<String, WebSocketSession>> gameSessions = new ConcurrentHashMap<>();
-    // Map gameId -> Map(playerId -> sessionId)
     private final Map<String, Map<String, String>> playerSessions = new ConcurrentHashMap<>();
     // Quản lý phiên toàn cục theo playerId để phát hiện người chơi đăng nhập ở nhiều nơi
     record GlobalSessionInfo(String gameId, String sessionId, WebSocketSession session) {}
