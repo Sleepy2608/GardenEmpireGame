@@ -135,10 +135,12 @@ GardenEmpireGame/
 │           ├── PlayerUI.js          # Render kho thẻ, token cầm tay và điểm số người chơi
 │           └── ResourceUI.js        # Render ngân hàng ngọc & trạng thái chip năng lượng
 │
+├── tests/                           # Kịch bản kiểm thử tích hợp & E2E mô phỏng
+│   └── test_multi_tab.js            # Kịch bản kiểm thử E2E giả lập đa người chơi
+│
 └── server/                          # Máy chủ Backend (Spring Boot 3.2.4)
     ├── pom.xml                      # Quản lý Maven dependencies (Web, WebSocket, JPA, Postgres)
     ├── Dockerfile                   # Multi-stage build (Maven 3.9 -> JRE 21 Alpine)
-    ├── test_multi_tab.js            # Kịch bản kiểm thử E2E giả lập đa người chơi
     └── src/main/java/com/gardenempire/
         ├── GardenEmpireApplication.java # Entry point & kích hoạt @EnableScheduling
         ├── config/                  # Cấu hình WebSocket, CORS, Jackson
@@ -226,7 +228,7 @@ mvn test
 ### 2. Multi-Tab E2E Simulation Test:
 Kiểm thử giả lập 3 người chơi kết nối WebSocket, tạo phòng, bốc ngọc đồng thời và giải phóng phòng:
 ```bash
-node server/test_multi_tab.js
+node tests/test_multi_tab.js
 ```
 
 ---

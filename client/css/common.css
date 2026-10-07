@@ -42,7 +42,7 @@
   --grad-earth: linear-gradient(135deg, #a4642f 0%, #5c3516 100%);
   --glow-earth: 0 0 14px rgba(164, 100, 47, 0.45);
 
-  /* SEED (White / Diamond -> Silver Slate Grey) */
+  /* SEED (White / Diamond -> change to Silver Slate Grey for contrastion) */
   --color-seed: #64748b;
   --color-seed-light: #94a3b8;
   --grad-seed: linear-gradient(135deg, #64748b 0%, #475569 100%);
