@@ -34,7 +34,7 @@ public class GameService {
             if (roomOpt.isPresent()) {
                 var room = roomOpt.get();
                 if (room.getStatus() == com.gardenempire.room.RoomStatus.WAITING) {
-                    throw new GameException("Trận đấu chưa bắt đầu. Vui lòng đợi chủ phòng bắt đầu ở phòng chờ.");
+                    throw new GameException("Trận đấu chưa bắt đầu. Vui lòng đợi chủ phòng bắt đầu.");
                 }
                 game = gameEngine.createNewGame(room.getId(), room.getPlayers());
                 activeGames.put(room.getId(), game);
