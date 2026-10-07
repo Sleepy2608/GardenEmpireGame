@@ -1,4 +1,5 @@
 import { CONFIG } from '../config.js';
+import { sessionGuard } from '../utils/sessionGuard.js';
 
 /**
  * WebSocket handler for real-time multiplayer updates
@@ -10,6 +11,7 @@ export class GameSocket {
     this.onMessageCallback = onMessageCallback;
     this.socket = null;
     this.isConnected = false;
+    this.manualDisconnect = false;
   }
 
   connect() {
@@ -27,6 +29,14 @@ export class GameSocket {
     this.socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
+        if (data.type === 'SESSION_TERMINATED') {
+          console.warn('[GameSocket] Phiên kết nối bị hủy do đăng nhập nơi khác:', data);
+          this.manualDisconnect = true;
+          this.disconnect();
+          sessionGuard.triggerConflict(data.message || 'Đã đăng nhập ở một tab hoặc thiết bị khác');
+          return;
+        }
+
         if (this.onMessageCallback) {
           this.onMessageCallback(data);
         }
@@ -37,10 +47,12 @@ export class GameSocket {
 
     this.socket.onclose = () => {
       this.isConnected = false;
-      console.log('WebSocket đã đóng kết nối, thử kết nối lại sau 2 giây...');
-      if (!this.manualDisconnect) {
-        setTimeout(() => this.connect(), 2000);
+      if (this.manualDisconnect) {
+        console.log('WebSocket đóng kết nối chủ động hoặc bị ngắt phiên.');
+        return;
       }
+      console.log('WebSocket đã đóng kết nối, thử kết nối lại sau 2 giây...');
+      setTimeout(() => this.connect(), 2000);
     };
 
     this.socket.onerror = (error) => {

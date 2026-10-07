@@ -5,6 +5,7 @@
 import { roomApi } from '../api/roomApi.js';
 import { GameSocket } from '../websocket/gameSocket.js';
 import { CONFIG } from '../config.js';
+import { sessionGuard } from '../utils/sessionGuard.js';
 
 class WaitingRoomUI {
   constructor() {
@@ -28,6 +29,14 @@ class WaitingRoomUI {
   }
 
   async init() {
+    sessionGuard.init({
+      onConflict: () => {
+        if (this.socket) {
+          this.socket.disconnect();
+        }
+      }
+    });
+
     this._renderSelfBadge();
     this._bindStaticEvents();
 

@@ -1,9 +1,7 @@
-/*
-   GARDEN EMPIRE — GUEST ENTRY LOGIC
-*/
+import { sessionGuard } from './utils/sessionGuard.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Pre-warm backend: Đánh thức Render server ngay khi người dùng mở trang chủ
+  // 🚀 Pre-warm backend: Đánh thức Render server ngay khi người dùng mở trang chủ
   try {
     const customApi = localStorage.getItem('garden_empire_api_url');
     const targetApi = customApi || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : 'https://gardenempiregame.onrender.com');
@@ -61,6 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('garden_empire_guest_id', guestId);
       localStorage.setItem('garden_empire_guest_name', guestName);
       localStorage.setItem('garden_empire_guest_avatar', guestAvatar);
+
+      // Kích hoạt quyền active và phát tín hiệu ngắt các tab cũ
+      sessionGuard.claimActiveSession('index.html');
 
       window.location.href = 'lobby.html';
     });

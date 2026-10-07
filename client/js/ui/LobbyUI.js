@@ -2,6 +2,7 @@
    GARDEN EMPIRE — LOBBY UI COMPONENT
 */
 import { roomApi } from '../api/roomApi.js';
+import { sessionGuard } from '../utils/sessionGuard.js';
 
 export class LobbyUI {
   constructor() {
@@ -18,6 +19,13 @@ export class LobbyUI {
   }
 
   init() {
+    // Kích hoạt bảo vệ phiên độc quyền trên platform/browser
+    sessionGuard.init({
+      onConflict: () => {
+        if (this.pollInterval) clearInterval(this.pollInterval);
+      }
+    });
+
     // Update user profile banner
     const displayUserName = document.getElementById('display-user-name');
     const displayUserAvatar = document.getElementById('display-user-avatar');
