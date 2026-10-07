@@ -33,15 +33,32 @@ export class VisitorUI {
     return el;
   }
 
-  static renderVisitorsList(container, visitors = []) {
+  static renderVisitorsList(container, visitors = [], deckCount = 0) {
     container.innerHTML = '';
+
+    // 1. Chồng bài Khách Thăm (Draw pile on left)
+    const visitorDeckEl = document.createElement('div');
+    visitorDeckEl.className = 'visitor-deck-card';
+    visitorDeckEl.title = `Chồng bài Khách Thăm (Còn ${deckCount} thẻ dự trữ)`;
+    visitorDeckEl.innerHTML = `
+      <div class="deck-icon">🦋</div>
+      <div class="deck-label">Khách Quý</div>
+      <div class="deck-count-pill">${deckCount} thẻ</div>
+    `;
+    container.appendChild(visitorDeckEl);
+
+    // 2. Dãy thẻ khách lộ diện
+    const revealedRow = document.createElement('div');
+    revealedRow.className = 'visitors-revealed-row';
+
     if (visitors.length === 0) {
-      container.innerHTML = `<span class="text-muted" style="font-size: 0.85rem;">Tất cả khách đã được rước về vườn.</span>`;
-      return;
+      revealedRow.innerHTML = `<span class="text-muted" style="font-size: 0.85rem; align-self: center; padding: 0.5rem;">Tất cả khách đã được rước về vườn.</span>`;
+    } else {
+      visitors.forEach(v => {
+        revealedRow.appendChild(VisitorUI.renderVisitor(v));
+      });
     }
 
-    visitors.forEach(v => {
-      container.appendChild(VisitorUI.renderVisitor(v));
-    });
+    container.appendChild(revealedRow);
   }
 }

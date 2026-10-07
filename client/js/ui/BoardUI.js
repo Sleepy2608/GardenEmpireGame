@@ -140,6 +140,16 @@ export class BoardUI {
       confirmTokensBtn.addEventListener('click', () => this.onConfirmTakeTokens());
     }
 
+    // Toggle Game Log Drawer
+    const logToggleBtn = document.getElementById('btn-toggle-game-log');
+    const logCloseBtn = document.getElementById('btn-close-game-log');
+    const logDrawer = document.getElementById('game-log-drawer');
+    if (logToggleBtn && logDrawer) {
+      logToggleBtn.addEventListener('click', () => logDrawer.classList.toggle('hidden'));
+    }
+    if (logCloseBtn && logDrawer) {
+      logCloseBtn.addEventListener('click', () => logDrawer.classList.add('hidden'));
+    }
     // Back to Lobby on Game Over
     const backToLobbyBtn = document.getElementById('btn-back-to-lobby');
     if (backToLobbyBtn) {
@@ -184,7 +194,7 @@ export class BoardUI {
     // 2. Visitors Section
     const visitorsContainer = document.getElementById('visitors-container');
     if (visitorsContainer) {
-      VisitorUI.renderVisitorsList(visitorsContainer, this.gameState.visibleVisitors);
+      VisitorUI.renderVisitorsList(visitorsContainer, this.gameState.visibleVisitors, this.gameState.visitorDeckCount ?? 0);
     }
 
     // 3. Plant Cards Market
@@ -211,12 +221,15 @@ export class BoardUI {
       PlayerUI.renderCurrentPlayer(myPlayerPanel, myPlayer, (card) => this.onOpenCardActionModal(card, true));
     }
 
-    // 6. Opponents Sidebar
+    // 6. Opponents (Tabletop Seats around the table)
+    const opponents = this.gameState.players.filter(p => p.id !== this.guestId);
+    PlayerUI.renderTabletopSeats(opponents, this.gameState.currentTurnPlayerId);
+
+    // Fallback if legacy list container exists
     const opponentsContainer = document.getElementById('opponents-list');
     const opponentsCountBadge = document.getElementById('opponents-count');
     if (opponentsContainer) {
       opponentsContainer.innerHTML = '';
-      const opponents = this.gameState.players.filter(p => p.id !== this.guestId);
       if (opponentsCountBadge) opponentsCountBadge.textContent = opponents.length;
 
       opponents.forEach(opp => {

@@ -144,4 +144,41 @@ export class PlayerUI {
 
     return el;
   }
+
+  static renderTabletopSeats(opponents = [], currentTurnId = null) {
+    const seatTop = document.getElementById('seat-top');
+    const seatLeft = document.getElementById('seat-left');
+    const seatRight = document.getElementById('seat-right');
+    if (!seatTop || !seatLeft || !seatRight) return;
+
+    seatTop.innerHTML = '';
+    seatLeft.innerHTML = '';
+    seatRight.innerHTML = '';
+
+    seatTop.classList.add('hidden');
+    seatLeft.classList.add('hidden');
+    seatRight.classList.add('hidden');
+
+    if (!opponents || opponents.length === 0) return;
+
+    if (opponents.length === 1) {
+      // 2 players: 1 opponent directly opposite (Top)
+      seatTop.classList.remove('hidden');
+      seatTop.appendChild(PlayerUI.renderOpponent(opponents[0], opponents[0].id === currentTurnId));
+    } else if (opponents.length === 2) {
+      // 3 players: Left & Right
+      seatLeft.classList.remove('hidden');
+      seatRight.classList.remove('hidden');
+      seatLeft.appendChild(PlayerUI.renderOpponent(opponents[0], opponents[0].id === currentTurnId));
+      seatRight.appendChild(PlayerUI.renderOpponent(opponents[1], opponents[1].id === currentTurnId));
+    } else {
+      // 4 players: Left, Top, Right
+      seatLeft.classList.remove('hidden');
+      seatTop.classList.remove('hidden');
+      seatRight.classList.remove('hidden');
+      seatLeft.appendChild(PlayerUI.renderOpponent(opponents[0], opponents[0].id === currentTurnId));
+      seatTop.appendChild(PlayerUI.renderOpponent(opponents[1], opponents[1].id === currentTurnId));
+      seatRight.appendChild(PlayerUI.renderOpponent(opponents[2], opponents[2].id === currentTurnId));
+    }
+  }
 }
