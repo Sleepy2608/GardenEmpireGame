@@ -195,6 +195,9 @@ class WaitingRoomUI {
         break;
 
       case 'ERROR':
+        if (msg.message && msg.message.includes('Trận đấu chưa bắt đầu')) {
+          break;
+        }
         this._showToast(msg.message || 'Lỗi không xác định', 'error');
         break;
 
