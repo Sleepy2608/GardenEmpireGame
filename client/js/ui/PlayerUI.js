@@ -39,8 +39,11 @@ export class PlayerUI {
 
         const slot = document.createElement('div');
         slot.className = 'inventory-token-slot';
+        const iconDisplay = meta.img
+          ? `<img src="${meta.img}" alt="${meta.name}" class="token-mini-icon" onerror="this.replaceWith(document.createTextNode('${meta.icon}'))" />`
+          : meta.icon;
         slot.innerHTML = `
-          <span>${meta.icon} ${meta.name}</span>
+          <span>${iconDisplay} ${meta.name}</span>
           <strong>${count}</strong>
         `;
         tokensGrid.appendChild(slot);
@@ -69,8 +72,11 @@ export class PlayerUI {
         const slot = document.createElement('div');
         slot.className = `inventory-bonus-slot badge-${meta.class}`;
         slot.title = `Giảm giá vĩnh viễn: ${count} ${meta.name}`;
+        const bonusIconDisplay = meta.img
+          ? `<img src="${meta.img}" alt="${meta.name}" class="token-mini-icon" onerror="this.replaceWith(document.createTextNode('${meta.icon}'))" />`
+          : meta.icon;
         slot.innerHTML = `
-          <span>${meta.icon}</span>
+          <span>${bonusIconDisplay}</span>
           <span>+${count}</span>
         `;
         bonusesGrid.appendChild(slot);

@@ -26,10 +26,12 @@ export class PlantCardUI {
   static getResourceNameVi(resourceKey) {
     const names = {
       'EARTH': 'Đất',
+      'DIRT': 'Đất',
       'SEED': 'Hạt',
       'SUNLIGHT': 'Sáng',
       'WATER': 'Nước',
       'NUTRIENTS': 'Dưỡng',
+      'NUTRIENT': 'Dưỡng',
       'WILD': 'Vàng'
     };
     return names[resourceKey] || resourceKey;
@@ -38,10 +40,12 @@ export class PlantCardUI {
   static getResourceIcon(resourceKey) {
     const icons = {
       'EARTH': '🟫',
+      'DIRT': '🟫',
       'SEED': '🌰',
       'SUNLIGHT': '☀️',
       'WATER': '💧',
       'NUTRIENTS': '🧪',
+      'NUTRIENT': '🧪',
       'WILD': '⭐'
     };
     return icons[resourceKey] || '🌿';
