@@ -19,7 +19,7 @@ const isDirectLocalDev = (hostname === 'localhost' || hostname === '127.0.0.1') 
  * - If running on localhost on port 3000 (or any web port other than 8080)
  * - Nginx serves static assets and proxies /api and /ws cleanly with zero CORS
  */
-const isNginxProxy = (hostname === 'localhost' || hostname === '127.0.0.1') && port !== '8080';
+const isNginxProxy = (hostname === 'localhost' || hostname === '127.0.0.1') && port === '3000';
 
 // ─── Cloud URLs (Production Backend on Render) ──────────────────────────────
 const CLOUD_HTTP = 'https://gardenempiregame.onrender.com';
