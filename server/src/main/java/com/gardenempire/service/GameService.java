@@ -28,13 +28,21 @@ public class GameService {
     }
 
     public Game getGame(String gameId) {
+        return getGame(gameId, null);
+    }
+
+    public Game getGame(String gameId, String playerId) {
         Game game = activeGames.get(gameId);
         if (game == null) {
             var roomOpt = roomManager.getRoom(gameId);
             if (roomOpt.isPresent()) {
                 var room = roomOpt.get();
                 if (room.getStatus() == com.gardenempire.room.RoomStatus.WAITING) {
-                    throw new GameException("Trận đấu chưa bắt đầu. Vui lòng đợi chủ phòng bắt đầu ở phòng chờ.");
+                    boolean isGuest = playerId != null && !playerId.equals(room.getHostId());
+                    if (isGuest) {
+                        throw new GameException("Trận đấu chưa bắt đầu. Vui lòng đợi chủ phòng bắt đầu.");
+                    }
+                    return null;
                 }
                 game = gameEngine.createNewGame(room.getId(), room.getPlayers());
                 activeGames.put(room.getId(), game);
@@ -46,16 +54,38 @@ public class GameService {
     }
 
     public GameState getGameState(String gameId) {
-        return getGame(gameId).getState();
+        return getGameState(gameId, null);
+    }
+
+    public GameState getGameState(String gameId, String playerId) {
+        Game game = getGame(gameId, playerId);
+        return game != null ? game.getState() : null;
     }
 
     public GameState processAction(String gameId, GameActionRequest action) {
         java.util.concurrent.locks.ReentrantLock lock = roomLocks.computeIfAbsent(gameId, k -> new java.util.concurrent.locks.ReentrantLock(true));
         lock.lock();
         try {
-            Game game = getGame(gameId);
             String actionType = action.getResolvedActionType();
             String playerId = action.getPlayerId();
+
+            var roomOpt = roomManager.getRoom(gameId);
+            if (roomOpt.isPresent() && roomOpt.get().getStatus() == com.gardenempire.room.RoomStatus.WAITING) {
+                var room = roomOpt.get();
+                boolean isHost = playerId != null && playerId.equals(room.getHostId());
+                if ("GET_STATE".equals(actionType)) {
+                    return null;
+                }
+                if (!isHost) {
+                    throw new GameException("Trận đấu chưa bắt đầu. Vui lòng đợi chủ phòng bắt đầu.");
+                }
+                throw new GameException("Trận đấu chưa bắt đầu. Vui lòng bấm 'Bắt Đầu Trò Chơi' khi đã sẵn sàng.");
+            }
+
+            Game game = getGame(gameId, playerId);
+            if (game == null) {
+                return null;
+            }
 
             if (!"GET_STATE".equals(actionType)) {
                 if (game.getState().isGameOver()) {
@@ -93,7 +123,6 @@ public class GameService {
             }
 
             if (game.getState().isGameOver()) {
-                var roomOpt = roomManager.getRoom(gameId);
                 roomOpt.ifPresent(r -> r.setStatus(com.gardenempire.room.RoomStatus.FINISHED));
             }
 

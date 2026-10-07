@@ -65,8 +65,10 @@ public class GameMessageHandler {
         
         // Immediately send current game state upon join / reconnect
         try {
-            GameState state = gameService.getGameState(gameId);
-            sendToSession(session, new GameStateResponse("GAME_STATE_UPDATE", state));
+            GameState state = gameService.getGameState(gameId, playerId);
+            if (state != null) {
+                sendToSession(session, new GameStateResponse("GAME_STATE_UPDATE", state));
+            }
         } catch (Exception e) {
             log.warn("Chưa có game state hoặc lỗi khi nạp: {}", e.getMessage());
         }
@@ -101,7 +103,9 @@ public class GameMessageHandler {
                 action.setGameId(gameId);
             }
             GameState updatedState = gameService.processAction(gameId, action);
-            broadcastGameState(gameId, updatedState);
+            if (updatedState != null) {
+                broadcastGameState(gameId, updatedState);
+            }
         } catch (com.gardenempire.exception.GameException ge) {
             log.warn("Lỗi logic game cho gameId={}: {}", gameId, ge.getMessage());
             Map<String, Object> err = Map.of("type", "ERROR", "message", ge.getMessage());
