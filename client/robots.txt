@@ -1,8 +1,9 @@
 User-agent: *
 Allow: /
-Allow: /index.html
-Allow: /lobby.html
-Disallow: /game.html
+Allow: /lobby
+Disallow: /game
+Disallow: /room
+Disallow: /waiting-room
 Disallow: /api/
 
 Sitemap: https://garden-empire-game.vercel.app/sitemap.xml

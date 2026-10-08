@@ -1,8 +1,26 @@
 {
+  "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
     {
       "source": "/",
       "destination": "/client/index.html"
+    },
+    {
+      "source": "/lobby",
+      "destination": "/client/lobby.html"
+    },
+    {
+      "source": "/room",
+      "destination": "/client/waiting-room.html"
+    },
+    {
+      "source": "/waiting-room",
+      "destination": "/client/waiting-room.html"
+    },
+    {
+      "source": "/game",
+      "destination": "/client/game.html"
     },
     {
       "source": "/(.*)",

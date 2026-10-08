@@ -8,6 +8,7 @@ import { ResourceUI } from './ResourceUI.js';
 import { PlayerUI } from './PlayerUI.js';
 import { TabletopFit } from './TabletopFit.js';
 import { sessionGuard } from '../utils/sessionGuard.js';
+import { navigateTo } from '../utils/navigation.js';
 
 export class BoardUI {
   constructor() {
@@ -23,7 +24,7 @@ export class BoardUI {
     this.guestName = localStorage.getItem('garden_empire_guest_name') || paramGuestName;
 
     if (!this.guestName || !this.roomId) {
-      window.location.href = 'lobby.html';
+      navigateTo('lobby');
       return;
     }
 
@@ -97,7 +98,7 @@ export class BoardUI {
             // Ignore if already disconnected
           }
           this.socket.disconnect();
-          window.location.href = 'lobby.html';
+          navigateTo('lobby');
         }
       });
     }
@@ -167,7 +168,7 @@ export class BoardUI {
           // Ignore if already cleaned up
         }
         this.socket.disconnect();
-        window.location.href = 'lobby.html';
+        navigateTo('lobby');
       });
     }
   }

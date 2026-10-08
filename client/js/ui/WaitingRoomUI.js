@@ -6,6 +6,7 @@ import { roomApi } from '../api/roomApi.js';
 import { GameSocket } from '../websocket/gameSocket.js';
 import { CONFIG } from '../config.js';
 import { sessionGuard } from '../utils/sessionGuard.js';
+import { navigateTo } from '../utils/navigation.js';
 
 class WaitingRoomUI {
   constructor() {
@@ -19,7 +20,7 @@ class WaitingRoomUI {
     this.roomId   = params.get('roomId');
 
     if (!this.myName || !this.roomId) {
-      window.location.href = 'index.html';
+      navigateTo('index');
       return;
     }
 
@@ -45,7 +46,7 @@ class WaitingRoomUI {
       this._renderRoom();
     } catch (err) {
       this._showToast('Không tìm thấy phòng: ' + err.message, 'error');
-      setTimeout(() => { window.location.href = 'lobby.html'; }, 2000);
+      setTimeout(() => { navigateTo('lobby'); }, 2000);
       return;
     }
 
@@ -181,7 +182,7 @@ class WaitingRoomUI {
         // Chủ phòng bấm bắt đầu → tất cả chuyển sang game
         this._showToast('🎮 Trò chơi bắt đầu! Đang chuyển sang bàn đấu...');
         setTimeout(() => {
-          window.location.href = `game.html?roomId=${msg.roomId || this.roomId}`;
+          navigateTo('game', { roomId: msg.roomId || this.roomId });
         }, 800);
         break;
 
@@ -190,7 +191,7 @@ class WaitingRoomUI {
         if (this.socket) this.socket.disconnect();
         this._showToast('🚫 Bạn đã bị chủ phòng mời ra khỏi phòng.', 'error');
         setTimeout(() => {
-          window.location.href = 'lobby.html';
+          navigateTo('lobby');
         }, 2000);
         break;
 
@@ -236,7 +237,7 @@ class WaitingRoomUI {
     } catch (_) {
       // ignore
     } finally {
-      window.location.href = 'lobby.html';
+      navigateTo('lobby');
     }
   }
 

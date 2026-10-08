@@ -1,4 +1,5 @@
 import { sessionGuard } from './utils/sessionGuard.js';
+import { navigateTo } from './utils/navigation.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // 🚀 Pre-warm backend: Đánh thức Render server ngay khi người dùng mở trang chủ
@@ -61,9 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('garden_empire_guest_avatar', guestAvatar);
 
       // Kích hoạt quyền active và phát tín hiệu ngắt các tab cũ
-      sessionGuard.claimActiveSession('index.html');
+      sessionGuard.claimActiveSession('index');
 
-      window.location.href = 'lobby.html';
+      navigateTo('lobby');
     });
   }
 });
