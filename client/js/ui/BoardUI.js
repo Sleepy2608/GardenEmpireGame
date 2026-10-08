@@ -341,7 +341,7 @@ export class BoardUI {
       <div style="background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 1rem;">
         <h5 style="margin-bottom: 0.5rem; color: var(--text-secondary);">Chi Phí & Giảm Giá:</h5>
         ${costBreakdownHtml}
-        ${wildNeeded > 0 ? `<div style="color: var(--text-gold); font-weight: 700; margin-top: 0.5rem;">Cần bù: ${wildNeeded} ⭐ Phân Bón Vàng (Bạn có: ${playerWild})</div>` : ''}
+        ${wildNeeded > 0 ? `<div style="color: var(--text-gold); font-weight: 700; margin-top: 0.5rem;">Cần bù: ${wildNeeded} 🌾 Phân Bón (Bạn có: ${playerWild})</div>` : ''}
       </div>
     `;
 

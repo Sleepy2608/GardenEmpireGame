@@ -13,7 +13,8 @@ export class ResourceUI {
       'SEED': { icon: '🌰', name: 'Hạt Giống', class: 'seed', img: 'assets/images/resources/seed.png' },
       'NUTRIENTS': { icon: '🧪', name: 'Chất Dinh Dưỡng', class: 'nutrients', img: 'assets/images/resources/nutrient.png' },
       'NUTRIENT': { icon: '🧪', name: 'Chất Dinh Dưỡng', class: 'nutrients', img: 'assets/images/resources/nutrient.png' },
-      'WILD': { icon: '⭐', name: 'Vàng Wild', class: 'wild' }
+      'WILD': { icon: '🌾', name: 'Phân Bón', class: 'wild', img: 'assets/images/resources/fertilizer.png' },
+      'FERTILIZER': { icon: '🌾', name: 'Phân Bón', class: 'wild', img: 'assets/images/resources/fertilizer.png' }
     };
     return meta[type] || { icon: '🌿', name: type, class: 'nutrients' };
   }
