@@ -63,7 +63,7 @@ class GameEngineTest {
 
         // Kiểm tra Bank cho 2 người
         Map<Resource, Integer> bank = state.getResourceBank();
-        assertEquals(4, bank.get(Resource.EARTH));
+        assertEquals(4, bank.get(Resource.DIRT));
         assertEquals(4, bank.get(Resource.WATER));
         assertEquals(4, bank.get(Resource.SUNLIGHT));
         assertEquals(4, bank.get(Resource.SEED));
@@ -86,11 +86,11 @@ class GameEngineTest {
     @DisplayName("Khởi tạo ván đấu 3 người và 4 người: Bank và Khách mở chính xác")
     void testGameInitialization_3And4Players() {
         Game game3 = gameEngine.createNewGame("game_3p", players3);
-        assertEquals(5, game3.getState().getResourceBank().get(Resource.EARTH));
+        assertEquals(5, game3.getState().getResourceBank().get(Resource.DIRT));
         assertEquals(4, game3.getState().getVisibleVisitors().size()); // 3 + 1 = 4
 
         Game game4 = gameEngine.createNewGame("game_4p", players4);
-        assertEquals(7, game4.getState().getResourceBank().get(Resource.EARTH));
+        assertEquals(7, game4.getState().getResourceBank().get(Resource.DIRT));
         assertEquals(5, game4.getState().getVisibleVisitors().size()); // 4 + 1 = 5
     }
 
@@ -103,7 +103,7 @@ class GameEngineTest {
         Game game = gameEngine.createNewGame("game_1", players2);
 
         Map<Resource, Integer> request = Map.of(
-                Resource.EARTH, 1,
+                Resource.DIRT, 1,
                 Resource.WATER, 1,
                 Resource.SUNLIGHT, 1
         );
@@ -111,13 +111,13 @@ class GameEngineTest {
         gameEngine.takeTokens(game, "p1", request);
 
         Player p1 = gameEngine.getPlayer(game, "p1");
-        assertEquals(1, p1.getTokens().get(Resource.EARTH));
+        assertEquals(1, p1.getTokens().get(Resource.DIRT));
         assertEquals(1, p1.getTokens().get(Resource.WATER));
         assertEquals(1, p1.getTokens().get(Resource.SUNLIGHT));
         assertEquals(3, p1.getTotalTokensCount());
 
         // Bank giảm
-        assertEquals(3, game.getState().getResourceBank().get(Resource.EARTH));
+        assertEquals(3, game.getState().getResourceBank().get(Resource.DIRT));
         assertEquals(3, game.getState().getResourceBank().get(Resource.WATER));
         assertEquals(3, game.getState().getResourceBank().get(Resource.SUNLIGHT));
 
@@ -130,12 +130,12 @@ class GameEngineTest {
     void testTakeTwoSameTokens_Success() {
         Game game = gameEngine.createNewGame("game_1", players2);
 
-        Map<Resource, Integer> request = Map.of(Resource.EARTH, 2);
+        Map<Resource, Integer> request = Map.of(Resource.DIRT, 2);
         gameEngine.takeTokens(game, "p1", request);
 
         Player p1 = gameEngine.getPlayer(game, "p1");
-        assertEquals(2, p1.getTokens().get(Resource.EARTH));
-        assertEquals(2, game.getState().getResourceBank().get(Resource.EARTH));
+        assertEquals(2, p1.getTokens().get(Resource.DIRT));
+        assertEquals(2, game.getState().getResourceBank().get(Resource.DIRT));
         assertEquals("p2", game.getState().getCurrentTurnPlayerId());
     }
 
@@ -143,9 +143,9 @@ class GameEngineTest {
     @DisplayName("Lấy 2 token cùng loại khi Bank <= 3 bị từ chối")
     void testTakeTwoSameTokens_FailsWhenBankLessThan4() {
         Game game = gameEngine.createNewGame("game_1", players2);
-        game.getState().getResourceBank().put(Resource.EARTH, 3); // Còn 3 token
+        game.getState().getResourceBank().put(Resource.DIRT, 3); // Còn 3 token
 
-        Map<Resource, Integer> request = Map.of(Resource.EARTH, 2);
+        Map<Resource, Integer> request = Map.of(Resource.DIRT, 2);
         assertThrows(GameException.class, () -> gameEngine.takeTokens(game, "p1", request));
     }
 
@@ -153,7 +153,7 @@ class GameEngineTest {
     @DisplayName("Nghiêm cấm lấy trực tiếp token WILD từ Bank")
     void testTakeTokens_CannotTakeWildDirectly() {
         Game game = gameEngine.createNewGame("game_1", players2);
-        Map<Resource, Integer> request = Map.of(Resource.WILD, 1, Resource.EARTH, 1, Resource.WATER, 1);
+        Map<Resource, Integer> request = Map.of(Resource.WILD, 1, Resource.DIRT, 1, Resource.WATER, 1);
         assertThrows(GameException.class, () -> gameEngine.takeTokens(game, "p1", request));
     }
 
@@ -161,7 +161,7 @@ class GameEngineTest {
     @DisplayName("Hành động khi chưa đến lượt bị từ chối")
     void testAction_NotCurrentPlayerTurn_ThrowsException() {
         Game game = gameEngine.createNewGame("game_1", players2);
-        Map<Resource, Integer> request = Map.of(Resource.EARTH, 1, Resource.WATER, 1, Resource.SEED, 1);
+        Map<Resource, Integer> request = Map.of(Resource.DIRT, 1, Resource.WATER, 1, Resource.SEED, 1);
         assertThrows(GameException.class, () -> gameEngine.takeTokens(game, "p2", request));
     }
 
@@ -205,7 +205,7 @@ class GameEngineTest {
         Player p1 = gameEngine.getPlayer(game, "p1");
 
         // Tạo thẻ giả lập chi phí 2 WATER
-        PlantCard testCard = new PlantCard("custom_1", "Test Plant", 1, Map.of(Resource.WATER, 2), 1, Resource.EARTH);
+        PlantCard testCard = new PlantCard("custom_1", "Test Plant", 1, Map.of(Resource.WATER, 2), 1, Resource.DIRT);
         game.getState().getVisibleTier1Cards().set(0, testCard);
 
         // Player có 1 Bonus WATER và chỉ có 1 token WATER
@@ -282,9 +282,9 @@ class GameEngineTest {
         Player p1 = gameEngine.getPlayer(game, "p1");
 
         // Giữ 3 thẻ liên tiếp
-        p1.getReservedCards().add(new PlantCard("r1", "R1", 1, Map.of(), 0, Resource.EARTH));
-        p1.getReservedCards().add(new PlantCard("r2", "R2", 1, Map.of(), 0, Resource.EARTH));
-        p1.getReservedCards().add(new PlantCard("r3", "R3", 1, Map.of(), 0, Resource.EARTH));
+        p1.getReservedCards().add(new PlantCard("r1", "R1", 1, Map.of(), 0, Resource.DIRT));
+        p1.getReservedCards().add(new PlantCard("r2", "R2", 1, Map.of(), 0, Resource.DIRT));
+        p1.getReservedCards().add(new PlantCard("r3", "R3", 1, Map.of(), 0, Resource.DIRT));
 
         PlantCard card = game.getState().getVisibleTier1Cards().get(0);
         assertThrows(GameException.class, () -> gameEngine.reservePlantCard(game, "p1", card.getId(), null));
@@ -296,9 +296,9 @@ class GameEngineTest {
         Game game = gameEngine.createNewGame("game_1", players2);
         Player p1 = gameEngine.getPlayer(game, "p1");
 
-        PlantCard reservedCard = new PlantCard("res_1", "Secret Tree", 2, Map.of(Resource.EARTH, 2), 2, Resource.SEED);
+        PlantCard reservedCard = new PlantCard("res_1", "Secret Tree", 2, Map.of(Resource.DIRT, 2), 2, Resource.SEED);
         p1.getReservedCards().add(reservedCard);
-        p1.getTokens().put(Resource.EARTH, 2);
+        p1.getTokens().put(Resource.DIRT, 2);
 
         gameEngine.buyPlantCard(game, "p1", "res_1", true);
 
@@ -323,7 +323,7 @@ class GameEngineTest {
         visitor.getRequirements().forEach((res, amount) -> p1.getBonuses().put(res, amount));
 
         // Player thực hiện một action bất kỳ (lấy token) để kết thúc lượt
-        gameEngine.takeTokens(game, "p1", Map.of(Resource.EARTH, 1, Resource.WATER, 1, Resource.SEED, 1));
+        gameEngine.takeTokens(game, "p1", Map.of(Resource.DIRT, 1, Resource.WATER, 1, Resource.SEED, 1));
 
         // Player tự động được rước Visitor và cộng 3 điểm
         assertEquals(1, p1.getVisitors().size());
@@ -344,9 +344,9 @@ class GameEngineTest {
 
         // P1 đạt 14 điểm và mua 1 cây 2 điểm -> 16 điểm
         p1.setPrestigePoints(14);
-        PlantCard card1 = new PlantCard("win_card", "Grand Tree", 3, Map.of(Resource.EARTH, 1), 2, Resource.EARTH);
+        PlantCard card1 = new PlantCard("win_card", "Grand Tree", 3, Map.of(Resource.DIRT, 1), 2, Resource.DIRT);
         game.getState().getVisibleTier3Cards().set(0, card1);
-        p1.getTokens().put(Resource.EARTH, 1);
+        p1.getTokens().put(Resource.DIRT, 1);
 
         // P1 thực hiện mua cây
         gameEngine.buyPlantCard(game, "p1", "win_card", false);
@@ -375,20 +375,20 @@ class GameEngineTest {
         // P1 có 15 điểm với 5 thẻ cây
         p1.setPrestigePoints(15);
         for (int i = 0; i < 5; i++) {
-            p1.getPurchasedCards().add(new PlantCard("p1_" + i, "Plant", 1, Map.of(), 3, Resource.EARTH));
+            p1.getPurchasedCards().add(new PlantCard("p1_" + i, "Plant", 1, Map.of(), 3, Resource.DIRT));
         }
 
         // P2 có 15 điểm với 4 thẻ cây
         p2.setPrestigePoints(15);
         for (int i = 0; i < 4; i++) {
-            p2.getPurchasedCards().add(new PlantCard("p2_" + i, "Plant", 1, Map.of(), 3, Resource.EARTH));
+            p2.getPurchasedCards().add(new PlantCard("p2_" + i, "Plant", 1, Map.of(), 3, Resource.DIRT));
         }
 
         game.getState().setFinalRound(true);
         game.getState().setCurrentTurnPlayerId("p2"); // P2 đang đến lượt cuối
 
         // P2 chơi lượt cuối
-        gameEngine.takeTokens(game, "p2", Map.of(Resource.EARTH, 1, Resource.WATER, 1, Resource.SEED, 1));
+        gameEngine.takeTokens(game, "p2", Map.of(Resource.DIRT, 1, Resource.WATER, 1, Resource.SEED, 1));
 
         assertTrue(game.getState().isGameOver());
         assertEquals("p2", game.getState().getWinnerPlayerId(), "P2 ít thẻ hơn nên thắng tiebreaker");
@@ -404,7 +404,7 @@ class GameEngineTest {
         Player p1 = gameEngine.getPlayer(game, "p1");
 
         // P1 đang có sẵn 8 token
-        p1.getTokens().put(Resource.EARTH, 4);
+        p1.getTokens().put(Resource.DIRT, 4);
         p1.getTokens().put(Resource.WATER, 4);
 
         // P1 lấy thêm 3 token (SEED, SUNLIGHT, NUTRIENTS) -> Tổng 11 token (> 10)
@@ -414,8 +414,8 @@ class GameEngineTest {
         // Lượt CHƯA chuyển sang p2 vì p1 đang bị dư token
         assertEquals("p1", game.getState().getCurrentTurnPlayerId());
 
-        // P1 thực hiện EXTRA ACTION 1: Trả lại 1 token EARTH
-        gameEngine.returnTokens(game, "p1", Map.of(Resource.EARTH, 1));
+        // P1 thực hiện EXTRA ACTION 1: Trả lại 1 token DIRT
+        gameEngine.returnTokens(game, "p1", Map.of(Resource.DIRT, 1));
 
         // Tổng token còn 10 -> Lượt chơi chính thức hoàn tất và chuyển sang p2
         assertEquals(10, p1.getTotalTokensCount());
@@ -428,7 +428,7 @@ class GameEngineTest {
         Game game = gameEngine.createNewGame("game_1", players2);
         Player p1 = gameEngine.getPlayer(game, "p1");
 
-        p1.getTokens().put(Resource.EARTH, 3); // Chỉ có 3 token (<= 10)
-        assertThrows(GameException.class, () -> gameEngine.returnTokens(game, "p1", Map.of(Resource.EARTH, 1)));
+        p1.getTokens().put(Resource.DIRT, 3); // Chỉ có 3 token (<= 10)
+        assertThrows(GameException.class, () -> gameEngine.returnTokens(game, "p1", Map.of(Resource.DIRT, 1)));
     }
 }

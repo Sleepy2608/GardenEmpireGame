@@ -6,14 +6,15 @@ export class ResourceUI {
 
   static getResourceMeta(type) {
     const meta = {
-      'EARTH': { icon: '🟫', name: 'Đất', class: 'earth', img: 'assets/icons/dirt.png' },
-      'DIRT': { icon: '🟫', name: 'Đất', class: 'earth', img: 'assets/icons/dirt.png' },
-      'WATER': { icon: '💧', name: 'Nước', class: 'water', img: 'assets/icons/water.png' },
-      'SUNLIGHT': { icon: '☀️', name: 'Ánh Sáng', class: 'sunlight', img: 'assets/icons/sunlight.png' },
-      'SEED': { icon: '🌰', name: 'Hạt Giống', class: 'seed', img: 'assets/icons/seed.png' },
-      'NUTRIENTS': { icon: '🧪', name: 'Chất Dinh Dưỡng', class: 'nutrients', img: 'assets/icons/nutrient.png' },
-      'NUTRIENT': { icon: '🧪', name: 'Chất Dinh Dưỡng', class: 'nutrients', img: 'assets/icons/nutrient.png' },
-      'WILD': { icon: '⭐', name: 'Vàng Wild', class: 'wild' }
+      'EARTH': { icon: '🟫', name: 'Đất', class: 'dirt', img: 'assets/images/resources/dirt.png' },
+      'DIRT': { icon: '🟫', name: 'Đất', class: 'dirt', img: 'assets/images/resources/dirt.png' },
+      'WATER': { icon: '💧', name: 'Nước', class: 'water', img: 'assets/images/resources/water.png' },
+      'SUNLIGHT': { icon: '☀️', name: 'Ánh Sáng', class: 'sunlight', img: 'assets/images/resources/sunlight.png' },
+      'SEED': { icon: '🌰', name: 'Hạt Giống', class: 'seed', img: 'assets/images/resources/seed.png' },
+      'NUTRIENTS': { icon: '🧪', name: 'Chất Dinh Dưỡng', class: 'nutrients', img: 'assets/images/resources/nutrient.png' },
+      'NUTRIENT': { icon: '🧪', name: 'Chất Dinh Dưỡng', class: 'nutrients', img: 'assets/images/resources/nutrient.png' },
+      'WILD': { icon: '🌾', name: 'Phân Bón', class: 'wild', img: 'assets/images/resources/fertilizer.png' },
+      'FERTILIZER': { icon: '🌾', name: 'Phân Bón', class: 'wild', img: 'assets/images/resources/fertilizer.png' }
     };
     return meta[type] || { icon: '🌿', name: type, class: 'nutrients' };
   }
@@ -46,10 +47,10 @@ export class ResourceUI {
 
   static renderBank(container, resourceBank, onTokenSelect = null) {
     container.innerHTML = '';
-    const resourceOrder = ['EARTH', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS', 'WILD'];
+    const resourceOrder = ['DIRT', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS', 'WILD'];
 
     resourceOrder.forEach(type => {
-      const count = resourceBank[type] ?? 0;
+      const count = resourceBank[type] ?? (type === 'DIRT' ? resourceBank['EARTH'] : 0) ?? 0;
       const orb = ResourceUI.renderTokenOrb(type, count, true, onTokenSelect);
       container.appendChild(orb);
     });

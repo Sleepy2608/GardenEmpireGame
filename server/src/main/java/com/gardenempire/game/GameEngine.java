@@ -91,9 +91,10 @@ public class GameEngine {
     }
 
     public void updateDeckCounts(Game game) {
-        game.getState().setTier1DeckCount(game.getTier1Deck().size());
-        game.getState().setTier2DeckCount(game.getTier2Deck().size());
-        game.getState().setTier3DeckCount(game.getTier3Deck().size());
+        game.getState().setTier1DeckCount(game.getTier1Deck() != null ? game.getTier1Deck().size() : 0);
+        game.getState().setTier2DeckCount(game.getTier2Deck() != null ? game.getTier2Deck().size() : 0);
+        game.getState().setTier3DeckCount(game.getTier3Deck() != null ? game.getTier3Deck().size() : 0);
+        game.getState().setVisitorDeckCount(game.getVisitorDeck() != null ? game.getVisitorDeck().size() : 0);
     }
 
     // =========================================================================

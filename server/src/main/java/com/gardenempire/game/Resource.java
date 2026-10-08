@@ -2,7 +2,7 @@ package com.gardenempire.game;
 
 public enum Resource {
     //5 tài nguyên chính thay thế trong game
-    EARTH,       // Đất -> Black gems (emerald)
+    DIRT,        // Đất -> Black gems (emerald)
     WATER,       // Nước -> Blue gems (sapphire)
     SUNLIGHT,    // Ánh sáng -> Red gems (ruby)
     SEED,        // Hạt giống -> White gems (diamond)

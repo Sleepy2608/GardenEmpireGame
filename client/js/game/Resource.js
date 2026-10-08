@@ -2,7 +2,8 @@
  * Resource Types and definitions
  */
 export const ResourceType = {
-  EARTH: 'EARTH',         // Đất (Brown / Emerald equivalent)
+  DIRT: 'DIRT',           // Đất (Brown / Emerald equivalent)
+  EARTH: 'DIRT',          // Alias cho DIRT
   WATER: 'WATER',         // Nước (Blue / Sapphire equivalent)
   SUNLIGHT: 'SUNLIGHT',   // Ánh sáng (Red / Ruby equivalent)
   SEED: 'SEED',           // Hạt giống (Green / Emerald equivalent)

@@ -3,6 +3,7 @@
 */
 import { roomApi } from '../api/roomApi.js';
 import { sessionGuard } from '../utils/sessionGuard.js';
+import { navigateTo } from '../utils/navigation.js';
 
 export class LobbyUI {
   constructor() {
@@ -11,7 +12,7 @@ export class LobbyUI {
     this.guestAvatar = localStorage.getItem('garden_empire_guest_avatar') || '🌱';
 
     if (!this.guestName) {
-      window.location.href = 'index.html';
+      navigateTo('index');
       return;
     }
 
@@ -37,7 +38,7 @@ export class LobbyUI {
     const btnHome = document.getElementById('btn-home') || document.getElementById('btn-logout');
     if (btnHome) {
       btnHome.addEventListener('click', () => {
-        window.location.href = 'index.html';
+        navigateTo('index');
       });
     }
 
@@ -206,7 +207,7 @@ export class LobbyUI {
         name: this.guestName,
         avatar: this.guestAvatar
       });
-      window.location.href = `waiting-room.html?roomId=${room.id}`;
+      navigateTo('room', { roomId: room.id });
     } catch (err) {
       alert(`Lỗi tạo phòng: ${err.message}`);
     }
@@ -224,7 +225,7 @@ export class LobbyUI {
         name: this.guestName,
         avatar: this.guestAvatar
       });
-      window.location.href = `waiting-room.html?roomId=${room.id}`;
+      navigateTo('room', { roomId: room.id });
     } catch (err) {
       alert(`Lỗi vào phòng: ${err.message}`);
     }
@@ -237,7 +238,7 @@ export class LobbyUI {
         name: this.guestName,
         avatar: this.guestAvatar
       });
-      window.location.href = `waiting-room.html?roomId=${roomId}`;
+      navigateTo('room', { roomId: roomId });
     } catch (err) {
       alert(`Lỗi tham gia phòng: ${err.message}`);
     }

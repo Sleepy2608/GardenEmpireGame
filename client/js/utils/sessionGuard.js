@@ -9,6 +9,8 @@
  * => Điều này giúp khắc phục lỗi nhiều tài khoản trên cùng 1 platform thực hiện nhiều hành động
  * cùng lúc thì sẽ xảy ra lỗi/không đồng bộ
  */
+import { navigateTo } from './navigation.js';
+
 class SessionGuard {
   constructor() {
     this.channel = null;
@@ -160,7 +162,7 @@ class SessionGuard {
 
       // Nút về trang chủ
       document.getElementById('btn-conflict-home')?.addEventListener('click', () => {
-        window.location.href = 'index.html';
+        navigateTo('index');
       });
     } else {
       const title = document.getElementById('conflict-title-text');

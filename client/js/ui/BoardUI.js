@@ -6,18 +6,25 @@ import { PlantCardUI } from './PlantCardUI.js';
 import { VisitorUI } from './VisitorUI.js';
 import { ResourceUI } from './ResourceUI.js';
 import { PlayerUI } from './PlayerUI.js';
+import { TabletopFit } from './TabletopFit.js';
 import { sessionGuard } from '../utils/sessionGuard.js';
+import { navigateTo } from '../utils/navigation.js';
 
 export class BoardUI {
   constructor() {
-    this.guestId = localStorage.getItem('garden_empire_guest_id');
-    this.guestName = localStorage.getItem('garden_empire_guest_name');
-
     const urlParams = new URLSearchParams(window.location.search);
     this.roomId = urlParams.get('roomId');
 
+    const paramGuestId = urlParams.get('guestId');
+    const paramGuestName = urlParams.get('guestName');
+    if (paramGuestId) localStorage.setItem('garden_empire_guest_id', paramGuestId);
+    if (paramGuestName) localStorage.setItem('garden_empire_guest_name', paramGuestName);
+
+    this.guestId = localStorage.getItem('garden_empire_guest_id') || paramGuestId;
+    this.guestName = localStorage.getItem('garden_empire_guest_name') || paramGuestName;
+
     if (!this.guestName || !this.roomId) {
-      window.location.href = 'lobby.html';
+      navigateTo('lobby');
       return;
     }
 
@@ -45,6 +52,7 @@ export class BoardUI {
   init() {
     this.initStaticDOMElements();
     this.initEventListeners();
+    TabletopFit.init();
     this.socket.connect();
   }
 
@@ -90,7 +98,7 @@ export class BoardUI {
             // Ignore if already disconnected
           }
           this.socket.disconnect();
-          window.location.href = 'lobby.html';
+          navigateTo('lobby');
         }
       });
     }
@@ -140,6 +148,16 @@ export class BoardUI {
       confirmTokensBtn.addEventListener('click', () => this.onConfirmTakeTokens());
     }
 
+    // Toggle Game Log Drawer
+    const logToggleBtn = document.getElementById('btn-toggle-game-log');
+    const logCloseBtn = document.getElementById('btn-close-game-log');
+    const logDrawer = document.getElementById('game-log-drawer');
+    if (logToggleBtn && logDrawer) {
+      logToggleBtn.addEventListener('click', () => logDrawer.classList.toggle('hidden'));
+    }
+    if (logCloseBtn && logDrawer) {
+      logCloseBtn.addEventListener('click', () => logDrawer.classList.add('hidden'));
+    }
     // Back to Lobby on Game Over
     const backToLobbyBtn = document.getElementById('btn-back-to-lobby');
     if (backToLobbyBtn) {
@@ -150,7 +168,7 @@ export class BoardUI {
           // Ignore if already cleaned up
         }
         this.socket.disconnect();
-        window.location.href = 'lobby.html';
+        navigateTo('lobby');
       });
     }
   }
@@ -160,10 +178,13 @@ export class BoardUI {
       this.gameState.updateFromDto(message.payload);
 
       const myPlayer = this.gameState.players.find(p => p.id === this.guestId);
-      const currentVisitorCount = myPlayer?.claimedVisitors?.length || 0;
+      const myVisitors = myPlayer?.visitors || myPlayer?.claimedVisitors || [];
+      const currentVisitorCount = myVisitors.length;
       if (currentVisitorCount > this.lastClaimedVisitorCount) {
         SoundFX.playVisitorSound();
-        this.showToast('🦋 Bạn đã đón một Khách Thăm Vườn mới (+3★)!');
+        const newlyClaimed = myVisitors[currentVisitorCount - 1];
+        const vMeta = VisitorUI.getVisitorMeta(newlyClaimed?.id, newlyClaimed?.name);
+        this.showToast(`${vMeta.icon} Bạn đã đón ${newlyClaimed?.name || 'Khách Thăm'} vào vườn (+3★)!`);
       }
       this.lastClaimedVisitorCount = currentVisitorCount;
 
@@ -184,7 +205,7 @@ export class BoardUI {
     // 2. Visitors Section
     const visitorsContainer = document.getElementById('visitors-container');
     if (visitorsContainer) {
-      VisitorUI.renderVisitorsList(visitorsContainer, this.gameState.visibleVisitors);
+      VisitorUI.renderVisitorsList(visitorsContainer, this.gameState.visibleVisitors, this.gameState.visitorDeckCount ?? 0);
     }
 
     // 3. Plant Cards Market
@@ -208,15 +229,24 @@ export class BoardUI {
     // 5. Current Player (Garden Studio)
     const myPlayerPanel = document.getElementById('my-player-panel');
     if (myPlayerPanel && myPlayer) {
+      const isMyTurn = this.gameState.currentTurnPlayerId === this.guestId;
+      if (isMyTurn) {
+        myPlayerPanel.classList.add('my-turn-active');
+      } else {
+        myPlayerPanel.classList.remove('my-turn-active');
+      }
       PlayerUI.renderCurrentPlayer(myPlayerPanel, myPlayer, (card) => this.onOpenCardActionModal(card, true));
     }
 
-    // 6. Opponents Sidebar
+    // 6. Opponents (Tabletop Seats around the table)
+    const opponents = this.gameState.players.filter(p => p.id !== this.guestId);
+    PlayerUI.renderTabletopSeats(opponents, this.gameState.currentTurnPlayerId);
+
+    // Fallback if legacy list container exists
     const opponentsContainer = document.getElementById('opponents-list');
     const opponentsCountBadge = document.getElementById('opponents-count');
     if (opponentsContainer) {
       opponentsContainer.innerHTML = '';
-      const opponents = this.gameState.players.filter(p => p.id !== this.guestId);
       if (opponentsCountBadge) opponentsCountBadge.textContent = opponents.length;
 
       opponents.forEach(opp => {
@@ -224,6 +254,9 @@ export class BoardUI {
         opponentsContainer.appendChild(PlayerUI.renderOpponent(opp, isCurrentTurn));
       });
     }
+
+    TabletopFit.adjustFit();
+    requestAnimationFrame(() => TabletopFit.adjustFit());
   }
 
   renderTurnBanner() {
@@ -311,7 +344,7 @@ export class BoardUI {
       <div style="background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 1rem;">
         <h5 style="margin-bottom: 0.5rem; color: var(--text-secondary);">Chi Phí & Giảm Giá:</h5>
         ${costBreakdownHtml}
-        ${wildNeeded > 0 ? `<div style="color: var(--text-gold); font-weight: 700; margin-top: 0.5rem;">Cần bù: ${wildNeeded} ⭐ Phân Bón Vàng (Bạn có: ${playerWild})</div>` : ''}
+        ${wildNeeded > 0 ? `<div style="color: var(--text-gold); font-weight: 700; margin-top: 0.5rem;">Cần bù: ${wildNeeded} 🌾 Phân Bón (Bạn có: ${playerWild})</div>` : ''}
       </div>
     `;
 
@@ -406,12 +439,12 @@ export class BoardUI {
     if (!grid) return;
 
     grid.innerHTML = '';
-    const baseResources = ['EARTH', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS'];
+    const baseResources = ['DIRT', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS'];
     const bank = this.gameState.resourceBank || {};
 
     baseResources.forEach(res => {
       const meta = ResourceUI.getResourceMeta(res);
-      const inBank = bank[res] || 0;
+      const inBank = bank[res] ?? (res === 'DIRT' ? bank['EARTH'] : 0) ?? 0;
       const selectedCount = this.selectedTokens[res] || 0;
 
       const card = document.createElement('div');
@@ -590,7 +623,7 @@ export class BoardUI {
 
       const avatar = p.avatar || '🌿';
       const cardCount = p.purchasedCards?.length || 0;
-      const visitorCount = p.claimedVisitors?.length || 0;
+      const visitorCount = p.visitors?.length || p.claimedVisitors?.length || 0;
 
       card.innerHTML = `
         <div class="podium-left">

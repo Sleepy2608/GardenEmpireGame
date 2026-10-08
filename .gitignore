@@ -31,3 +31,8 @@ Thumbs.db
 
 # own plan implemetation/docs files
 .plan/
+
+# Temporary scratch & test scripts
+.scratch/
+scratch/
+

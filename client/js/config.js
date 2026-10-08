@@ -36,7 +36,7 @@ export const CONFIG = {
     const custom = localStorage.getItem('garden_empire_api_url');
     if (custom) return custom;
     if (isNginxProxy) return '';             // Nginx proxies /api/*
-    if (isDirectLocalDev) return 'http://localhost:8080';
+    if (hostname === 'localhost' || hostname === '127.0.0.1') return 'http://localhost:8080';
     return CLOUD_HTTP;
   },
 
@@ -50,7 +50,7 @@ export const CONFIG = {
     const custom = localStorage.getItem('garden_empire_ws_url');
     if (custom) return custom;
     if (isNginxProxy) return `${wsProto}//${window.location.host}`; // Dynamic host:port via Nginx
-    if (isDirectLocalDev) return 'ws://localhost:8080';
+    if (hostname === 'localhost' || hostname === '127.0.0.1') return 'ws://localhost:8080';
     return CLOUD_WS;
   }
 };

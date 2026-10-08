@@ -32,7 +32,8 @@ export class PlantCardUI {
       'WATER': 'Nước',
       'NUTRIENTS': 'Dưỡng',
       'NUTRIENT': 'Dưỡng',
-      'WILD': 'Vàng'
+      'WILD': 'Phân Bón',
+      'FERTILIZER': 'Phân Bón'
     };
     return names[resourceKey] || resourceKey;
   }
@@ -46,7 +47,8 @@ export class PlantCardUI {
       'WATER': '💧',
       'NUTRIENTS': '🧪',
       'NUTRIENT': '🧪',
-      'WILD': '⭐'
+      'WILD': '🌾',
+      'FERTILIZER': '🌾'
     };
     return icons[resourceKey] || '🌿';
   }

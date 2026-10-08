@@ -17,7 +17,7 @@ public class PlantCard {
     private int tier; // 1, 2, 3
     private Map<Resource, Integer> cost;
     private int prestigePoints;
-    private Resource bonusResource; // 1 trong 5 tài nguyên cơ bản (EARTH, WATER, SUNLIGHT, SEED, NUTRIENTS)
+    private Resource bonusResource; // 1 trong 5 tài nguyên cơ bản (DIRT, WATER, SUNLIGHT, SEED, NUTRIENTS)
     private String imagePath;
 
     public PlantCard(String id, String name, int tier, Map<Resource, Integer> cost, int prestigePoints, Resource bonusResource) {

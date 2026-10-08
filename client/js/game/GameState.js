@@ -11,6 +11,7 @@ export class GameState {
 
     // Board state
     this.resourceBank = {
+      DIRT: 0,
       EARTH: 0,
       WATER: 0,
       SUNLIGHT: 0,

@@ -7,13 +7,13 @@ import java.util.Map;
 
 /**
  * Dữ liệu bài chuẩn 100% theo game gốc Splendor (90 Plant Cards + 10 Visitors)
- * Thứ tự chi phí: EARTH (Black) | SEED (White) | SUNLIGHT (Red) | WATER (Blue) | NUTRIENTS (Green)
+ * Thứ tự chi phí: DIRT (Black/Brown) | SEED (White) | SUNLIGHT (Red) | WATER (Blue) | NUTRIENTS (Green)
  */
 public class CardCatalog {
 
-    private static Map<Resource, Integer> cost(int earth, int seed, int sunlight, int water, int nutrients) {
+    private static Map<Resource, Integer> cost(int dirt, int seed, int sunlight, int water, int nutrients) {
         Map<Resource, Integer> map = new EnumMap<>(Resource.class);
-        if (earth > 0) map.put(Resource.EARTH, earth);
+        if (dirt > 0) map.put(Resource.DIRT, dirt);
         if (seed > 0) map.put(Resource.SEED, seed);
         if (sunlight > 0) map.put(Resource.SUNLIGHT, sunlight);
         if (water > 0) map.put(Resource.WATER, water);
@@ -21,24 +21,24 @@ public class CardCatalog {
         return map;
     }
 
-    private static Map<Resource, Integer> req(int earth, int seed, int sunlight, int water, int nutrients) {
-        return cost(earth, seed, sunlight, water, nutrients);
+    private static Map<Resource, Integer> req(int dirt, int seed, int sunlight, int water, int nutrients) {
+        return cost(dirt, seed, sunlight, water, nutrients);
     }
 
     public static List<PlantCard> createTier1Cards() {
         List<PlantCard> list = new ArrayList<>();
 
         // ==================================================
-        // TIER 1 — BLACK (EARTH Bonus) — 8 thẻ
+        // TIER 1 — BLACK (DIRT Bonus) — 8 thẻ
         // ==================================================
-        list.add(new PlantCard("t1_e1", "Cỏ May Mắn", 1, cost(0, 1, 1, 1, 1), 0, Resource.EARTH));
-        list.add(new PlantCard("t1_e2", "Dây Trầu", 1, cost(0, 0, 1, 0, 2), 0, Resource.EARTH));
-        list.add(new PlantCard("t1_e3", "Cây Sen Đá", 1, cost(0, 2, 0, 0, 2), 0, Resource.EARTH));
-        list.add(new PlantCard("t1_e4", "Cây Lưỡi Hổ", 1, cost(1, 0, 3, 0, 1), 0, Resource.EARTH));
-        list.add(new PlantCard("t1_e5", "Cây Kim Tiền", 1, cost(0, 0, 0, 0, 3), 0, Resource.EARTH));
-        list.add(new PlantCard("t1_e6", "Bí Ngô Mini", 1, cost(0, 1, 1, 2, 1), 0, Resource.EARTH));
-        list.add(new PlantCard("t1_e7", "Khoai Lang Mầm", 1, cost(0, 2, 1, 2, 0), 0, Resource.EARTH));
-        list.add(new PlantCard("t1_e8", "Củ Cải Đỏ", 1, cost(0, 0, 4, 0, 0), 1, Resource.EARTH));
+        list.add(new PlantCard("t1_e1", "Cỏ May Mắn", 1, cost(0, 1, 1, 1, 1), 0, Resource.DIRT));
+        list.add(new PlantCard("t1_e2", "Dây Trầu", 1, cost(0, 0, 1, 0, 2), 0, Resource.DIRT));
+        list.add(new PlantCard("t1_e3", "Cây Sen Đá", 1, cost(0, 2, 0, 0, 2), 0, Resource.DIRT));
+        list.add(new PlantCard("t1_e4", "Cây Lưỡi Hổ", 1, cost(1, 0, 3, 0, 1), 0, Resource.DIRT));
+        list.add(new PlantCard("t1_e5", "Cây Kim Tiền", 1, cost(0, 0, 0, 0, 3), 0, Resource.DIRT));
+        list.add(new PlantCard("t1_e6", "Bí Ngô Mini", 1, cost(0, 1, 1, 2, 1), 0, Resource.DIRT));
+        list.add(new PlantCard("t1_e7", "Khoai Lang Mầm", 1, cost(0, 2, 1, 2, 0), 0, Resource.DIRT));
+        list.add(new PlantCard("t1_e8", "Củ Cải Đỏ", 1, cost(0, 0, 4, 0, 0), 1, Resource.DIRT));
 
         // ==================================================
         // TIER 1 — WHITE (SEED Bonus) — 8 thẻ
@@ -95,14 +95,14 @@ public class CardCatalog {
         List<PlantCard> list = new ArrayList<>();
 
         // ==================================================
-        // TIER 2 — BLACK (EARTH Bonus) — 6 thẻ
+        // TIER 2 — BLACK (DIRT Bonus) — 6 thẻ
         // ==================================================
-        list.add(new PlantCard("t2_e1", "Cây Bàng Vuông", 2, cost(0, 3, 0, 2, 2), 1, Resource.EARTH));
-        list.add(new PlantCard("t2_e2", "Cây Me Cổ", 2, cost(2, 3, 0, 0, 3), 1, Resource.EARTH));
-        list.add(new PlantCard("t2_e3", "Cây Cọ Dầu", 2, cost(0, 0, 2, 1, 4), 2, Resource.EARTH));
-        list.add(new PlantCard("t2_e4", "Tre Xanh", 2, cost(0, 5, 0, 0, 0), 2, Resource.EARTH));
-        list.add(new PlantCard("t2_e5", "Cây Trắc Bách Diệp", 2, cost(0, 0, 3, 0, 5), 2, Resource.EARTH));
-        list.add(new PlantCard("t2_e6", "Cây Cau Vua", 2, cost(6, 0, 0, 0, 0), 3, Resource.EARTH));
+        list.add(new PlantCard("t2_e1", "Cây Bàng Vuông", 2, cost(0, 3, 0, 2, 2), 1, Resource.DIRT));
+        list.add(new PlantCard("t2_e2", "Cây Me Cổ", 2, cost(2, 3, 0, 0, 3), 1, Resource.DIRT));
+        list.add(new PlantCard("t2_e3", "Cây Cọ Dầu", 2, cost(0, 0, 2, 1, 4), 2, Resource.DIRT));
+        list.add(new PlantCard("t2_e4", "Tre Xanh", 2, cost(0, 5, 0, 0, 0), 2, Resource.DIRT));
+        list.add(new PlantCard("t2_e5", "Cây Trắc Bách Diệp", 2, cost(0, 0, 3, 0, 5), 2, Resource.DIRT));
+        list.add(new PlantCard("t2_e6", "Cây Cau Vua", 2, cost(6, 0, 0, 0, 0), 3, Resource.DIRT));
 
         // ==================================================
         // TIER 2 — WHITE (SEED Bonus) — 6 thẻ
@@ -151,12 +151,12 @@ public class CardCatalog {
         List<PlantCard> list = new ArrayList<>();
 
         // ==================================================
-        // TIER 3 — BLACK (EARTH Bonus) — 4 thẻ
+        // TIER 3 — BLACK (DIRT Bonus) — 4 thẻ
         // ==================================================
-        list.add(new PlantCard("t3_e1", "Đại Thụ Baobab", 3, cost(0, 3, 3, 3, 5), 3, Resource.EARTH));
-        list.add(new PlantCard("t3_e2", "Cổ Thụ Gõ Đỏ", 3, cost(0, 0, 7, 0, 0), 4, Resource.EARTH));
-        list.add(new PlantCard("t3_e3", "Cây Đa Nghìn Năm", 3, cost(3, 0, 6, 0, 3), 4, Resource.EARTH));
-        list.add(new PlantCard("t3_e4", "Bách Tùng Ngàn Năm", 3, cost(3, 0, 7, 0, 0), 5, Resource.EARTH));
+        list.add(new PlantCard("t3_e1", "Đại Thụ Baobab", 3, cost(0, 3, 3, 3, 5), 3, Resource.DIRT));
+        list.add(new PlantCard("t3_e2", "Cổ Thụ Gõ Đỏ", 3, cost(0, 0, 7, 0, 0), 4, Resource.DIRT));
+        list.add(new PlantCard("t3_e3", "Cây Đa Nghìn Năm", 3, cost(3, 0, 6, 0, 3), 4, Resource.DIRT));
+        list.add(new PlantCard("t3_e4", "Bách Tùng Ngàn Năm", 3, cost(3, 0, 7, 0, 0), 5, Resource.DIRT));
 
         // ==================================================
         // TIER 3 — WHITE (SEED Bonus) — 4 thẻ
@@ -197,18 +197,18 @@ public class CardCatalog {
         List<VisitorCard> list = new ArrayList<>();
         // 10 Khách Thăm Vườn (Garden Visitors / Nobles) — 3 Điểm mỗi thẻ
         // 5 thẻ yêu cầu 3 loại x 3
-        list.add(new VisitorCard("v_01", "Ong Chúa Vườn Hoa", 3, req(3, 3, 3, 0, 0))); // Earth, Seed, Sunlight
-        list.add(new VisitorCard("v_02", "Bướm Hoàng Yến", 3, req(3, 3, 0, 3, 0)));    // Earth, Seed, Water
-        list.add(new VisitorCard("v_03", "Bọ Rùa May Mắn", 3, req(3, 0, 3, 0, 3)));    // Earth, Sunlight, Nutrients
-        list.add(new VisitorCard("v_04", "Chim Ruồi Đổi Màu", 3, req(0, 3, 0, 3, 3))); // Seed, Water, Nutrients
+        list.add(new VisitorCard("v_01", "Ong Chúa Vườn Hoa", 3, req(3, 3, 3, 0, 0))); // Dirt, Seed, Sunlight
+        list.add(new VisitorCard("v_02", "Bướm Nữ Hoàng Alexandra", 3, req(3, 3, 0, 3, 0)));    // Dirt, Seed, Water
+        list.add(new VisitorCard("v_03", "Bọ Rùa May Mắn", 3, req(3, 0, 3, 0, 3)));    // Dirt, Sunlight, Nutrients
+        list.add(new VisitorCard("v_04", "Chim Hoàng Yến Vàng", 3, req(0, 3, 0, 3, 3))); // Seed, Water, Nutrients
         list.add(new VisitorCard("v_05", "Sóc Nâu Tinh Nghịch", 3, req(0, 0, 3, 3, 3)));// Sunlight, Water, Nutrients
 
         // 5 thẻ yêu cầu 2 loại x 4
-        list.add(new VisitorCard("v_06", "Nhím Nhỏ Đáng Yêu", 3, req(4, 0, 4, 0, 0))); // Earth, Sunlight
-        list.add(new VisitorCard("v_07", "Chuồn Chuồn Ớt", 3, req(4, 4, 0, 0, 0)));    // Earth, Seed
-        list.add(new VisitorCard("v_08", "Chim Én Báo Xuân", 3, req(0, 4, 0, 4, 0)));  // Seed, Water
-        list.add(new VisitorCard("v_09", "Cú Mèo Tri Thức", 3, req(0, 0, 0, 4, 4)));   // Water, Nutrients
-        list.add(new VisitorCard("v_10", "Kiến Thợ Cần Mẫn", 3, req(0, 0, 4, 0, 4)));  // Nutrients, Sunlight
+        list.add(new VisitorCard("v_06", "Ốc Sên Chậm Chạp", 3, req(4, 0, 4, 0, 0))); // Dirt, Sunlight
+        list.add(new VisitorCard("v_07", "Chim Én Mùa Xuân", 3, req(4, 4, 0, 0, 0)));    // Dirt, Seed
+        list.add(new VisitorCard("v_08", "Kiến Thợ Cần Mẫn", 3, req(0, 4, 0, 4, 0)));  // Seed, Water
+        list.add(new VisitorCard("v_09", "Bọ Hung Cơ Bắp", 3, req(0, 0, 0, 4, 4)));   // Water, Nutrients
+        list.add(new VisitorCard("v_10", "Chuồn Chuồn Nắng Mưa", 3, req(0, 0, 4, 0, 4)));  // Nutrients, Sunlight
 
         return list;
     }
