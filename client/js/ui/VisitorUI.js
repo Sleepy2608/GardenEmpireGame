@@ -11,12 +11,12 @@ export class VisitorUI {
     v_02: { icon: '🦋', name: 'Bướm Nữ Hoàng Alexandra', shortName: 'Bướm Nữ Hoàng', img: 'assets/images/visitors/v_02_buom_alexandra.png' },
     v_03: { icon: '🐞', name: 'Bọ Rùa May Mắn', shortName: 'Bọ Rùa', img: 'assets/images/visitors/v_03_bo_rua.png' },
     v_04: { icon: '🐤', name: 'Chim Hoàng Yến Vàng', shortName: 'Hoàng Yến', img: 'assets/images/visitors/v_04_chim_hoang_yen.png' },
-    v_05: { icon: '🐿️', name: 'Sóc Nâu Tinh Nghịch', shortName: 'Sóc Nâu' },
-    v_06: { icon: '🦔', name: 'Nhím Nhỏ Đáng Yêu', shortName: 'Nhím Nhỏ' },
-    v_07: { icon: '🪰', name: 'Chuồn Chuồn Ớt', shortName: 'Chuồn Chuồn' },
-    v_08: { icon: '🕊️', name: 'Chim Én Báo Xuân', shortName: 'Chim Én' },
-    v_09: { icon: '🦉', name: 'Cú Mèo Tri Thức', shortName: 'Cú Mèo' },
-    v_10: { icon: '🐜', name: 'Kiến Thợ Cần Mẫn', shortName: 'Kiến Thợ' },
+    v_05: { icon: '🐿️', name: 'Sóc Nâu Tinh Nghịch', shortName: 'Sóc Nâu', img: 'assets/images/visitors/v_05_soc_nau.png' },
+    v_06: { icon: '🐌', name: 'Ốc Sên Chậm Chạp', shortName: 'Ốc Sên', img: 'assets/images/visitors/v_06_oc_sen.png' },
+    v_07: { icon: '🕊️', name: 'Chim Én Mùa Xuân', shortName: 'Chim Én', img: 'assets/images/visitors/v_07_chim_en.png' },
+    v_08: { icon: '🐜', name: 'Kiến Thợ Cần Mẫn', shortName: 'Kiến Thợ', img: 'assets/images/visitors/v_08_kien_tho.png' },
+    v_09: { icon: '🪲', name: 'Bọ Hung Cơ Bắp', shortName: 'Bọ Hung', img: 'assets/images/visitors/v_09_bo_hung.png' },
+    v_10: { icon: '🪰', name: 'Chuồn Chuồn Nắng Mưa', shortName: 'Chuồn Chuồn', img: 'assets/images/visitors/v_10_chuon_chuon.png' },
   };
 
   /**
@@ -30,13 +30,13 @@ export class VisitorUI {
     if (nameLower.includes('ong')) return { icon: '🐝', name: fallbackName, shortName: 'Ong Chúa', img: 'assets/images/visitors/v_01_ong_chua.png' };
     if (nameLower.includes('bướm') || nameLower.includes('alexandra')) return { icon: '🦋', name: fallbackName, shortName: 'Bướm Nữ Hoàng', img: 'assets/images/visitors/v_02_buom_alexandra.png' };
     if (nameLower.includes('bọ rùa')) return { icon: '🐞', name: fallbackName, shortName: 'Bọ Rùa', img: 'assets/images/visitors/v_03_bo_rua.png' };
-    if (nameLower.includes('hoàng yến') || nameLower.includes('chim')) return { icon: '🐤', name: fallbackName, shortName: 'Hoàng Yến', img: 'assets/images/visitors/v_04_chim_hoang_yen.png' };
-    if (nameLower.includes('sóc')) return { icon: '🐿️', name: fallbackName, shortName: 'Sóc Nâu' };
-    if (nameLower.includes('nhím')) return { icon: '🦔', name: fallbackName, shortName: 'Nhím Nhỏ' };
-    if (nameLower.includes('chuồn')) return { icon: '🪰', name: fallbackName, shortName: 'Chuồn Chuồn' };
-    if (nameLower.includes('én')) return { icon: '🕊️', name: fallbackName, shortName: 'Chim Én' };
-    if (nameLower.includes('cú')) return { icon: '🦉', name: fallbackName, shortName: 'Cú Mèo' };
-    if (nameLower.includes('kiến')) return { icon: '🐜', name: fallbackName, shortName: 'Kiến Thợ' };
+    if (nameLower.includes('hoàng yến') || nameLower.includes('chim hoàng yến')) return { icon: '🐤', name: fallbackName, shortName: 'Hoàng Yến', img: 'assets/images/visitors/v_04_chim_hoang_yen.png' };
+    if (nameLower.includes('sóc')) return { icon: '🐿️', name: fallbackName, shortName: 'Sóc Nâu', img: 'assets/images/visitors/v_05_soc_nau.png' };
+    if (nameLower.includes('ốc sên')) return { icon: '🐌', name: fallbackName, shortName: 'Ốc Sên', img: 'assets/images/visitors/v_06_oc_sen.png' };
+    if (nameLower.includes('én') || nameLower.includes('chim én')) return { icon: '🕊️', name: fallbackName, shortName: 'Chim Én', img: 'assets/images/visitors/v_07_chim_en.png' };
+    if (nameLower.includes('kiến')) return { icon: '🐜', name: fallbackName, shortName: 'Kiến Thợ', img: 'assets/images/visitors/v_08_kien_tho.png' };
+    if (nameLower.includes('bọ hung')) return { icon: '🪲', name: fallbackName, shortName: 'Bọ Hung', img: 'assets/images/visitors/v_09_bo_hung.png' };
+    if (nameLower.includes('chuồn')) return { icon: '🪰', name: fallbackName, shortName: 'Chuồn Chuồn', img: 'assets/images/visitors/v_10_chuon_chuon.png' };
     return { icon: '🦋', name: fallbackName || 'Khách Quý', shortName: 'Khách Quý' };
   }
 
