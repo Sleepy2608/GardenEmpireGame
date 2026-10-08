@@ -5,12 +5,12 @@ import { ResourceUI } from './ResourceUI.js';
 
 export class VisitorUI {
 
-  // Danh mục 10 Vị Khách Thăm Vườn chuẩn theo CardCatalog.java (kèm linh vật đại diện)
+  // Danh mục 10 Vị Khách Thăm Vườn chuẩn theo CardCatalog.java (kèm linh vật đại diện và ảnh)
   static VISITOR_META = {
-    v_01: { icon: '🐝', name: 'Ong Chúa Vườn Hoa', shortName: 'Ong Chúa' },
-    v_02: { icon: '🦋', name: 'Bướm Nữ Hoàng Alexandra', shortName: 'Bướm Nữ Hoàng' },
-    v_03: { icon: '🐞', name: 'Bọ Rùa May Mắn', shortName: 'Bọ Rùa' },
-    v_04: { icon: '🐤', name: 'Chim Hoàng Yến Vàng', shortName: 'Hoàng Yến' },
+    v_01: { icon: '🐝', name: 'Ong Chúa Vườn Hoa', shortName: 'Ong Chúa', img: 'assets/images/visitors/v_01_ong_chua.png' },
+    v_02: { icon: '🦋', name: 'Bướm Nữ Hoàng Alexandra', shortName: 'Bướm Nữ Hoàng', img: 'assets/images/visitors/v_02_buom_alexandra.png' },
+    v_03: { icon: '🐞', name: 'Bọ Rùa May Mắn', shortName: 'Bọ Rùa', img: 'assets/images/visitors/v_03_bo_rua.png' },
+    v_04: { icon: '🐤', name: 'Chim Hoàng Yến Vàng', shortName: 'Hoàng Yến', img: 'assets/images/visitors/v_04_chim_hoang_yen.png' },
     v_05: { icon: '🐿️', name: 'Sóc Nâu Tinh Nghịch', shortName: 'Sóc Nâu' },
     v_06: { icon: '🦔', name: 'Nhím Nhỏ Đáng Yêu', shortName: 'Nhím Nhỏ' },
     v_07: { icon: '🪰', name: 'Chuồn Chuồn Ớt', shortName: 'Chuồn Chuồn' },
@@ -27,10 +27,10 @@ export class VisitorUI {
       return this.VISITOR_META[id];
     }
     const nameLower = (fallbackName || '').toLowerCase();
-    if (nameLower.includes('ong')) return { icon: '🐝', name: fallbackName, shortName: 'Ong Chúa' };
-    if (nameLower.includes('bướm') || nameLower.includes('alexandra')) return { icon: '🦋', name: fallbackName, shortName: 'Bướm Nữ Hoàng' };
-    if (nameLower.includes('bọ rùa')) return { icon: '🐞', name: fallbackName, shortName: 'Bọ Rùa' };
-    if (nameLower.includes('hoàng yến') || nameLower.includes('chim')) return { icon: '🐤', name: fallbackName, shortName: 'Hoàng Yến' };
+    if (nameLower.includes('ong')) return { icon: '🐝', name: fallbackName, shortName: 'Ong Chúa', img: 'assets/images/visitors/v_01_ong_chua.png' };
+    if (nameLower.includes('bướm') || nameLower.includes('alexandra')) return { icon: '🦋', name: fallbackName, shortName: 'Bướm Nữ Hoàng', img: 'assets/images/visitors/v_02_buom_alexandra.png' };
+    if (nameLower.includes('bọ rùa')) return { icon: '🐞', name: fallbackName, shortName: 'Bọ Rùa', img: 'assets/images/visitors/v_03_bo_rua.png' };
+    if (nameLower.includes('hoàng yến') || nameLower.includes('chim')) return { icon: '🐤', name: fallbackName, shortName: 'Hoàng Yến', img: 'assets/images/visitors/v_04_chim_hoang_yen.png' };
     if (nameLower.includes('sóc')) return { icon: '🐿️', name: fallbackName, shortName: 'Sóc Nâu' };
     if (nameLower.includes('nhím')) return { icon: '🦔', name: fallbackName, shortName: 'Nhím Nhỏ' };
     if (nameLower.includes('chuồn')) return { icon: '🪰', name: fallbackName, shortName: 'Chuồn Chuồn' };
@@ -63,18 +63,34 @@ export class VisitorUI {
       .map(([res, count]) => `${count} cây ${ResourceUI.getResourceMeta(res).name}`)
       .join(', ');
 
-    el.title = `${meta.icon} ${displayName} (+${visitor.prestigePoints || 3}★)\nĐiều kiện: ${reqSummary}`;
+    el.title = `${meta.icon} ${displayName} (+${visitor.prestigePoints || 3}★)\nĐiều kiện rước về: ${reqSummary}`;
+
+    const imgTag = meta.img
+      ? `<img src="${meta.img}" alt="${displayName}" class="visitor-card-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+         <div class="visitor-img-fallback" style="display: none;">${meta.icon}</div>`
+      : `<div class="visitor-img-fallback">${meta.icon}</div>`;
 
     el.innerHTML = `
-      <div class="visitor-header">
-        <div class="visitor-identity">
-          <span class="visitor-avatar" aria-hidden="true">${meta.icon}</span>
-          <span class="visitor-title" title="${displayName}">${displayName}</span>
+      <!-- 1. Hàng Tiêu Đề: Tên (trái) + Điểm (phải) chuẩn Hình 1 -->
+      <div class="visitor-header-bar">
+        <div class="visitor-name-cell" title="${displayName}">
+          <span class="visitor-mini-avatar">${meta.icon}</span>
+          <span class="visitor-name-text">${displayName}</span>
         </div>
-        <span class="visitor-score" title="+${visitor.prestigePoints || 3} Điểm Uy Tín">★ ${visitor.prestigePoints || 3}</span>
+        <div class="visitor-score-cell" title="+${visitor.prestigePoints || 3} Điểm Uy Tín">
+          ★ ${visitor.prestigePoints || 3}
+        </div>
       </div>
-      <div class="visitor-req-chips">
-        ${reqHtml}
+
+      <!-- 2. Thân Thẻ: Ảnh Linh Vật + Khung Cách Lấy (ở góc dưới bên trái) chuẩn Hình 1 -->
+      <div class="visitor-image-frame">
+        ${imgTag}
+        <div class="visitor-req-overlay" title="Điều kiện rước về: ${reqSummary}">
+          <span class="visitor-req-tag">Cách lấy</span>
+          <div class="visitor-req-chips">
+            ${reqHtml}
+          </div>
+        </div>
       </div>
     `;
 
