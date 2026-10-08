@@ -243,7 +243,7 @@ html, body {
   align-items: center;
   justify-content: center;
   padding: 0.35rem;
-  height: 66px;
+  height: 94px;
   box-sizing: border-box;
   box-shadow: 
     0 1px 0 #fbbf24,
@@ -635,97 +635,176 @@ html, body {
   padding-bottom: 0.25rem;
 }
 
+/* Thẻ Khách Thăm Vườn chuẩn theo Mockup Hình 1 */
 .visitor-tile {
-  min-width: 125px;
-  max-width: 185px;
-  flex: 0 1 auto;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(11, 26, 17, 0.98) 100%);
-  border: 1px solid var(--border-gold);
+  min-width: 148px;
+  max-width: 200px;
+  flex: 1 1 165px;
+  height: 94px;
+  background: #c69c3a;
+  border: 2px solid #a37a24;
   border-radius: var(--radius-md);
-  padding: 0.3rem 0.45rem;
+  padding: 3px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 0.2rem;
-  height: 66px;
+  gap: 3px;
   box-sizing: border-box;
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-normal);
-  cursor: default;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    0 6px 14px rgba(0, 0, 0, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
 .visitor-tile:hover {
-  transform: translateY(-2px);
-  border-color: var(--border-gold-focus);
-  box-shadow: 0 0 14px rgba(245, 158, 11, 0.35);
+  transform: translateY(-3px) scale(1.02);
+  border-color: #fde047;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6), 0 0 12px rgba(245, 158, 11, 0.45);
+  z-index: 20;
 }
 
-.visitor-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.35rem;
-  min-width: 0;
+/* 1. Header Bar: Tên (trái) + Điểm (phải) chuẩn Hình 1 */
+.visitor-header-bar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3px;
+  height: 22px;
+  flex-shrink: 0;
 }
 
-.visitor-identity {
+.visitor-name-cell {
+  background: #fef08a;
+  border: 1px solid #b48522;
+  border-radius: 4px;
+  padding: 0 0.35rem;
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  justify-content: center;
+  gap: 0.25rem;
   min-width: 0;
-  flex: 1;
 }
 
-.visitor-avatar {
-  font-size: 0.95rem;
+.visitor-mini-avatar {
+  font-size: 0.8rem;
   line-height: 1;
   flex-shrink: 0;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
 }
 
-.visitor-title {
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: var(--text-gold);
-  line-height: 1.15;
-  letter-spacing: -0.01em;
+.visitor-name-text {
+  font-family: var(--font-display);
+  font-size: 0.54rem;
+  font-weight: 800;
+  color: #451a03;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  word-break: break-word;
-  min-width: 0;
+  text-align: center;
 }
 
-.visitor-score {
+.visitor-score-cell {
+  background: #fef08a;
+  border: 1px solid #b48522;
+  border-radius: 4px;
+  padding: 0 0.45rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-display);
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   font-weight: 900;
-  color: var(--text-gold);
-  text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
-  flex-shrink: 0;
+  color: #78350f;
   line-height: 1;
-  padding-top: 0.05rem;
+  white-space: nowrap;
+  text-shadow: 0 0 4px rgba(245, 158, 11, 0.4);
+}
+
+/* 2. Body Area: Khung Ảnh Lớn */
+.visitor-image-frame {
+  flex: 1;
+  position: relative;
+  background: #fef9c3;
+  border: 1px solid #b48522;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.visitor-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.visitor-tile:hover .visitor-card-img {
+  transform: scale(1.05);
+}
+
+.visitor-img-fallback {
+  font-size: 2rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #78350f;
+  background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
+}
+
+/* 3. Ô Cách Lấy: Đặt cố định ở góc dưới bên trái của ảnh theo Hình 1 */
+.visitor-req-overlay {
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+  background: rgba(30, 30, 30, 0.82);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 4px;
+  padding: 0.1rem 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  z-index: 5;
+}
+
+.visitor-req-tag {
+  font-size: 0.55rem;
+  font-weight: 800;
+  color: #fef08a;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  line-height: 1;
 }
 
 .visitor-req-chips {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.2rem;
   align-items: center;
-  flex-wrap: nowrap;
 }
 
-.req-chip {
-  padding: 0.08rem 0.32rem;
-  border-radius: var(--radius-xs);
-  font-size: 0.62rem;
+.visitor-req-chips .req-chip {
+  padding: 0.06rem 0.28rem;
+  border-radius: 3px;
+  font-size: 0.6rem;
   font-weight: 800;
   color: #fff;
-  box-shadow: var(--shadow-sm);
+  line-height: 1.1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
   display: inline-flex;
   align-items: center;
-  gap: 0.15rem;
+  gap: 0.12rem;
   white-space: nowrap;
 }
 
