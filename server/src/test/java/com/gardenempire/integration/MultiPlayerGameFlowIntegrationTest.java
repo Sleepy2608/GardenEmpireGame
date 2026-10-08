@@ -72,13 +72,13 @@ class MultiPlayerGameFlowIntegrationTest {
         state.setCurrentTurnPlayerId("p1");
         state.setFirstPlayerId("p1");
         // For 3 players: Bank has 5 of each base resource and 5 Wilds
-        assertEquals(5, state.getResourceBank().get(Resource.EARTH));
+        assertEquals(5, state.getResourceBank().get(Resource.DIRT));
         assertEquals(5, state.getResourceBank().get(Resource.NUTRIENTS));
         assertEquals(5, state.getResourceBank().get(Resource.WILD));
 
-        // 5. Action 1: Player 1 (Alice) takes 3 distinct tokens (EARTH, WATER, SUNLIGHT)
+        // 5. Action 1: Player 1 (Alice) takes 3 distinct tokens (DIRT, WATER, SUNLIGHT)
         Map<Resource, Integer> takeTokensP1 = Map.of(
-                Resource.EARTH, 1,
+                Resource.DIRT, 1,
                 Resource.WATER, 1,
                 Resource.SUNLIGHT, 1
         );
@@ -90,10 +90,10 @@ class MultiPlayerGameFlowIntegrationTest {
 
         state = gameService.processAction(roomId, action1);
         assertEquals("p2", state.getCurrentTurnPlayerId(), "Turn should rotate to Bob (p2)");
-        assertEquals(1, state.getPlayers().get(0).getTokens().get(Resource.EARTH));
+        assertEquals(1, state.getPlayers().get(0).getTokens().get(Resource.DIRT));
         assertEquals(1, state.getPlayers().get(0).getTokens().get(Resource.WATER));
         assertEquals(1, state.getPlayers().get(0).getTokens().get(Resource.SUNLIGHT));
-        assertEquals(4, state.getResourceBank().get(Resource.EARTH));
+        assertEquals(4, state.getResourceBank().get(Resource.DIRT));
 
         // 6. Action 2: Player 2 (Bob) takes 2 same tokens (NUTRIENTS x2)
         Map<Resource, Integer> takeTokensP2 = Map.of(
@@ -128,12 +128,12 @@ class MultiPlayerGameFlowIntegrationTest {
 
         // 8. Test Excess Token Return Workflow
         Player p1 = state.getPlayers().get(0);
-        // Total tokens: 6 EARTH + 6 WATER + 1 SUNLIGHT = 13 tokens (excess 3)
-        p1.getTokens().put(Resource.EARTH, 6);
+        // Total tokens: 6 DIRT + 6 WATER + 1 SUNLIGHT = 13 tokens (excess 3)
+        p1.getTokens().put(Resource.DIRT, 6);
         p1.getTokens().put(Resource.WATER, 6);
 
         Map<Resource, Integer> returnTokens = Map.of(
-                Resource.EARTH, 3
+                Resource.DIRT, 3
         );
         GameActionRequest returnAction = new GameActionRequest();
         returnAction.setType("RETURN_TOKENS");
@@ -142,7 +142,7 @@ class MultiPlayerGameFlowIntegrationTest {
         returnAction.setReturnedTokens(returnTokens);
 
         state = gameService.processAction(roomId, returnAction);
-        assertEquals(3, p1.getTokens().get(Resource.EARTH));
+        assertEquals(3, p1.getTokens().get(Resource.DIRT));
 
         // 9. Test Victory Condition & Tiebreaker
         p1.setPrestigePoints(15);
@@ -161,7 +161,7 @@ class MultiPlayerGameFlowIntegrationTest {
         p3PassAction.setType("TAKE_RESOURCES");
         p3PassAction.setGameId(roomId);
         p3PassAction.setPlayerId("p3");
-        p3PassAction.setSelectedTokens(Map.of(Resource.SEED, 1, Resource.NUTRIENTS, 1, Resource.EARTH, 1));
+        p3PassAction.setSelectedTokens(Map.of(Resource.SEED, 1, Resource.NUTRIENTS, 1, Resource.DIRT, 1));
 
         state = gameService.processAction(roomId, p3PassAction);
         assertTrue(state.isGameOver(), "Game should be finished after final round ends");
