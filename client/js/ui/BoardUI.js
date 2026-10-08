@@ -178,10 +178,13 @@ export class BoardUI {
       this.gameState.updateFromDto(message.payload);
 
       const myPlayer = this.gameState.players.find(p => p.id === this.guestId);
-      const currentVisitorCount = myPlayer?.claimedVisitors?.length || 0;
+      const myVisitors = myPlayer?.visitors || myPlayer?.claimedVisitors || [];
+      const currentVisitorCount = myVisitors.length;
       if (currentVisitorCount > this.lastClaimedVisitorCount) {
         SoundFX.playVisitorSound();
-        this.showToast('🦋 Bạn đã đón một Khách Thăm Vườn mới (+3★)!');
+        const newlyClaimed = myVisitors[currentVisitorCount - 1];
+        const vMeta = VisitorUI.getVisitorMeta(newlyClaimed?.id, newlyClaimed?.name);
+        this.showToast(`${vMeta.icon} Bạn đã đón ${newlyClaimed?.name || 'Khách Thăm'} vào vườn (+3★)!`);
       }
       this.lastClaimedVisitorCount = currentVisitorCount;
 
@@ -620,7 +623,7 @@ export class BoardUI {
 
       const avatar = p.avatar || '🌿';
       const cardCount = p.purchasedCards?.length || 0;
-      const visitorCount = p.claimedVisitors?.length || 0;
+      const visitorCount = p.visitors?.length || p.claimedVisitors?.length || 0;
 
       card.innerHTML = `
         <div class="podium-left">

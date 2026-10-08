@@ -243,7 +243,7 @@ html, body {
   align-items: center;
   justify-content: center;
   padding: 0.35rem;
-  height: 64px;
+  height: 66px;
   box-sizing: border-box;
   box-shadow: 
     0 1px 0 #fbbf24,
@@ -636,61 +636,136 @@ html, body {
 }
 
 .visitor-tile {
-  min-width: 110px;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(11, 26, 17, 0.95) 100%);
+  min-width: 125px;
+  max-width: 185px;
+  flex: 0 1 auto;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(11, 26, 17, 0.98) 100%);
   border: 1px solid var(--border-gold);
   border-radius: var(--radius-md);
-  padding: 0.35rem 0.5rem;
+  padding: 0.3rem 0.45rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 0.25rem;
-  height: 64px;
+  gap: 0.2rem;
+  height: 66px;
   box-sizing: border-box;
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-normal);
+  cursor: default;
 }
 
 .visitor-tile:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   border-color: var(--border-gold-focus);
   box-shadow: 0 0 14px rgba(245, 158, 11, 0.35);
 }
 
 .visitor-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.visitor-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.visitor-avatar {
+  font-size: 0.95rem;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
 }
 
 .visitor-title {
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   font-weight: 700;
   color: var(--text-gold);
   line-height: 1.15;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+  min-width: 0;
 }
 
 .visitor-score {
   font-family: var(--font-display);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 900;
   color: var(--text-gold);
   text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+  flex-shrink: 0;
+  line-height: 1;
+  padding-top: 0.05rem;
 }
 
 .visitor-req-chips {
   display: flex;
-  gap: 0.2rem;
-  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+  flex-wrap: nowrap;
 }
 
 .req-chip {
-  padding: 0.1rem 0.3rem;
+  padding: 0.08rem 0.32rem;
   border-radius: var(--radius-xs);
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 800;
   color: #fff;
   box-shadow: var(--shadow-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  white-space: nowrap;
+}
+
+/* Claimed Visitors Strip in Player Dashboard & Opponents */
+.claimed-visitors-strip {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.35rem;
+}
+
+.claimed-visitor-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(245, 158, 11, 0.16);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  border-radius: var(--radius-full);
+  padding: 0.1rem 0.45rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--text-gold);
+  line-height: 1.2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform var(--transition-fast);
+  cursor: help;
+}
+
+.claimed-visitor-pill:hover {
+  transform: scale(1.05);
+  border-color: var(--border-gold-focus);
+}
+
+.opponent-visitors-strip {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  margin-top: 0.2rem;
+  font-size: 0.75rem;
 }
 
 /* Plant Market Section */

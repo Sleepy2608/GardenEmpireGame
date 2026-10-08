@@ -198,9 +198,9 @@ public class CardCatalog {
         // 10 Khách Thăm Vườn (Garden Visitors / Nobles) — 3 Điểm mỗi thẻ
         // 5 thẻ yêu cầu 3 loại x 3
         list.add(new VisitorCard("v_01", "Ong Chúa Vườn Hoa", 3, req(3, 3, 3, 0, 0))); // Earth, Seed, Sunlight
-        list.add(new VisitorCard("v_02", "Bướm Hoàng Yến", 3, req(3, 3, 0, 3, 0)));    // Earth, Seed, Water
+        list.add(new VisitorCard("v_02", "Bướm Nữ Hoàng Alexandra", 3, req(3, 3, 0, 3, 0)));    // Earth, Seed, Water
         list.add(new VisitorCard("v_03", "Bọ Rùa May Mắn", 3, req(3, 0, 3, 0, 3)));    // Earth, Sunlight, Nutrients
-        list.add(new VisitorCard("v_04", "Chim Ruồi Đổi Màu", 3, req(0, 3, 0, 3, 3))); // Seed, Water, Nutrients
+        list.add(new VisitorCard("v_04", "Chim Hoàng Yến Vàng", 3, req(0, 3, 0, 3, 3))); // Seed, Water, Nutrients
         list.add(new VisitorCard("v_05", "Sóc Nâu Tinh Nghịch", 3, req(0, 0, 3, 3, 3)));// Sunlight, Water, Nutrients
 
         // 5 thẻ yêu cầu 2 loại x 4

@@ -3,6 +3,7 @@
 */
 import { PlantCardUI } from './PlantCardUI.js';
 import { ResourceUI } from './ResourceUI.js';
+import { VisitorUI } from './VisitorUI.js';
 
 export class PlayerUI {
 
@@ -21,6 +22,20 @@ export class PlayerUI {
     if (progressBarEl) {
       const progressPercent = Math.min(100, Math.round(((player.prestigePoints || 0) / 15) * 100));
       progressBarEl.style.width = `${progressPercent}%`;
+    }
+
+    // Update Claimed Visitors Badges
+    const claimedStrip = document.getElementById('my-claimed-visitors-strip');
+    const myVisitors = player.visitors || player.claimedVisitors || [];
+    if (claimedStrip) {
+      if (myVisitors.length === 0) {
+        claimedStrip.innerHTML = '';
+      } else {
+        claimedStrip.innerHTML = myVisitors.map(v => {
+          const meta = VisitorUI.getVisitorMeta(v.id, v.name);
+          return `<span class="claimed-visitor-pill" title="${meta.icon} ${v.name || meta.name} (+${v.prestigePoints || 3}★)">${meta.icon} <span>${meta.shortName || v.name}</span></span>`;
+        }).join('');
+      }
     }
 
     // Update Tokens Inventory (6 types)
@@ -119,6 +134,8 @@ export class PlayerUI {
     const totalPlants = opponent.purchasedCards?.length || 0;
     const totalReserved = opponent.reservedCards?.length || 0;
     const totalTokens = Object.values(opponent.tokens || {}).reduce((a, b) => a + b, 0);
+    const oppVisitors = opponent.visitors || opponent.claimedVisitors || [];
+    const totalVisitors = oppVisitors.length;
 
     const bonusPillsHtml = ['EARTH', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS']
       .map(res => {
@@ -126,6 +143,15 @@ export class PlayerUI {
         const meta = ResourceUI.getResourceMeta(res);
         return `<div class="mini-bonus-pill badge-${meta.class}" title="${meta.name}: +${cnt}">${cnt}</div>`;
       }).join('');
+
+    const visitorsBadgesHtml = oppVisitors.length > 0
+      ? `<div class="opponent-visitors-strip" title="Khách đã đón: ${oppVisitors.map(v => v.name).join(', ')}">
+          ${oppVisitors.map(v => {
+            const meta = VisitorUI.getVisitorMeta(v.id, v.name);
+            return `<span title="${meta.icon} ${v.name}">${meta.icon}</span>`;
+          }).join(' ')}
+        </div>`
+      : '';
 
     el.innerHTML = `
       <div class="opponent-card-header">
@@ -136,7 +162,9 @@ export class PlayerUI {
         <span>🌳 Cây: <strong>${totalPlants}</strong></span>
         <span>📑 Giữ: <strong>${totalReserved}</strong></span>
         <span>🪙 Token: <strong>${totalTokens}</strong></span>
+        <span>🦋 Khách: <strong>${totalVisitors}</strong></span>
       </div>
+      ${visitorsBadgesHtml}
       <div class="opponent-bonuses-strip">
         ${bonusPillsHtml}
       </div>
