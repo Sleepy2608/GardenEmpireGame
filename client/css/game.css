@@ -152,8 +152,6 @@ html, body {
   height: calc(100vh - 54px);
   max-height: calc(100vh - 54px);
   padding: 0.2rem 0.85rem 0.35rem;
-  perspective: 1400px;
-  transform-style: preserve-3d;
   width: 100%;
   box-sizing: border-box;
   overflow: hidden;
@@ -197,7 +195,7 @@ html, body {
   justify-content: center;
 }
 
-/* Central Board Mat (Chiếu Bàn Cờ Gỗ & Nỉ 3D Tabletop Auto-Fit) */
+/* Central Board Mat (Chiếu Bàn Cờ Cố Định — Không Hiệu Ứng Float) */
 .tabletop-mat {
   position: relative;
   background: radial-gradient(circle at 50% 25%, #153823 0%, #0c2316 55%, #06140c 100%);
@@ -206,39 +204,26 @@ html, body {
   outline-offset: -2px;
   border-radius: 18px;
   box-shadow: 
-    0 25px 50px -8px rgba(0, 0, 0, 0.88),
-    0 12px 24px rgba(0, 0, 0, 0.65),
+    0 16px 36px rgba(0, 0, 0, 0.8),
+    0 6px 14px rgba(0, 0, 0, 0.6),
     inset 0 1px 2px rgba(255, 255, 255, 0.12),
     inset 0 0 50px rgba(0, 0, 0, 0.65),
-    0 0 30px rgba(74, 222, 128, 0.08);
+    0 0 25px rgba(74, 222, 128, 0.06);
   padding: 0.55rem 0.85rem;
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
   max-width: 960px;
   width: 100%;
-  transform: rotateX(7deg) scale(var(--mat-auto-scale, 1));
+  transform: scale(var(--mat-auto-scale, 1));
   transform-origin: center center;
-  transform-style: preserve-3d;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
 }
 
-.tabletop-mat:hover {
-  transform: rotateX(2deg) translateY(-2px) scale(var(--mat-auto-scale, 1));
-  box-shadow: 
-    0 30px 60px -8px rgba(0, 0, 0, 0.92),
-    0 16px 30px rgba(0, 0, 0, 0.72),
-    inset 0 1px 2px rgba(255, 255, 255, 0.16),
-    inset 0 0 50px rgba(0, 0, 0, 0.55),
-    0 0 40px rgba(74, 222, 128, 0.12);
-}
-
-/* Visitors Row on Mat */
+/* Visitors Row on Mat — Căn thẳng hàng hoàn hảo với các tầng Deck bên dưới */
 .visitors-mat-section {
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 0.3rem 0.65rem;
+  padding: 0;
+  background: transparent;
+  border: none;
 }
 
 .visitors-row-wrapper {
@@ -340,7 +325,7 @@ html, body {
 
 .visitors-revealed-row {
   display: flex;
-  gap: 0.55rem;
+  gap: 0.65rem;
   overflow-x: auto;
   align-items: center;
 }
