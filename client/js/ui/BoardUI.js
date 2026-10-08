@@ -439,12 +439,12 @@ export class BoardUI {
     if (!grid) return;
 
     grid.innerHTML = '';
-    const baseResources = ['EARTH', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS'];
+    const baseResources = ['DIRT', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS'];
     const bank = this.gameState.resourceBank || {};
 
     baseResources.forEach(res => {
       const meta = ResourceUI.getResourceMeta(res);
-      const inBank = bank[res] || 0;
+      const inBank = bank[res] ?? (res === 'DIRT' ? bank['EARTH'] : 0) ?? 0;
       const selectedCount = this.selectedTokens[res] || 0;
 
       const card = document.createElement('div');

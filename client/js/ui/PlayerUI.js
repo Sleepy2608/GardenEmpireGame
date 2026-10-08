@@ -44,11 +44,11 @@ export class PlayerUI {
     
     if (tokensGrid) {
       tokensGrid.innerHTML = '';
-      const resourceOrder = ['EARTH', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS', 'WILD'];
+      const resourceOrder = ['DIRT', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS', 'WILD'];
       let totalTokens = 0;
 
       resourceOrder.forEach(type => {
-        const count = player.tokens?.[type] || 0;
+        const count = (player.tokens?.[type] || 0) + (type === 'DIRT' ? (player.tokens?.['EARTH'] || 0) : 0);
         totalTokens += count;
         const meta = ResourceUI.getResourceMeta(type);
 
@@ -78,10 +78,10 @@ export class PlayerUI {
     const bonusesGrid = document.getElementById('my-bonuses-grid');
     if (bonusesGrid) {
       bonusesGrid.innerHTML = '';
-      const baseResources = ['EARTH', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS'];
+      const baseResources = ['DIRT', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS'];
 
       baseResources.forEach(type => {
-        const count = player.bonuses?.[type] || 0;
+        const count = (player.bonuses?.[type] || 0) + (type === 'DIRT' ? (player.bonuses?.['EARTH'] || 0) : 0);
         const meta = ResourceUI.getResourceMeta(type);
 
         const slot = document.createElement('div');
@@ -137,9 +137,9 @@ export class PlayerUI {
     const oppVisitors = opponent.visitors || opponent.claimedVisitors || [];
     const totalVisitors = oppVisitors.length;
 
-    const bonusPillsHtml = ['EARTH', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS']
+    const bonusPillsHtml = ['DIRT', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS']
       .map(res => {
-        const cnt = bonuses[res] || 0;
+        const cnt = (bonuses[res] || 0) + (res === 'DIRT' ? (bonuses['EARTH'] || 0) : 0);
         const meta = ResourceUI.getResourceMeta(res);
         return `<div class="mini-bonus-pill badge-${meta.class}" title="${meta.name}: +${cnt}">${cnt}</div>`;
       }).join('');

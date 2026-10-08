@@ -8,6 +8,7 @@ export class Player {
     this.isHost = isHost;
     this.prestigePoints = 0;
     this.tokens = {
+      DIRT: 0,
       EARTH: 0,
       WATER: 0,
       SUNLIGHT: 0,
@@ -16,6 +17,7 @@ export class Player {
       WILD: 0
     };
     this.bonuses = {
+      DIRT: 0,
       EARTH: 0,
       WATER: 0,
       SUNLIGHT: 0,
