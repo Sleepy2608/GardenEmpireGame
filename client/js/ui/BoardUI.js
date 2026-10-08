@@ -6,15 +6,21 @@ import { PlantCardUI } from './PlantCardUI.js';
 import { VisitorUI } from './VisitorUI.js';
 import { ResourceUI } from './ResourceUI.js';
 import { PlayerUI } from './PlayerUI.js';
+import { TabletopFit } from './TabletopFit.js';
 import { sessionGuard } from '../utils/sessionGuard.js';
 
 export class BoardUI {
   constructor() {
-    this.guestId = localStorage.getItem('garden_empire_guest_id');
-    this.guestName = localStorage.getItem('garden_empire_guest_name');
-
     const urlParams = new URLSearchParams(window.location.search);
     this.roomId = urlParams.get('roomId');
+
+    const paramGuestId = urlParams.get('guestId');
+    const paramGuestName = urlParams.get('guestName');
+    if (paramGuestId) localStorage.setItem('garden_empire_guest_id', paramGuestId);
+    if (paramGuestName) localStorage.setItem('garden_empire_guest_name', paramGuestName);
+
+    this.guestId = localStorage.getItem('garden_empire_guest_id') || paramGuestId;
+    this.guestName = localStorage.getItem('garden_empire_guest_name') || paramGuestName;
 
     if (!this.guestName || !this.roomId) {
       window.location.href = 'lobby.html';
@@ -45,6 +51,7 @@ export class BoardUI {
   init() {
     this.initStaticDOMElements();
     this.initEventListeners();
+    TabletopFit.init();
     this.socket.connect();
   }
 
@@ -243,6 +250,9 @@ export class BoardUI {
         opponentsContainer.appendChild(PlayerUI.renderOpponent(opp, isCurrentTurn));
       });
     }
+
+    TabletopFit.adjustFit();
+    requestAnimationFrame(() => TabletopFit.adjustFit());
   }
 
   renderTurnBanner() {
