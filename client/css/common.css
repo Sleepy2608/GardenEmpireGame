@@ -36,11 +36,15 @@
   /*
      5 Botanical Energies + 1 Wild Gold
   */
-  /* EARTH (Black / Onyx) */
-  --color-earth: #8b5a2b;
-  --color-earth-light: #b4743c;
-  --grad-earth: linear-gradient(135deg, #a4642f 0%, #5c3516 100%);
-  --glow-earth: 0 0 14px rgba(164, 100, 47, 0.45);
+  /* DIRT / EARTH (Brown / Onyx) */
+  --color-dirt: #8b5a2b;
+  --color-dirt-light: #b4743c;
+  --grad-dirt: linear-gradient(135deg, #a4642f 0%, #5c3516 100%);
+  --glow-dirt: 0 0 14px rgba(164, 100, 47, 0.45);
+  --color-earth: var(--color-dirt);
+  --color-earth-light: var(--color-dirt-light);
+  --grad-earth: var(--grad-dirt);
+  --glow-earth: var(--glow-dirt);
 
   /* SEED (White / Diamond -> change to Silver Slate Grey for contrastion) */
   --color-seed: #64748b;
@@ -387,7 +391,7 @@ button:disabled {
   color: #ffffff;
   box-shadow: var(--shadow-sm);
 }
-.badge-earth { background: var(--grad-earth); }
+.badge-dirt, .badge-earth { background: var(--grad-dirt); }
 .badge-seed { background: var(--grad-seed); color: #ffffff; }
 .badge-sunlight { background: var(--grad-sunlight); color: #1e1003; }
 .badge-water { background: var(--grad-water); }

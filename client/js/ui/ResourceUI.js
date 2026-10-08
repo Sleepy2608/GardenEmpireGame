@@ -6,8 +6,8 @@ export class ResourceUI {
 
   static getResourceMeta(type) {
     const meta = {
-      'EARTH': { icon: '🟫', name: 'Đất', class: 'earth', img: 'assets/images/resources/dirt.png' },
-      'DIRT': { icon: '🟫', name: 'Đất', class: 'earth', img: 'assets/images/resources/dirt.png' },
+      'EARTH': { icon: '🟫', name: 'Đất', class: 'dirt', img: 'assets/images/resources/dirt.png' },
+      'DIRT': { icon: '🟫', name: 'Đất', class: 'dirt', img: 'assets/images/resources/dirt.png' },
       'WATER': { icon: '💧', name: 'Nước', class: 'water', img: 'assets/images/resources/water.png' },
       'SUNLIGHT': { icon: '☀️', name: 'Ánh Sáng', class: 'sunlight', img: 'assets/images/resources/sunlight.png' },
       'SEED': { icon: '🌰', name: 'Hạt Giống', class: 'seed', img: 'assets/images/resources/seed.png' },
@@ -47,10 +47,10 @@ export class ResourceUI {
 
   static renderBank(container, resourceBank, onTokenSelect = null) {
     container.innerHTML = '';
-    const resourceOrder = ['EARTH', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS', 'WILD'];
+    const resourceOrder = ['DIRT', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS', 'WILD'];
 
     resourceOrder.forEach(type => {
-      const count = resourceBank[type] ?? 0;
+      const count = resourceBank[type] ?? (type === 'DIRT' ? resourceBank['EARTH'] : 0) ?? 0;
       const orb = ResourceUI.renderTokenOrb(type, count, true, onTokenSelect);
       container.appendChild(orb);
     });

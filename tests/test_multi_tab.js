@@ -95,7 +95,7 @@ async function runMultiTabPlaytest() {
 
     const initialP1State = ws1Messages[ws1Messages.length - 1]?.payload;
     console.log(`🎯 Lượt chơi ban đầu: [${initialP1State?.currentTurnPlayerId}]`);
-    console.log(`🪙 Ngân hàng 3 người: Đất=${initialP1State?.resourceBank?.EARTH}, Nước=${initialP1State?.resourceBank?.WATER}, Vàng=${initialP1State?.resourceBank?.WILD}`);
+    console.log(`🪙 Ngân hàng 3 người: Đất=${initialP1State?.resourceBank?.DIRT}, Nước=${initialP1State?.resourceBank?.WATER}, Vàng=${initialP1State?.resourceBank?.WILD}`);
     console.log(`🦋 Số Khách Thăm Vườn hiển thị: ${initialP1State?.visibleVisitors?.length} khách\n`);
 
     // ----------------------------------------------------
@@ -106,7 +106,7 @@ async function runMultiTabPlaytest() {
       type: 'TAKE_RESOURCES',
       gameId: roomId,
       playerId: hostPlayer.id,
-      tokens: { EARTH: 1, WATER: 1, SUNLIGHT: 1 }
+      tokens: { DIRT: 1, WATER: 1, SUNLIGHT: 1 }
     }));
 
     await delay(500);
@@ -116,8 +116,8 @@ async function runMultiTabPlaytest() {
     const latestState3 = ws3Messages[ws3Messages.length - 1]?.payload;
 
     console.log(`✅ Tab 1 nhận state mới: Lượt tiếp theo -> [${latestState1?.currentTurnPlayerId}]`);
-    console.log(`✅ Tab 2 nhận state mới đồng bộ: Ngân hàng Đất còn [${latestState2?.resourceBank?.EARTH}]`);
-    console.log(`✅ Tab 3 nhận state mới đồng bộ: Kho cá nhân của Tab 1 có [${latestState3?.players[0]?.tokens?.EARTH}] Đất\n`);
+    console.log(`✅ Tab 2 nhận state mới đồng bộ: Ngân hàng Đất còn [${latestState2?.resourceBank?.DIRT}]`);
+    console.log(`✅ Tab 3 nhận state mới đồng bộ: Kho cá nhân của Tab 1 có [${latestState3?.players[0]?.tokens?.DIRT}] Đất\n`);
 
     // ----------------------------------------------------
     // STEP 6: TAB 2 PERFORMS ACTION (TAKE 2 SAME TOKENS)

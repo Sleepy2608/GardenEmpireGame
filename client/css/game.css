@@ -679,27 +679,27 @@ html, body {
   background: #fef08a;
   border: 1px solid #b48522;
   border-radius: 4px;
-  padding: 0 0.35rem;
+  padding: 0 0.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.25rem;
+  gap: 0.15rem;
   min-width: 0;
 }
 
 .visitor-mini-avatar {
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   line-height: 1;
   flex-shrink: 0;
 }
 
 .visitor-name-text {
   font-family: var(--font-display);
-  font-size: 0.54rem;
+  font-size: 0.49rem;
   font-weight: 800;
   color: #451a03;
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -710,7 +710,7 @@ html, body {
   background: #fef08a;
   border: 1px solid #b48522;
   border-radius: 4px;
-  padding: 0 0.45rem;
+  padding: 0 0.35rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1225,6 +1225,7 @@ html, body {
 }
 
 /* 3D Specular Highlighted Orbs */
+.badge-dirt.token-orb,
 .badge-earth.token-orb {
   background: radial-gradient(circle at 35% 30%, #a16207 0%, #713f12 50%, #451a03 100%);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6), 0 0 12px rgba(202, 138, 4, 0.35), inset 0 3px 6px rgba(255, 255, 255, 0.3);
