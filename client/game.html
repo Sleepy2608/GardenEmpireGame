@@ -64,6 +64,37 @@
     <!-- Top Seat: Player 3 (Opponent Top) -->
     <div class="seat-top opponent-seat-pod hidden" id="seat-top"></div>
 
+    <!-- Game Action Logs Widget (Top-Right as per Mockup) -->
+    <div class="game-log-widget glass-panel" id="game-log-widget">
+      <div class="game-log-header" id="game-log-header">
+        <div class="game-log-title">
+          <span class="log-title-icon">📜</span>
+          <span class="log-title-text">NHẬT KÝ</span>
+          <span class="game-log-count-badge" id="game-log-count">0</span>
+        </div>
+        <button class="game-log-toggle-btn" id="btn-toggle-log-collapse" title="Thu gọn / Mở rộng nhật ký">
+          <span class="toggle-arrow-icon" id="log-toggle-arrow">▼</span>
+        </button>
+      </div>
+
+      <!-- Collapsed Mini Ticker Bar (shown when collapsed) -->
+      <div class="game-log-mini-ticker hidden" id="game-log-mini-ticker" title="Bấm để mở rộng nhật ký">
+        <span class="ticker-pulse-dot"></span>
+        <div class="ticker-text-wrapper">
+          <span class="ticker-text" id="game-log-latest-text">Đang đồng bộ ván đấu...</span>
+        </div>
+        <span class="ticker-expand-icon">▲</span>
+      </div>
+
+      <!-- Expanded Full Scrollable Log Feed (shown when expanded) -->
+      <div class="game-log-feed" id="game-log-feed">
+        <div class="log-item log-empty-state">
+          <span class="log-empty-icon">🌱</span>
+          <span>Ván đấu đã sẵn sàng, chờ hành động đầu tiên...</span>
+        </div>
+      </div>
+    </div>
+
     <!-- Middle Row: Left Seat + Center Mat + Right Seat -->
     <div class="tabletop-middle-row">
       <!-- Left Seat: Player 2 (Opponent Left) -->
@@ -161,16 +192,7 @@
     </footer>
   </div>
 
-  <!-- Collapsible Game Log Drawer -->
-  <aside class="game-log-drawer hidden" id="game-log-drawer">
-    <div class="log-drawer-header">
-      <h4>📜 Nhật Ký Ván Đấu</h4>
-      <button class="modal-close-btn" id="btn-close-game-log">✕</button>
-    </div>
-    <div class="log-content" id="game-log-feed">
-      <div class="log-item initial">Ván đấu đã sẵn sàng!</div>
-    </div>
-  </aside>
+
 
   <!--
      Modals & Interactive Overlays

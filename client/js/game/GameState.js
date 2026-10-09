@@ -36,9 +36,15 @@ export class GameState {
 
     // Visible visitors
     this.visibleVisitors = [];
+
+    // Game action logs
+    this.actionLogs = [];
   }
 
   updateFromDto(dto) {
     Object.assign(this, dto);
+    if (dto.actionLogs) {
+      this.actionLogs = dto.actionLogs;
+    }
   }
 }

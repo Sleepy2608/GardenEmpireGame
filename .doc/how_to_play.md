@@ -288,19 +288,25 @@ Khi tham gia trận đấu tại [Garden Empire](https://garden-empire-game.verc
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ 🌿 GARDEN EMPIRE  |  MÃ PHÒNG: ABCXYZ  |  LƯỢT: Bạn [30s]  | 🔊 [Luật] [Rời] │
-├───────────────────────┬─────────────────────────────┬───────────────────────┤
-│ 👥 ĐỐI THỦ (Left)     │ 🦋 KHÁCH THĂM VƯỜN (Nobles) │ 🪴 XƯỞNG CỦA BẠN (R)  │
-│ - Người chơi 2        │ [Khách 1] [Khách 2] [Khách 3]│ - Điểm: 12 / 15★      │
-│ - Người chơi 3        ├─────────────────────────────┤ - Thanh tiến độ       │
-│                       │ 🌳 CHỢ CÂY TRỒNG (Market)   │                       │
-│ 📜 NHẬT KÝ VÁN ĐẤU    │ [Tier 3: 4 Thẻ Mở Ngửa]     │ 📦 TOKEN CẦM TAY      │
-│ - Tom trồng Sen Đá    │ [Tier 2: 4 Thẻ Mở Ngửa]     │ [🟫 2] [💧 1] [⭐ 1]  │
-│ - Jerry lấy 3 token   │ [Tier 1: 4 Thẻ Mở Ngửa]     │ (Tối đa 10)           │
-│                       ├─────────────────────────────┤ 🌿 GIẢM GIÁ BONUS     │
-│                       │ 🪙 NGÂN HÀNG NĂNG LƯỢNG     │ [🟫 +2] [💧 +3]       │
-│                       │ [🟫] [💧] [☀️] [🌰] [🧪] [⭐]│ 📑 THẺ ĐẶT CHỖ (Max 3)│
-│                       │ [Nút: Lấy Tài Nguyên]       │ [Thẻ 1] [Thẻ 2] [Trống]│
-└───────────────────────┴─────────────────────────────┴───────────────────────┘
+├─────────────────────────────────────────────────────────────────────────────┤
+│                         [PLAYER 3 / ĐỐI THỦ TRÊN]                           │
+│                                                                             │
+│ [PLAYER 2]      ┌────────────────────────────────────────┐  📜 NHẬT KÝ  ▼   │
+│ (Trái: Avatar,  │ 🦋 KHÁCH THĂM VƯỜN (Visitors)          │  • [Bảo] +1 Đất  │
+│  Điểm ★,        │ [Chồng Khách] [Khách 1] [Khách 2]...    │  • [An] giữ bài..│
+│  Token & Kho)   ├────────────────────────────────────────┤  (Cuộn / Ticker) │
+│                 │ 🌳 CHỢ CÂY TRỒNG (3 Tiers có Deck úp)  │                  │
+│                 │ [Tier 3: Deck + 4 Thẻ Mở Ngửa]         │  [PLAYER 4]      │
+│                 │ [Tier 2: Deck + 4 Thẻ Mở Ngửa]         │  (Phải: Avatar,  │
+│                 │ [Tier 1: Deck + 4 Thẻ Mở Ngửa]         │   Điểm ★,        │
+│                 ├────────────────────────────────────────┤   Token & Kho)   │
+│                 │ 🪙 NGÂN HÀNG NĂNG LƯỢNG (6 Viên Ngọc)  │                  │
+│                 │ [🟫] [💧] [☀️] [🌰] [🧪] [⭐]          │                  │
+│                 └────────────────────────────────────────┘                  │
+│                                                                             │
+│        [PLAYER 1 — CHÍNH BẠN (MASTER PLAYER DASHBOARD CỐ ĐỊNH Ở ĐÁY)]       │
+│  • Avatar & Tên | 🏆 Điểm: 12/15★ | 📦 Token cầm tay | 🌿 Bonus | 📑 Đặt chỗ│
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 1. **Lấy Token:**
@@ -313,8 +319,13 @@ Khi tham gia trận đấu tại [Garden Empire](https://garden-empire-game.verc
      - Nhấp **"Đặt Chỗ (Giữ)"** nếu bạn muốn giữ thẻ về tay và nhận 1 Phân Bón Vàng WILD ⭐.
 3. **Đặt chỗ thẻ bài úp từ xấp bài:**
    - Nhấp trực tiếp vào biểu tượng xấp bài úp ở đầu mỗi hàng Tier 1, Tier 2 hoặc Tier 3 để giữ thẻ bí mật.
-4. **Theo Dõi Đối Thủ:**
-   - Cột bên trái hiển thị chi tiết số điểm uy tín, số token cầm tay, số lượng giảm giá bonus của từng người chơi khác giúp bạn tính toán đối sách kịp thời.
+4. **Theo Dõi Đối Thủ Xung Quanh Bàn Đấu:**
+   - Các đối thủ ngồi quanh bàn cờ (Trái, Trên, Phải) hiển thị chi tiết số điểm uy tín, số token cầm tay, số lượng giảm giá bonus của từng người giúp bạn tính toán đối sách kịp thời.
+5. **Theo Dõi Nhật Ký Ván Đấu (Game Action Logs):**
+   - **Vị trí:** Nằm ở góc trên bên phải bàn đấu (Top-Right, phía trên Player 4).
+   - **Ghi nhận thời gian thực:** Mọi nước đi (Lấy token, giữ thẻ, trồng cây, rước khách, kích hoạt chung kết) đều được cập nhật tức thì với badge màu sinh động.
+   - **Thu gọn / Mở rộng (`▼` / `▲`):** Bấm nút mũi tên `▼` để thu gọn thành 1 thanh Mini Ticker mỏng gọn chỉ hiển thị hành động mới nhất (tiết kiệm không gian bàn đấu). Bấm `▲` hoặc click vào mini ticker để mở rộng danh sách cuộn đầy đủ.
+   - **Tự động cuộn thông minh:** Danh sách tự động cuộn xuống dưới cùng khi có hành động mới, nhưng sẽ tự động dừng cuộn nếu bạn đang chủ động cuộn lên xem lại lịch sử các lượt trước.
 
 ---
 

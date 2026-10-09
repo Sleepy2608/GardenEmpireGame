@@ -45,4 +45,7 @@ public class GameState {
     private int tier2DeckCount;
     private int tier3DeckCount;
     private int visitorDeckCount;
+    
+    @Builder.Default
+    private List<GameLogEntry> actionLogs = new ArrayList<>();
 }

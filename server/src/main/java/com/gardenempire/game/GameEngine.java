@@ -25,9 +25,13 @@ public class GameEngine {
         
         // Chọn ngẫu nhiên người đi đầu tiên
         int randomIndex = this.random.nextInt(players.size());
-        String firstPlayerId = players.get(randomIndex).getId();
+        Player firstPlayer = players.get(randomIndex);
+        String firstPlayerId = firstPlayer.getId();
         game.getState().setFirstPlayerId(firstPlayerId);
         game.getState().setCurrentTurnPlayerId(firstPlayerId);
+        
+        String startMsg = String.format("🌱 Ván đấu bắt đầu! %s là người đi đầu tiên.", firstPlayer.getName());
+        addLog(game, null, "GAME_START", startMsg, Map.of("firstPlayerId", firstPlayerId, "firstPlayerName", firstPlayer.getName()));
         
         return game;
     }
@@ -169,6 +173,17 @@ public class GameEngine {
             player.getTokens().put(res, player.getTokens().getOrDefault(res, 0) + count);
         }
 
+        // Ghi log hành động lấy tài nguyên
+        if (requestedTokens.size() == 1 && requestedTokens.values().iterator().next() == 2) {
+            Resource res = requestedTokens.keySet().iterator().next();
+            String msg = String.format("%s đã lấy 2 %s từ ngân hàng.", player.getName(), formatResourceName(res));
+            addLog(game, playerId, "TAKE_TOKENS_DOUBLE", msg, Map.of("resource", res.name(), "count", 2));
+        } else {
+            String tokenStr = formatTokenMap(requestedTokens);
+            String msg = String.format("%s đã lấy %s từ ngân hàng.", player.getName(), tokenStr);
+            addLog(game, playerId, "TAKE_TOKENS_DISTINCT", msg, Map.of("tokens", requestedTokens.toString()));
+        }
+
         // Nếu tổng token sau khi lấy <= 10 -> Lượt chơi hoàn tất và chuyển lượt
         // Nếu > 10 -> Giữ nguyên lượt để người chơi thực hiện EXTRA ACTION: returnTokens
         if (player.getTotalTokensCount() <= 10) {
@@ -256,6 +271,16 @@ public class GameEngine {
             player.getBonuses().put(bonus, player.getBonuses().getOrDefault(bonus, 0) + 1);
         }
 
+        // Ghi log hành động trồng cây
+        String sourceDesc = fromReserved ? "thẻ giữ sẵn" : "thẻ";
+        String perkDesc = targetCard.getPrestigePoints() > 0
+                ? String.format("[★ +%d, vĩnh viễn %s +1]", targetCard.getPrestigePoints(), formatResourceName(bonus))
+                : String.format("[vĩnh viễn %s +1]", formatResourceName(bonus));
+        String msg = String.format("%s đã trồng %s \"%s\" (Tier %d) %s.", 
+                player.getName(), sourceDesc, targetCard.getName(), targetCard.getTier(), perkDesc);
+        addLog(game, playerId, (fromReserved ? "BUY_CARD_RESERVED" : "BUY_CARD_BOARD"), msg, 
+                Map.of("cardId", targetCard.getId(), "cardName", targetCard.getName(), "tier", targetCard.getTier(), "prestigePoints", targetCard.getPrestigePoints()));
+
         // Rút thẻ mới lấp đầy bàn cờ nếu mua từ bàn
         if (!fromReserved) {
             refillMarket(game, tierFound);
@@ -308,10 +333,23 @@ public class GameEngine {
         // Nhận 1 Phân bón vàng (WILD) từ Bank nếu còn
         Map<Resource, Integer> bank = game.getState().getResourceBank();
         int wildInBank = bank.getOrDefault(Resource.WILD, 0);
+        boolean receivedWild = false;
         if (wildInBank > 0) {
             bank.put(Resource.WILD, wildInBank - 1);
             player.getTokens().put(Resource.WILD, player.getTokens().getOrDefault(Resource.WILD, 0) + 1);
+            receivedWild = true;
         }
+
+        // Ghi log hành động giữ cây
+        String cardDesc = (cardId != null)
+                ? String.format("thẻ \"%s\" (Tier %d)", targetCard.getName(), targetCard.getTier())
+                : String.format("1 thẻ ẩn từ chồng bài Tier %d", tierFromDeck);
+        String wildDesc = receivedWild
+                ? "và nhận +1 🌾 Phân Bón."
+                : "(không nhận Phân Bón do kho đã hết).";
+        String msg = String.format("%s đã giữ %s %s", player.getName(), cardDesc, wildDesc);
+        addLog(game, playerId, (cardId != null ? "RESERVE_CARD_BOARD" : "RESERVE_CARD_DECK"), msg,
+                Map.of("cardId", targetCard.getId(), "receivedWild", receivedWild));
 
         // Nếu tổng token sau khi nhận WILD <= 10 -> Lượt chơi hoàn tất
         // Nếu > 10 -> Yêu cầu người chơi trả bớt token bằng EXTRA ACTION: returnTokens
@@ -358,6 +396,11 @@ public class GameEngine {
             bank.put(res, bank.getOrDefault(res, 0) + count);
         }
 
+        // Ghi log hành động trả lại token
+        String tokenStr = formatTokenMap(returnedTokens);
+        String msg = String.format("%s đã trả lại %s do vượt quá 10 token.", player.getName(), tokenStr);
+        addLog(game, playerId, "RETURN_TOKENS", msg, Map.of("returnedTokens", returnedTokens.toString()));
+
         // Khi đã trả đủ token để tổng số <= 10 -> Chính thức hoàn tất lượt chơi
         if (player.getTotalTokensCount() <= 10) {
             endTurn(game, playerId);
@@ -391,6 +434,10 @@ public class GameEngine {
             visibleVisitors.remove(eligibleVisitor);
             player.getVisitors().add(eligibleVisitor);
             player.setPrestigePoints(player.getPrestigePoints() + eligibleVisitor.getPrestigePoints());
+
+            String msg = String.format("✨ %s đã đón Khách Thăm Vườn \"%s\" về vườn (+3★)!", player.getName(), eligibleVisitor.getName());
+            addLog(game, player.getId(), "CLAIM_VISITOR", msg, 
+                    Map.of("visitorId", eligibleVisitor.getId(), "visitorName", eligibleVisitor.getName(), "points", eligibleVisitor.getPrestigePoints()));
         }
     }
 
@@ -406,6 +453,8 @@ public class GameEngine {
         // 2. Kiểm tra kích hoạt Vòng chung kết (15 điểm)
         if (player.getPrestigePoints() >= 15 && !game.getState().isFinalRound()) {
             game.getState().setFinalRound(true);
+            String msg = String.format("🚨 %s đã chạm mốc %d điểm uy tín! Kích hoạt VÒNG CHUNG KẾT!", player.getName(), player.getPrestigePoints());
+            addLog(game, player.getId(), "FINAL_ROUND_TRIGGERED", msg, Map.of("points", player.getPrestigePoints()));
         }
 
         // 3. Chuyển lượt sang người kế tiếp
@@ -446,6 +495,10 @@ public class GameEngine {
 
         if (winner != null) {
             game.getState().setWinnerPlayerId(winner.getId());
+            String msg = String.format("👑 %s CHIẾN THẮNG với %d Điểm Uy Tín (sở hữu %d thẻ cây)! Ván đấu kết thúc.",
+                    winner.getName(), winner.getPrestigePoints(), winner.getPurchasedCards().size());
+            addLog(game, winner.getId(), "GAME_OVER", msg, 
+                    Map.of("winnerId", winner.getId(), "points", winner.getPrestigePoints(), "cardsCount", winner.getPurchasedCards().size()));
         }
     }
 
@@ -501,5 +554,49 @@ public class GameEngine {
             }
         }
         updateDeckCounts(game);
+    }
+
+    private void addLog(Game game, String playerId, String actionType, String message, Map<String, Object> details) {
+        Player player = playerId != null ? getPlayer(game, playerId) : null;
+        String playerName = player != null ? player.getName() : "Hệ thống";
+        String playerAvatar = player != null && player.getAvatar() != null ? player.getAvatar() : "🌱";
+
+        GameLogEntry entry = GameLogEntry.builder()
+                .id(UUID.randomUUID().toString().substring(0, 8))
+                .timestamp(System.currentTimeMillis())
+                .playerId(playerId)
+                .playerName(playerName)
+                .playerAvatar(playerAvatar)
+                .actionType(actionType)
+                .message(message)
+                .details(details)
+                .build();
+
+        game.getState().getActionLogs().add(entry);
+    }
+
+    private String formatResourceName(Resource res) {
+        if (res == null) return "";
+        return switch (res) {
+            case DIRT -> "🟫 Đất";
+            case WATER -> "💧 Nước";
+            case SUNLIGHT -> "☀️ Sáng";
+            case SEED -> "🌰 Hạt Giống";
+            case NUTRIENTS -> "🧪 Dinh Dưỡng";
+            case WILD -> "🌾 Phân Bón";
+        };
+    }
+
+    private String formatTokenMap(Map<Resource, Integer> tokens) {
+        if (tokens == null || tokens.isEmpty()) return "";
+        List<String> parts = new ArrayList<>();
+        List<Resource> order = List.of(Resource.DIRT, Resource.WATER, Resource.SUNLIGHT, Resource.SEED, Resource.NUTRIENTS, Resource.WILD);
+        for (Resource res : order) {
+            Integer count = tokens.get(res);
+            if (count != null && count > 0) {
+                parts.add(count + " " + formatResourceName(res));
+            }
+        }
+        return String.join(", ", parts);
     }
 }

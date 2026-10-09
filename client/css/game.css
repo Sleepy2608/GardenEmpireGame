@@ -397,43 +397,6 @@ html, body {
   padding: 0.15rem 0.6rem;
 }
 
-/* Game Log Side Drawer */
-.game-log-drawer {
-  position: fixed;
-  right: 1.25rem;
-  top: 75px;
-  width: 320px;
-  max-height: 480px;
-  background: rgba(8, 24, 15, 0.95);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--border-gold);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
-  display: flex;
-  flex-direction: column;
-  z-index: 100;
-  padding: 0.85rem;
-  transition: all var(--transition-normal);
-}
-
-.game-log-drawer.hidden {
-  display: none;
-}
-
-.log-drawer-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.log-drawer-header h4 {
-  font-size: 0.95rem;
-  color: var(--text-gold);
-}
-
 /* Legacy Layout Fallback */
 .game-layout {
   display: grid;
@@ -1798,5 +1761,346 @@ html, body {
       0 0 26px rgba(52, 211, 153, 0.75),
       0 8px 18px rgba(0, 0, 0, 0.5),
       inset 0 0 16px rgba(52, 211, 153, 0.35);
+  }
+}
+
+/* =============================================================================
+   GAME ACTION LOGS WIDGET (Top-Right Tabletop Arena)
+   ============================================================================= */
+.game-log-widget {
+  position: absolute;
+  top: 8px;
+  right: 14px;
+  width: 280px;
+  max-width: calc(100vw - 28px);
+  z-index: 85;
+  background: rgba(13, 26, 18, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  border-radius: 12px;
+  box-shadow: 
+    0 10px 28px rgba(0, 0, 0, 0.7),
+    0 0 16px rgba(74, 222, 128, 0.08);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.game-log-widget.is-collapsed {
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+/* Header */
+.game-log-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.75rem;
+  background: rgba(0, 0, 0, 0.35);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  user-select: none;
+}
+
+.game-log-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #fde047;
+  text-transform: uppercase;
+}
+
+.log-title-icon {
+  font-size: 0.95rem;
+}
+
+.game-log-count-badge {
+  background: rgba(74, 222, 128, 0.2);
+  color: #4ade80;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.08rem 0.42rem;
+  border-radius: 10px;
+  border: 1px solid rgba(74, 222, 128, 0.35);
+}
+
+.game-log-toggle-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  border-radius: 6px;
+  padding: 0.2rem 0.48rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.game-log-toggle-btn:hover {
+  background: rgba(74, 222, 128, 0.2);
+  color: #ffffff;
+  border-color: rgba(74, 222, 128, 0.5);
+}
+
+.toggle-arrow-icon {
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+/* Collapsed Mini Ticker Bar */
+.game-log-mini-ticker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  background: rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.game-log-mini-ticker:hover {
+  background: rgba(74, 222, 128, 0.12);
+}
+
+.ticker-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 8px #4ade80;
+  flex-shrink: 0;
+  animation: log-pulse-dot 1.5s infinite;
+}
+
+@keyframes log-pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.85); }
+}
+
+.ticker-text-wrapper {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.ticker-text {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.74rem;
+  color: #e2e8f0;
+}
+
+.ticker-text strong {
+  color: #fde047;
+  font-weight: 700;
+}
+
+.ticker-expand-icon {
+  font-size: 0.68rem;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+/* Expanded Full Feed */
+.game-log-feed {
+  max-height: 230px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.45rem 0.55rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.38rem;
+}
+
+.game-log-feed::-webkit-scrollbar {
+  width: 5px;
+}
+
+.game-log-feed::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.game-log-feed::-webkit-scrollbar-thumb {
+  background: rgba(74, 222, 128, 0.35);
+  border-radius: 4px;
+}
+
+.game-log-feed::-webkit-scrollbar-thumb:hover {
+  background: rgba(74, 222, 128, 0.6);
+}
+
+/* Log Item Cards */
+.log-item {
+  padding: 0.42rem 0.55rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+  border-left: 3px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.74rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  transition: background 0.15s ease;
+}
+
+.log-item:hover {
+  background: rgba(255, 255, 255, 0.065);
+}
+
+.log-item.log-empty-state {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  color: #94a3b8;
+  font-style: italic;
+  padding: 1rem 0.5rem;
+  text-align: center;
+  border-left: none;
+}
+
+.log-item.log-item-mine {
+  background: rgba(74, 222, 128, 0.08);
+  border-left-color: #4ade80;
+}
+
+.log-item.action-buy-card-board,
+.log-item.action-buy-card-reserved {
+  border-left-color: #f59e0b;
+}
+
+.log-item.action-claim-visitor {
+  border-left-color: #ec4899;
+  background: rgba(236, 72, 153, 0.09);
+}
+
+.log-item.action-game-start {
+  border-left-color: #38bdf8;
+}
+
+.log-item.action-final-round-triggered {
+  border-left-color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.log-item.action-game-over {
+  border-left-color: #fbbf24;
+  background: rgba(251, 191, 36, 0.12);
+  font-weight: 600;
+}
+
+/* Log Item Header & Body */
+.log-item-header {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.71rem;
+}
+
+.log-player-avatar {
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.log-player-name {
+  font-weight: 700;
+  color: #f1f5f9;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.log-player-name.text-mine {
+  color: #4ade80;
+}
+
+.log-timestamp {
+  color: #64748b;
+  font-size: 0.65rem;
+  font-family: var(--font-stats);
+  flex-shrink: 0;
+}
+
+.log-item-message {
+  color: #cbd5e1;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+/* Token Badges & Prestige Gain */
+.log-token-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.05rem 0.32rem;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  margin: 0 0.1rem;
+  vertical-align: middle;
+}
+
+.badge-dirt {
+  background: rgba(139, 90, 43, 0.28);
+  color: #d4a373;
+  border: 1px solid rgba(139, 90, 43, 0.45);
+}
+
+.badge-water {
+  background: rgba(14, 165, 233, 0.28);
+  color: #7dd3fc;
+  border: 1px solid rgba(14, 165, 233, 0.45);
+}
+
+.badge-sunlight {
+  background: rgba(245, 158, 11, 0.28);
+  color: #fde047;
+  border: 1px solid rgba(245, 158, 11, 0.45);
+}
+
+.badge-seed {
+  background: rgba(100, 116, 139, 0.32);
+  color: #cbd5e1;
+  border: 1px solid rgba(100, 116, 139, 0.5);
+}
+
+.badge-nutrients {
+  background: rgba(16, 185, 129, 0.28);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.45);
+}
+
+.badge-wild {
+  background: rgba(234, 179, 8, 0.28);
+  color: #fef08a;
+  border: 1px solid rgba(234, 179, 8, 0.5);
+}
+
+.log-prestige-gain {
+  font-weight: 800;
+  color: #fbbf24;
+  text-shadow: 0 0 6px rgba(251, 191, 36, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .game-log-widget {
+    width: 240px;
+    top: 6px;
+    right: 10px;
+  }
+}
+
+@media (max-height: 750px) {
+  .game-log-feed {
+    max-height: 170px;
   }
 }
