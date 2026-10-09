@@ -24,10 +24,10 @@ export function getRouteUrl(route, params = '') {
 
   const routeMap = {
     'index': isLocalStatic ? 'index.html' : '/',
-    'lobby': isLocalStatic ? 'lobby.html' : 'lobby',
-    'room': isLocalStatic ? 'waiting-room.html' : 'room',
-    'waiting-room': isLocalStatic ? 'waiting-room.html' : 'room',
-    'game': isLocalStatic ? 'game.html' : 'game'
+    'lobby': isLocalStatic ? 'lobby.html' : '/lobby',
+    'room': isLocalStatic ? 'waiting-room.html' : '/room',
+    'waiting-room': isLocalStatic ? 'waiting-room.html' : '/room',
+    'game': isLocalStatic ? 'game.html' : '/game'
   };
 
   const target = routeMap[route] || route;

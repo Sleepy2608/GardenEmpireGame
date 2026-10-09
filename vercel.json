@@ -4,23 +4,27 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/client/index.html"
+      "destination": "/client"
+    },
+    {
+      "source": "/index",
+      "destination": "/client"
     },
     {
       "source": "/lobby",
-      "destination": "/client/lobby.html"
+      "destination": "/client/lobby"
     },
     {
       "source": "/room",
-      "destination": "/client/waiting-room.html"
+      "destination": "/client/waiting-room"
     },
     {
       "source": "/waiting-room",
-      "destination": "/client/waiting-room.html"
+      "destination": "/client/waiting-room"
     },
     {
       "source": "/game",
-      "destination": "/client/game.html"
+      "destination": "/client/game"
     },
     {
       "source": "/(.*)",
