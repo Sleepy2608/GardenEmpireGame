@@ -31,7 +31,8 @@
 **Garden Empire** đưa người chơi vào vai các nghệ nhân thực vật học tài hoa, cạnh tranh kiến tạo khu vườn thượng uyển tráng lệ nhất vương quốc:
 - **Thu thập năng lượng thiên nhiên** (Đất, Nước, Ánh Sáng, Hạt Giống, Dinh Dưỡng, Phân Bón Vàng).
 - **Nuôi trồng thẻ cây** thuộc 3 cấp độ (Tier 1, Tier 2, Tier 3) để tích lũy điểm uy tín vĩnh viễn và tạo hiệu ứng giảm giá mua cây tiếp theo.
-- **Rước các Vị Khách Quý Tộc & Linh Vật** (Chim én, Bọ rùa, Nhà thực vật học...) khi khu vườn hội tụ đủ các tiêu chí thực vật đặc sắc.
+- **Bàn cờ Tabletop 3D (Around-the-Table Arena):** Chiếu cờ 3D sinh động ở trung tâm, các đối thủ ngồi bao quanh bàn và thanh điều khiển của bạn cố định ở đáy, tự động co giãn (`TabletopFit`) vừa vặn mọi màn hình.
+- **Nhật ký hành động thời gian thực (Game Action Logs):** Ghi lại chi tiết từng lượt bốc token, giữ thẻ, trồng cây, đón khách quý, chạm mốc 15 điểm chung kết; tích hợp widget cuộn mượt và nút mũi tên `▼`/`▲` thu gọn thành 1 dòng mini ticker mỏng nhẹ.
 - **Phòng chờ & Quản lý chủ phòng (Waiting Room):** Quản lý chủ phòng (Room Host), chỉ chủ phòng có quyền bắt đầu trận đấu khi đủ 2–4 người chơi, tính năng kick người chơi kèm lệnh cấm 2 phút (cooldown ban) và chọn ngẫu nhiên lượt đi đầu tiên.
 - **Đồng bộ đa người chơi thời gian thực (Real-time Multiplayer)** với độ trễ thấp thông qua WebSocket Native.
 
@@ -142,13 +143,15 @@ GardenEmpireGame/
 │       ├── api/roomApi.js           # Giao tiếp REST API tạo phòng, vào phòng, kick, rời phòng
 │       └── ui/
 │           ├── BoardUI.js           # Điều phối toàn bộ sự kiện và hoạt ảnh bàn cờ
+│           ├── GameLogUI.js         # Nhật ký hành động ván đấu, collapsible ticker, token badge highlight
 │           ├── LobbyUI.js           # Render danh sách phòng và cập nhật sảnh chờ
 │           ├── WaitingRoomUI.js     # Điều khiển phòng chờ: Host controls, kick ban, WebSocket sync
 │           ├── PlayerUI.js          # Render kho thẻ, token cầm tay và điểm số người chơi
 │           └── ResourceUI.js        # Render ngân hàng ngọc & trạng thái chip năng lượng
 │
 ├── tests/                           # Kịch bản kiểm thử tích hợp & E2E mô phỏng
-│   └── test_multi_tab.js            # Kịch bản kiểm thử E2E giả lập đa người chơi
+│   ├── test_multi_tab.js            # Kịch bản kiểm thử E2E giả lập đa người chơi
+│   └── test_game_action_logs_e2e.js # Kịch bản kiểm thử E2E đồng bộ nhật ký hành động đa tab
 │
 └── server/                          # Máy chủ Backend (Spring Boot 3.2.4)
     ├── pom.xml                      # Quản lý Maven dependencies (Web, WebSocket, JPA, Postgres)
@@ -235,13 +238,18 @@ Dự án bao gồm bộ kiểm thử tự động toàn diện:
 cd server
 mvn test
 ```
-*Kết quả:* **21/21 Unit & Integration Tests PASS 100%**.
+*Kết quả:* **22/22 Unit & Integration Tests PASS 100%**.
 
-### 2. Multi-Tab E2E Simulation Test:
-Kiểm thử giả lập 3 người chơi kết nối WebSocket, tạo phòng, bốc ngọc đồng thời và giải phóng phòng:
+### 2. Multi-Tab E2E Simulation Tests:
+- **Kiểm thử đa tab tổng thể (Phòng, bốc token, giữ bài, F5 reconnect):**
 ```bash
 node tests/test_multi_tab.js
 ```
+- **Kiểm thử đồng bộ thời gian thực Nhật ký hành động (Game Action Logs):**
+```bash
+node tests/test_game_action_logs_e2e.js
+```
+*Kết quả:* **100% kịch bản E2E PASS thành công**.
 
 ---
 
