@@ -431,4 +431,56 @@ class GameEngineTest {
         p1.getTokens().put(Resource.DIRT, 3); // Chỉ có 3 token (<= 10)
         assertThrows(GameException.class, () -> gameEngine.returnTokens(game, "p1", Map.of(Resource.DIRT, 1)));
     }
+
+    // ==========================================
+    // TEST 8: HỆ THỐNG GHI NHẬT KÝ VÁN ĐẤU (GAME ACTION LOGS)
+    // ==========================================
+    @Test
+    @DisplayName("Kiểm tra toàn bộ luồng ghi log tự động cho các hành động trong trận đấu")
+    void testGameActionLogs_FullWorkflow() {
+        Game game = gameEngine.createNewGame("game_log_test", players2);
+        GameState state = game.getState();
+
+        // 1. Log bắt đầu ván đấu
+        assertFalse(state.getActionLogs().isEmpty());
+        GameLogEntry startLog = state.getActionLogs().get(0);
+        assertEquals("GAME_START", startLog.getActionType());
+        assertTrue(startLog.getMessage().contains("Ván đấu bắt đầu"));
+
+        // 2. Log lấy tài nguyên 3 loại khác nhau
+        gameEngine.takeTokens(game, "p1", Map.of(Resource.DIRT, 1, Resource.WATER, 1, Resource.SUNLIGHT, 1));
+        GameLogEntry takeLog = state.getActionLogs().get(state.getActionLogs().size() - 1);
+        assertEquals("TAKE_TOKENS_DISTINCT", takeLog.getActionType());
+        assertEquals("p1", takeLog.getPlayerId());
+        assertTrue(takeLog.getMessage().contains("Alice đã lấy"));
+
+        // 3. Log lấy tài nguyên 2 loại cùng loại (p2)
+        gameEngine.takeTokens(game, "p2", Map.of(Resource.SEED, 2));
+        GameLogEntry doubleLog = state.getActionLogs().get(state.getActionLogs().size() - 1);
+        assertEquals("TAKE_TOKENS_DOUBLE", doubleLog.getActionType());
+        assertEquals("p2", doubleLog.getPlayerId());
+        assertTrue(doubleLog.getMessage().contains("Bob đã lấy 2"));
+
+        // 4. Log giữ thẻ bài và nhận xu Wild (p1)
+        PlantCard cardToReserve = state.getVisibleTier1Cards().get(0);
+        String cardName = cardToReserve.getName();
+        gameEngine.reservePlantCard(game, "p1", cardToReserve.getId(), null);
+        GameLogEntry reserveLog = state.getActionLogs().get(state.getActionLogs().size() - 1);
+        assertEquals("RESERVE_CARD_BOARD", reserveLog.getActionType());
+        assertTrue(reserveLog.getMessage().contains(cardName));
+        assertTrue(reserveLog.getMessage().contains("+1 🌾 Phân Bón"));
+
+        // 5. Log mua thẻ bài đã giữ sẵn trên tay (p1)
+        Player p1 = gameEngine.getPlayer(game, "p1");
+        // Giả lập p2 thực hiện action để đến lượt p1
+        gameEngine.takeTokens(game, "p2", Map.of(Resource.WATER, 1, Resource.SUNLIGHT, 1, Resource.NUTRIENTS, 1));
+        
+        // Cho p1 đủ tiền mua thẻ vừa giữ
+        cardToReserve.getCost().forEach((res, amt) -> p1.getTokens().put(res, amt));
+        gameEngine.buyPlantCard(game, "p1", cardToReserve.getId(), true);
+        GameLogEntry buyLog = state.getActionLogs().get(state.getActionLogs().size() - 1);
+        assertEquals("BUY_CARD_RESERVED", buyLog.getActionType());
+        assertTrue(buyLog.getMessage().contains("đã trồng thẻ giữ sẵn"));
+        assertTrue(buyLog.getMessage().contains(cardName));
+    }
 }
