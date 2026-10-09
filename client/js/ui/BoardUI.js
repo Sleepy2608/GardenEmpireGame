@@ -7,6 +7,7 @@ import { VisitorUI } from './VisitorUI.js';
 import { ResourceUI } from './ResourceUI.js';
 import { PlayerUI } from './PlayerUI.js';
 import { TabletopFit } from './TabletopFit.js';
+import { gameLogUI } from './GameLogUI.js';
 import { sessionGuard } from '../utils/sessionGuard.js';
 import { navigateTo } from '../utils/navigation.js';
 
@@ -52,6 +53,7 @@ export class BoardUI {
   init() {
     this.initStaticDOMElements();
     this.initEventListeners();
+    gameLogUI.init();
     TabletopFit.init();
     this.socket.connect();
   }
@@ -148,16 +150,6 @@ export class BoardUI {
       confirmTokensBtn.addEventListener('click', () => this.onConfirmTakeTokens());
     }
 
-    // Toggle Game Log Drawer
-    const logToggleBtn = document.getElementById('btn-toggle-game-log');
-    const logCloseBtn = document.getElementById('btn-close-game-log');
-    const logDrawer = document.getElementById('game-log-drawer');
-    if (logToggleBtn && logDrawer) {
-      logToggleBtn.addEventListener('click', () => logDrawer.classList.toggle('hidden'));
-    }
-    if (logCloseBtn && logDrawer) {
-      logCloseBtn.addEventListener('click', () => logDrawer.classList.add('hidden'));
-    }
     // Back to Lobby on Game Over
     const backToLobbyBtn = document.getElementById('btn-back-to-lobby');
     if (backToLobbyBtn) {
@@ -254,6 +246,9 @@ export class BoardUI {
         opponentsContainer.appendChild(PlayerUI.renderOpponent(opp, isCurrentTurn));
       });
     }
+
+    // 7. Game Action Logs Feed
+    gameLogUI.render(this.gameState.actionLogs, this.guestId);
 
     TabletopFit.adjustFit();
     requestAnimationFrame(() => TabletopFit.adjustFit());
