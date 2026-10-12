@@ -28,6 +28,9 @@ public class GameActionRequest {
     
     private Map<Resource, Integer> returnedTokens;
     
+    @JsonAlias({"message", "chatMessage", "content"})
+    private String message;
+    
     // Nested payload support if sent as { type, gameId, playerId, payload: { ... } }
     private Map<String, Object> payload;
 
@@ -109,6 +112,22 @@ public class GameActionRequest {
             }
         }
         return returnedTokens;
+    }
+
+    public String getResolvedMessage() {
+        if (message != null && !message.trim().isEmpty()) {
+            return message.trim();
+        }
+        if (payload != null) {
+            Object raw = payload.get("message");
+            if (raw == null) raw = payload.get("chatMessage");
+            if (raw == null) raw = payload.get("content");
+            if (raw != null) {
+                String str = raw.toString().trim();
+                if (!str.isEmpty()) return str;
+            }
+        }
+        return null;
     }
 }
 
