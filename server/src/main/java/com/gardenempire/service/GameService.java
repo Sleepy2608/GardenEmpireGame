@@ -87,7 +87,8 @@ public class GameService {
                 return null;
             }
 
-            if (!"GET_STATE".equals(actionType)) {
+            boolean isTurnExempt = "GET_STATE".equals(actionType) || "SEND_CHAT".equals(actionType) || "CHAT".equals(actionType);
+            if (!isTurnExempt) {
                 if (game.getState().isGameOver()) {
                     throw new GameException("Trận đấu đã kết thúc, không thể thực hiện thêm hành động.");
                 }
@@ -116,6 +117,10 @@ public class GameService {
                     java.util.Map<com.gardenempire.game.Resource, Integer> returnedTokens = action.getResolvedReturnedTokens();
                     gameEngine.returnTokens(game, playerId, returnedTokens);
                 }
+                case "SEND_CHAT", "CHAT" -> {
+                    String chatMsg = action.getResolvedMessage();
+                    gameEngine.sendChatMessage(game, playerId, chatMsg);
+                }
                 case "GET_STATE" -> {
                     // Return current state unchanged
                 }
@@ -135,5 +140,13 @@ public class GameService {
     public void removeGame(String gameId) {
         activeGames.remove(gameId);
         roomLocks.remove(gameId);
+    }
+
+    public com.gardenempire.game.ChatMessage sendChatMessage(String gameId, String playerId, String message) {
+        Game game = getGame(gameId, playerId);
+        if (game == null) {
+            throw new GameException("Không tìm thấy trận đấu với ID: " + gameId);
+        }
+        return gameEngine.sendChatMessage(game, playerId, message);
     }
 }
