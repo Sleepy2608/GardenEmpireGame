@@ -483,4 +483,99 @@ class GameEngineTest {
         assertTrue(buyLog.getMessage().contains("đã trồng thẻ giữ sẵn"));
         assertTrue(buyLog.getMessage().contains(cardName));
     }
+
+    // ==========================================
+    // TEST 13: IN-GAME CHAT SYSTEM (PHASE 13)
+    // ==========================================
+
+    @Test
+    @DisplayName("Chat: Gửi tin nhắn thành công, đúng avatar, tên và lưu vào GameState")
+    void testSendChatMessage_Success() {
+        Game game = gameEngine.createNewGame("game-chat-1", players2);
+        ChatMessage msg = gameEngine.sendChatMessage(game, "p1", "Xin chào mọi người!");
+
+        assertNotNull(msg);
+        assertNotNull(msg.getId());
+        assertEquals("p1", msg.getPlayerId());
+        assertEquals("Alice", msg.getPlayerName());
+        assertEquals("🌱", msg.getPlayerAvatar());
+        assertEquals("Xin chào mọi người!", msg.getContent());
+        assertTrue(msg.getTimestamp() > 0);
+
+        List<ChatMessage> chatList = game.getState().getChatMessages();
+        assertEquals(1, chatList.size());
+        assertEquals(msg, chatList.get(0));
+    }
+
+    @Test
+    @DisplayName("Chat: Chặn tin nhắn rỗng hoặc chỉ chứa khoảng trắng")
+    void testSendChatMessage_EmptyOrWhitespaceRejection() {
+        Game game = gameEngine.createNewGame("game-chat-2", players2);
+
+        assertThrows(GameException.class, () -> gameEngine.sendChatMessage(game, "p1", null));
+        assertThrows(GameException.class, () -> gameEngine.sendChatMessage(game, "p1", ""));
+        assertThrows(GameException.class, () -> gameEngine.sendChatMessage(game, "p1", "    "));
+    }
+
+    @Test
+    @DisplayName("Chat: XSS Sanitization bảo vệ chuỗi HTML injection")
+    void testSendChatMessage_HtmlSanitization() {
+        Game game = gameEngine.createNewGame("game-chat-3", players2);
+        String dangerousContent = "<script>alert('xss')</script> & \"bold\"";
+        ChatMessage msg = gameEngine.sendChatMessage(game, "p1", dangerousContent);
+
+        assertEquals("&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt; &amp; &quot;bold&quot;", msg.getContent());
+    }
+
+    @Test
+    @DisplayName("Chat: Giới hạn độ dài tối đa 120 ký tự (clamp)")
+    void testSendChatMessage_MaxLength120() {
+        Game game = gameEngine.createNewGame("game-chat-4", players2);
+        String longText = "A".repeat(150);
+        ChatMessage msg = gameEngine.sendChatMessage(game, "p1", longText);
+
+        assertEquals(120, msg.getContent().length());
+    }
+
+    @Test
+    @DisplayName("Chat: Giới hạn tối đa 50 tin nhắn trong RAM, tự động loại bỏ tin cũ nhất")
+    void testSendChatMessage_MaxHistory50() {
+        Game game = gameEngine.createNewGame("game-chat-5", players2);
+
+        for (int i = 1; i <= 55; i++) {
+            gameEngine.resetChatCooldown("game-chat-5", "p1");
+            gameEngine.sendChatMessage(game, "p1", "Tin nhắn thứ " + i);
+        }
+
+        List<ChatMessage> chatList = game.getState().getChatMessages();
+        assertEquals(50, chatList.size());
+        // Tin cũ nhất còn lại phải là tin thứ 6
+        assertEquals("Tin nhắn thứ 6", chatList.get(0).getContent());
+        // Tin mới nhất là tin thứ 55
+        assertEquals("Tin nhắn thứ 55", chatList.get(49).getContent());
+    }
+
+    @Test
+    @DisplayName("Chat: Chống spam rate limiting 600ms giữa 2 lần gửi từ cùng 1 người")
+    void testSendChatMessage_CooldownRateLimit() {
+        Game game = gameEngine.createNewGame("game-chat-6", players2);
+
+        // Lần 1: Thành công
+        gameEngine.sendChatMessage(game, "p1", "Tin đầu tiên");
+
+        // Lần 2 gửi ngay lập tức (<600ms): Thất bại
+        GameException ex = assertThrows(GameException.class, () -> 
+            gameEngine.sendChatMessage(game, "p1", "Tin thứ hai liên tiếp")
+        );
+        assertTrue(ex.getMessage().contains("quá nhanh"));
+
+        // Người chơi p2 gửi: Thành công (không bị ảnh hưởng bởi p1)
+        ChatMessage p2Msg = gameEngine.sendChatMessage(game, "p2", "Bob nói chào");
+        assertEquals("Bob", p2Msg.getPlayerName());
+
+        // Sau khi reset cooldown: p1 gửi lại thành công
+        gameEngine.resetChatCooldown("game-chat-6", "p1");
+        ChatMessage retryMsg = gameEngine.sendChatMessage(game, "p1", "Tin thứ hai sau cooldown");
+        assertEquals("Tin thứ hai sau cooldown", retryMsg.getContent());
+    }
 }
