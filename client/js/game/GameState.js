@@ -39,12 +39,18 @@ export class GameState {
 
     // Game action logs
     this.actionLogs = [];
+
+    // In-game chat messages
+    this.chatMessages = [];
   }
 
   updateFromDto(dto) {
     Object.assign(this, dto);
     if (dto.actionLogs) {
       this.actionLogs = dto.actionLogs;
+    }
+    if (dto.chatMessages) {
+      this.chatMessages = dto.chatMessages;
     }
   }
 }

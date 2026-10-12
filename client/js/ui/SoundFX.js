@@ -94,6 +94,12 @@ class SoundFXEngine {
   playErrorSound() {
     this.playTone(220, 'sawtooth', 0.15, 0.08, 0);
   }
+
+  // 7. Tin nhắn chat mới (âm thanh pop nhẹ nhàng)
+  playChatSound() {
+    this.playTone(587.33, 'sine', 0.08, 0.08, 0);    // D5
+    this.playTone(880.00, 'sine', 0.12, 0.06, 0.04); // A5
+  }
 }
 
 export const SoundFX = new SoundFXEngine();
