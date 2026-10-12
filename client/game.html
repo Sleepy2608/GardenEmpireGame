@@ -51,6 +51,9 @@
       <button class="btn-nature-secondary btn-sm" id="btn-toggle-sound" title="Bật/Tắt âm thanh">
         <span id="sound-icon">🔊</span>
       </button>
+      <button class="btn-nature-secondary btn-sm" id="btn-toggle-chat" title="Khung trò chuyện (Nhấn Enter để mở)">
+        <span>💬</span> <span>Trò Chuyện</span>
+      </button>
       <button class="btn-nature-secondary btn-sm" id="btn-toggle-game-log" title="Nhật ký ván đấu">
         <span>📜</span> <span>Nhật Ký</span>
       </button>
@@ -98,6 +101,53 @@
           <span class="log-empty-icon">🌱</span>
           <span>Ván đấu đã sẵn sàng, chờ hành động đầu tiên...</span>
         </div>
+      </div>
+    </div>
+
+    <!-- In-Game Chat Widget (Bottom-Left as per Mockup UI Match) -->
+    <div class="chat-widget glass-panel" id="chat-widget">
+      <div class="chat-header" id="chat-header">
+        <div class="chat-title">
+          <span class="chat-title-icon">💬</span>
+          <span class="chat-title-text">TRÒ CHUYỆN</span>
+          <span class="chat-unread-badge hidden" id="chat-unread-badge">0</span>
+        </div>
+        <button class="chat-toggle-btn" id="btn-toggle-chat-collapse" title="Thu gọn / Mở rộng trò chuyện">
+          <span class="toggle-arrow-icon" id="chat-toggle-arrow">▼</span>
+        </button>
+      </div>
+
+      <!-- Collapsed Mini Ticker Bar (shown when collapsed) -->
+      <div class="chat-mini-ticker hidden" id="chat-mini-ticker" title="Bấm để mở rộng trò chuyện">
+        <span class="chat-pulse-dot"></span>
+        <div class="chat-ticker-text-wrapper">
+          <span class="chat-ticker-text" id="chat-latest-text">Chưa có tin nhắn...</span>
+        </div>
+        <span class="chat-ticker-expand-icon">▲</span>
+      </div>
+
+      <!-- Expanded Full Content (Feed + Input) -->
+      <div class="chat-body" id="chat-body">
+        <div class="chat-feed" id="chat-feed">
+          <div class="chat-msg-item chat-empty-state">
+            <span class="chat-empty-icon">🌱</span>
+            <span>Trò chuyện cùng bạn bè trong phòng... (Nhấn Enter để gõ)</span>
+          </div>
+        </div>
+
+        <form class="chat-input-bar" id="chat-form">
+          <input
+            type="text"
+            id="chat-input"
+            class="chat-input"
+            placeholder="Gõ tin nhắn... (Enter để gửi)"
+            maxlength="120"
+            autocomplete="off"
+          />
+          <button type="submit" class="chat-send-btn" id="btn-send-chat" title="Gửi tin nhắn (Enter)">
+            <span class="chat-send-icon">➤</span>
+          </button>
+        </form>
       </div>
     </div>
 
