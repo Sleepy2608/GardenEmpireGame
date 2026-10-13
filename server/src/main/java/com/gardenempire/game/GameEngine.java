@@ -599,4 +599,65 @@ public class GameEngine {
         }
         return String.join(", ", parts);
     }
+
+    private final Map<String, Long> lastChatTimestamps = new java.util.concurrent.ConcurrentHashMap<>();
+
+    public ChatMessage sendChatMessage(Game game, String playerId, String rawContent) {
+        if (game == null) {
+            throw new GameException("Trận đấu không tồn tại.");
+        }
+        Player player = getPlayer(game, playerId);
+
+        if (rawContent == null || rawContent.trim().isEmpty()) {
+            throw new GameException("Nội dung tin nhắn không được để trống.");
+        }
+
+        // Anti-spam rate limiting: tối thiểu 600ms giữa 2 lần gửi từ cùng 1 người chơi
+        String cooldownKey = game.getState().getGameId() + ":" + playerId;
+        long now = System.currentTimeMillis();
+        Long lastTime = lastChatTimestamps.get(cooldownKey);
+        if (lastTime != null && (now - lastTime) < 600L) {
+            throw new GameException("Bạn đang gửi tin nhắn quá nhanh. Vui lòng thử lại sau giây lát.");
+        }
+        lastChatTimestamps.put(cooldownKey, now);
+
+        String trimmed = rawContent.trim();
+        if (trimmed.length() > 120) {
+            trimmed = trimmed.substring(0, 120);
+        }
+
+        String sanitized = sanitizeHtml(trimmed);
+
+        String playerAvatar = (player.getAvatar() != null && !player.getAvatar().isEmpty()) ? player.getAvatar() : "🌱";
+
+        ChatMessage chatMessage = ChatMessage.builder()
+                .id(UUID.randomUUID().toString().substring(0, 8))
+                .timestamp(now)
+                .playerId(player.getId())
+                .playerName(player.getName())
+                .playerAvatar(playerAvatar)
+                .content(sanitized)
+                .build();
+
+        List<ChatMessage> chatList = game.getState().getChatMessages();
+        chatList.add(chatMessage);
+        while (chatList.size() > 50) {
+            chatList.remove(0);
+        }
+
+        return chatMessage;
+    }
+
+    public void resetChatCooldown(String gameId, String playerId) {
+        lastChatTimestamps.remove(gameId + ":" + playerId);
+    }
+
+    private String sanitizeHtml(String input) {
+        if (input == null) return "";
+        return input.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
+    }
 }

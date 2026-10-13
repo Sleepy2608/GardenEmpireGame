@@ -8,6 +8,7 @@ import { ResourceUI } from './ResourceUI.js';
 import { PlayerUI } from './PlayerUI.js';
 import { TabletopFit } from './TabletopFit.js';
 import { gameLogUI } from './GameLogUI.js';
+import { chatUI } from './ChatUI.js';
 import { sessionGuard } from '../utils/sessionGuard.js';
 import { navigateTo } from '../utils/navigation.js';
 
@@ -54,6 +55,7 @@ export class BoardUI {
     this.initStaticDOMElements();
     this.initEventListeners();
     gameLogUI.init();
+    chatUI.init((msg) => this.sendChatMessage(msg));
     TabletopFit.init();
     this.socket.connect();
   }
@@ -182,6 +184,8 @@ export class BoardUI {
 
       this.render();
       this.checkSpecialGameStates();
+    } else if (message.type === 'CHAT_MESSAGE_RECEIVED') {
+      chatUI.onMessageReceived(message.message, this.guestId);
     } else if (message.type === 'ERROR') {
       SoundFX.playErrorSound();
       this.showToast(`⚠️ ${message.message || 'Hành động không hợp lệ'}`);
@@ -250,8 +254,16 @@ export class BoardUI {
     // 7. Game Action Logs Feed
     gameLogUI.render(this.gameState.actionLogs, this.guestId);
 
+    // 8. In-Game Chat Feed
+    chatUI.render(this.gameState.chatMessages, this.guestId);
+
     TabletopFit.adjustFit();
     requestAnimationFrame(() => TabletopFit.adjustFit());
+  }
+
+  sendChatMessage(content) {
+    if (!content || !content.trim()) return;
+    this.socket.send('SEND_CHAT', { message: content.trim() });
   }
 
   renderTurnBanner() {

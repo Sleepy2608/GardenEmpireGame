@@ -3,6 +3,7 @@ package com.gardenempire.websocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gardenempire.dto.GameActionRequest;
 import com.gardenempire.dto.GameStateResponse;
+import com.gardenempire.game.ChatMessage;
 import com.gardenempire.game.GameState;
 import com.gardenempire.service.GameService;
 import lombok.RequiredArgsConstructor;
@@ -105,6 +106,12 @@ public class GameMessageHandler {
             GameState updatedState = gameService.processAction(gameId, action);
             if (updatedState != null) {
                 broadcastGameState(gameId, updatedState);
+                if ("SEND_CHAT".equals(action.getResolvedActionType()) || "CHAT".equals(action.getResolvedActionType())) {
+                    java.util.List<ChatMessage> msgs = updatedState.getChatMessages();
+                    if (msgs != null && !msgs.isEmpty()) {
+                        broadcastChatMessage(gameId, msgs.get(msgs.size() - 1));
+                    }
+                }
             }
         } catch (com.gardenempire.exception.GameException ge) {
             log.warn("Lỗi logic game cho gameId={}: {}", gameId, ge.getMessage());
@@ -171,6 +178,17 @@ public class GameMessageHandler {
         message.put("type", "YOU_ARE_KICKED");
         message.put("roomId", roomId);
         sendToSession(session, message);
+    }
+
+    /**
+     * Broadcast tin nhắn chat mới tới toàn bộ người chơi trong phòng đấu
+     * Frontend lắng nghe type = "CHAT_MESSAGE_RECEIVED"
+     */
+    public void broadcastChatMessage(String gameId, ChatMessage message) {
+        Map<String, Object> payload = new java.util.LinkedHashMap<>();
+        payload.put("type", "CHAT_MESSAGE_RECEIVED");
+        payload.put("message", message);
+        broadcastToRoom(gameId, payload);
     }
 
     /** Gửi 1 message tới tất cả sessions đang mở trong 1 game/room */

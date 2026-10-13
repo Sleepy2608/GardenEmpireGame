@@ -48,4 +48,7 @@ public class GameState {
     
     @Builder.Default
     private List<GameLogEntry> actionLogs = new ArrayList<>();
+    
+    @Builder.Default
+    private List<ChatMessage> chatMessages = new ArrayList<>();
 }

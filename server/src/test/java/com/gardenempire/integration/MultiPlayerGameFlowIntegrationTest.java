@@ -166,5 +166,30 @@ class MultiPlayerGameFlowIntegrationTest {
         state = gameService.processAction(roomId, p3PassAction);
         assertTrue(state.isGameOver(), "Game should be finished after final round ends");
         assertEquals("p2", state.getWinnerPlayerId(), "Bob (p2) should win tiebreaker with fewer cards (2 vs 5)");
+
+        // 10. Test In-Game Chat (Even after game over, players can chat GG)
+        GameActionRequest chatReq = new GameActionRequest();
+        chatReq.setType("SEND_CHAT");
+        chatReq.setGameId(roomId);
+        chatReq.setPlayerId("p1");
+        chatReq.setMessage("GG ván này kịch tính quá!");
+
+        state = gameService.processAction(roomId, chatReq);
+        assertNotNull(state.getChatMessages());
+        assertEquals(1, state.getChatMessages().size());
+        assertEquals("Alice", state.getChatMessages().get(0).getPlayerName());
+        assertEquals("GG ván này kịch tính quá!", state.getChatMessages().get(0).getContent());
+
+        // Test Chat from another player when not their turn or nested payload
+        GameActionRequest chatBob = new GameActionRequest();
+        chatBob.setType("CHAT");
+        chatBob.setGameId(roomId);
+        chatBob.setPlayerId("p2");
+        chatBob.setPayload(Map.of("message", "Cảm ơn mọi người nha!"));
+
+        state = gameService.processAction(roomId, chatBob);
+        assertEquals(2, state.getChatMessages().size());
+        assertEquals("Bob", state.getChatMessages().get(1).getPlayerName());
+        assertEquals("Cảm ơn mọi người nha!", state.getChatMessages().get(1).getContent());
     }
 }

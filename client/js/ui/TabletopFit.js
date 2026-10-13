@@ -46,6 +46,7 @@ export class TabletopFit {
       ? topSeat.offsetHeight + 4
       : 0;
     const myPanelHeight = myPanel ? myPanel.offsetHeight + 6 : 88;
+    arena.style.setProperty('--panel-bottom-offset', `${myPanelHeight + 4}px`);
 
     // Remaining vertical clearance strictly allocated for the mat
     const theoreticalAvailableHeight = arenaHeight - topSeatHeight - myPanelHeight - 8;
