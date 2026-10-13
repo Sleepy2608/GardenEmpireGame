@@ -296,9 +296,9 @@ Khi tham gia trận đấu tại [Garden Empire](https://garden-empire-game.verc
 │  Điểm ★,        │ [Chồng Khách] [Khách 1] [Khách 2]...    │  • [An] giữ bài..│
 │  Token & Kho)   ├────────────────────────────────────────┤  (Cuộn / Ticker) │
 │                 │ 🌳 CHỢ CÂY TRỒNG (3 Tiers có Deck úp)  │                  │
-│                 │ [Tier 3: Deck + 4 Thẻ Mở Ngửa]         │  [PLAYER 4]      │
-│                 │ [Tier 2: Deck + 4 Thẻ Mở Ngửa]         │  (Phải: Avatar,  │
-│                 │ [Tier 1: Deck + 4 Thẻ Mở Ngửa]         │   Điểm ★,        │
+│ 💬 CHAT ▼       │ [Tier 3: Deck + 4 Thẻ Mở Ngửa]         │  [PLAYER 4]      │
+│ • An: Chào bạn! │ [Tier 2: Deck + 4 Thẻ Mở Ngửa]         │  (Phải: Avatar,  │
+│ [Nhập...] [➤]   │ [Tier 1: Deck + 4 Thẻ Mở Ngửa]         │   Điểm ★,        │
 │                 ├────────────────────────────────────────┤   Token & Kho)   │
 │                 │ 🪙 NGÂN HÀNG NĂNG LƯỢNG (6 Viên Ngọc)  │                  │
 │                 │ [🟫] [💧] [☀️] [🌰] [🧪] [⭐]          │                  │
@@ -326,6 +326,12 @@ Khi tham gia trận đấu tại [Garden Empire](https://garden-empire-game.verc
    - **Ghi nhận thời gian thực:** Mọi nước đi (Lấy token, giữ thẻ, trồng cây, rước khách, kích hoạt chung kết) đều được cập nhật tức thì với badge màu sinh động.
    - **Thu gọn / Mở rộng (`▼` / `▲`):** Bấm nút mũi tên `▼` để thu gọn thành 1 thanh Mini Ticker mỏng gọn chỉ hiển thị hành động mới nhất (tiết kiệm không gian bàn đấu). Bấm `▲` hoặc click vào mini ticker để mở rộng danh sách cuộn đầy đủ.
    - **Tự động cuộn thông minh:** Danh sách tự động cuộn xuống dưới cùng khi có hành động mới, nhưng sẽ tự động dừng cuộn nếu bạn đang chủ động cuộn lên xem lại lịch sử các lượt trước.
+6. **Tương Tác Khung Chat Trực Tuyến (In-Game Chat Box):**
+   - **Vị trí:** Nằm ở góc dưới bên trái bàn đấu (Bottom-Left, phía dưới Player 2, đối xứng với Nhật Ký Hành Động).
+   - **Phím tắt `Enter` mở nhanh:** Khi đang quan sát bàn cờ, nhấn phím `Enter` bất kỳ lúc nào để tự động mở rộng khung chat và focus con trỏ vào ô nhập liệu để gõ ngay lập tức (nhấn `Esc` để hủy focus).
+   - **Gửi tin nhắn tức thời:** Gõ nội dung và nhấn `Enter` hoặc bấm nút `➤` để gửi ngay tới tất cả người chơi trong phòng đấu.
+   - **Thu gọn / Mở rộng (`▼` / `▲`):** Thu gọn thành thanh Chat Bar mỏng nhẹ hiển thị tin nhắn mới nhất. Khi có người gửi tin mới trong lúc đang thu gọn, huy hiệu đỏ (Unread Badge 🔴) sẽ nhấp nháy báo hiệu kèm âm thanh pop nhẹ.
+   - **Bảo mật & Tự động lưu trữ:** Khử độc mã XSS an toàn, giới hạn 120 ký tự, chống spam 600ms, lưu trữ 50 tin gần nhất trong RAM bàn đấu (tự động khôi phục 100% khi người chơi F5 / Reconnect).
 
 ---
 

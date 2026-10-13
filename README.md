@@ -4,7 +4,7 @@
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/Version-v1.1.0-10B981?style=for-the-badge&logo=semver&logoColor=white)](https://garden-empire-game.vercel.app)
+[![Version](https://img.shields.io/badge/Version-v1.2.0-10B981?style=for-the-badge&logo=semver&logoColor=white)](https://garden-empire-game.vercel.app)
 
 [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://garden-empire-game.vercel.app) [![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://gardenempiregame.onrender.com) [![Clever Cloud](https://img.shields.io/badge/Clever%20Cloud-2C3E50?style=for-the-badge&logo=clevercloud&logoColor=white)](https://console.clever-cloud.com) [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://console.clever-cloud.com) [![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/) [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot) [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
@@ -33,6 +33,7 @@
 - **Nuôi trồng thẻ cây** thuộc 3 cấp độ (Tier 1, Tier 2, Tier 3) để tích lũy điểm uy tín vĩnh viễn và tạo hiệu ứng giảm giá mua cây tiếp theo.
 - **Bàn cờ Tabletop 3D (Around-the-Table Arena):** Chiếu cờ 3D sinh động ở trung tâm, các đối thủ ngồi bao quanh bàn và thanh điều khiển của bạn cố định ở đáy, tự động co giãn (`TabletopFit`) vừa vặn mọi màn hình.
 - **Nhật ký hành động thời gian thực (Game Action Logs):** Ghi lại chi tiết từng lượt bốc token, giữ thẻ, trồng cây, đón khách quý, chạm mốc 15 điểm chung kết; tích hợp widget cuộn mượt và nút mũi tên `▼`/`▲` thu gọn thành 1 dòng mini ticker mỏng nhẹ.
+- **Khung trò chuyện trực tuyến (In-Game Chat Box):** Tương tác thời gian thực tại góc dưới bên trái bàn đấu, đối xứng với Game Logs; hỗ trợ phím tắt `Enter` mở nhanh/gửi tin, thu gọn/mở rộng với huy hiệu tin chưa đọc (Unread badge), âm thanh pop nhẹ nhàng, lưu trữ in-memory RAM (khôi phục sau F5) và cơ chế chống spam/khử độc XSS an toàn.
 - **Phòng chờ & Quản lý chủ phòng (Waiting Room):** Quản lý chủ phòng (Room Host), chỉ chủ phòng có quyền bắt đầu trận đấu khi đủ 2–4 người chơi, tính năng kick người chơi kèm lệnh cấm 2 phút (cooldown ban) và chọn ngẫu nhiên lượt đi đầu tiên.
 - **Đồng bộ đa người chơi thời gian thực (Real-time Multiplayer)** với độ trễ thấp thông qua WebSocket Native.
 
@@ -143,6 +144,7 @@ GardenEmpireGame/
 │       ├── api/roomApi.js           # Giao tiếp REST API tạo phòng, vào phòng, kick, rời phòng
 │       └── ui/
 │           ├── BoardUI.js           # Điều phối toàn bộ sự kiện và hoạt ảnh bàn cờ
+│           ├── ChatUI.js            # Khung chat trực tuyến, phím tắt Enter, unread badge, auto-scroll
 │           ├── GameLogUI.js         # Nhật ký hành động ván đấu, collapsible ticker, token badge highlight
 │           ├── LobbyUI.js           # Render danh sách phòng và cập nhật sảnh chờ
 │           ├── WaitingRoomUI.js     # Điều khiển phòng chờ: Host controls, kick ban, WebSocket sync
@@ -151,7 +153,8 @@ GardenEmpireGame/
 │
 ├── tests/                           # Kịch bản kiểm thử tích hợp & E2E mô phỏng
 │   ├── test_multi_tab.js            # Kịch bản kiểm thử E2E giả lập đa người chơi
-│   └── test_game_action_logs_e2e.js # Kịch bản kiểm thử E2E đồng bộ nhật ký hành động đa tab
+│   ├── test_game_action_logs_e2e.js # Kịch bản kiểm thử E2E đồng bộ nhật ký hành động đa tab
+│   └── test_in_game_chat_e2e.js     # Kịch bản kiểm thử E2E khung chat đa tab, chống spam và bảo mật XSS
 │
 └── server/                          # Máy chủ Backend (Spring Boot 3.2.4)
     ├── pom.xml                      # Quản lý Maven dependencies (Web, WebSocket, JPA, Postgres)
@@ -238,7 +241,7 @@ Dự án bao gồm bộ kiểm thử tự động toàn diện:
 cd server
 mvn test
 ```
-*Kết quả:* **22/22 Unit & Integration Tests PASS 100%**.
+*Kết quả:* **28/28 Unit & Integration Tests PASS 100%**.
 
 ### 2. Multi-Tab E2E Simulation Tests:
 - **Kiểm thử đa tab tổng thể (Phòng, bốc token, giữ bài, F5 reconnect):**
@@ -248,6 +251,10 @@ node tests/test_multi_tab.js
 - **Kiểm thử đồng bộ thời gian thực Nhật ký hành động (Game Action Logs):**
 ```bash
 node tests/test_game_action_logs_e2e.js
+```
+- **Kiểm thử đồng bộ khung chat trực tuyến (In-Game Chat Box, anti-spam, XSS sanitization, unread badge):**
+```bash
+node tests/test_in_game_chat_e2e.js
 ```
 *Kết quả:* **100% kịch bản E2E PASS thành công**.
 
