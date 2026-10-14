@@ -324,9 +324,9 @@ Khi tham gia trận đấu tại [Garden Empire](https://garden-empire-game.verc
    - Các đối thủ ngồi quanh bàn cờ (Trái, Trên, Phải) hiển thị chi tiết số điểm uy tín, số token cầm tay, số lượng giảm giá bonus của từng người giúp bạn tính toán đối sách kịp thời.
 5. **Theo Dõi Nhật Ký Ván Đấu (Game Action Logs):**
    - **Vị trí:** Nằm ở góc trên bên phải bàn đấu (Top-Right, phía trên Player 4).
-   - **Ghi nhận thời gian thực:** Mọi nước đi (Lấy token, giữ thẻ, trồng cây, rước khách, kích hoạt chung kết) đều được cập nhật tức thì với badge màu sinh động.
-   - **Thu gọn / Mở rộng (`▼` / `▲`):** Bấm nút mũi tên `▼` để thu gọn thành 1 thanh Mini Ticker mỏng gọn chỉ hiển thị hành động mới nhất (tiết kiệm không gian bàn đấu). Bấm `▲` hoặc click vào mini ticker để mở rộng danh sách cuộn đầy đủ.
-   - **Tự động cuộn thông minh:** Danh sách tự động cuộn xuống dưới cùng khi có hành động mới, nhưng sẽ tự động dừng cuộn nếu bạn đang chủ động cuộn lên xem lại lịch sử các lượt trước.
+   - **Hiển thị 3 lượt hành động gần nhất:** Widget trên bàn cờ luôn hiển thị 3 nước đi gần đây nhất kèm số thứ tự (#X), avatar, tên người chơi và chi tiết tài nguyên/điểm số để người chơi nắm bắt diễn biến nhanh chóng mà không chiếm diện tích bàn cờ.
+   - **Xem toàn bộ lịch sử (Full Game Logs Modal):** Bấm trực tiếp vào khung nhật ký, nút `⛶` hoặc nút **"📜 Nhật Ký"** trên thanh Top Bar để mở cửa sổ Full Logs hiển thị chi tiết toàn bộ các lượt hành động từ khởi đầu ván đấu đến hiện tại, kèm số thứ tự từ `#1` đến `#N` và tổng số hành động đã diễn ra.
+   - **Tự động cuộn & Đóng tiện lợi:** Modal hỗ trợ nút "⬇ Mới nhất" để nhảy nhanh xuống nước đi cuối cùng; nhấn `Esc`, nút `✕` hoặc bấm ra ngoài màn hình mờ để đóng lại bàn cờ.
 6. **Tương Tác Khung Chat Trực Tuyến (In-Game Chat Box):**
    - **Vị trí:** Nằm ở góc dưới bên trái bàn đấu (Bottom-Left, phía dưới Player 2, đối xứng với Nhật Ký Hành Động).
    - **Phím tắt `Enter` mở nhanh:** Khi đang quan sát bàn cờ, nhấn phím `Enter` bất kỳ lúc nào để tự động mở rộng khung chat và focus con trỏ vào ô nhập liệu để gõ ngay lập tức (nhấn `Esc` để hủy focus).
