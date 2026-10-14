@@ -73,34 +73,31 @@
     <!-- Top Seat: Player 3 (Opponent Top) -->
     <div class="seat-top opponent-seat-pod hidden" id="seat-top"></div>
 
-    <!-- Game Action Logs Widget (Top-Right as per Mockup) -->
-    <div class="game-log-widget glass-panel" id="game-log-widget">
+    <!-- Game Action Logs Widget (Top-Right Tabletop Arena - 3 Recent Actions as per Mockup) -->
+    <div class="game-log-widget glass-panel" id="game-log-widget" title="Nhấp để xem toàn bộ nhật ký ván đấu">
       <div class="game-log-header" id="game-log-header">
         <div class="game-log-title">
           <span class="log-title-icon">📜</span>
-          <span class="log-title-text">NHẬT KÝ</span>
-          <span class="game-log-count-badge" id="game-log-count">0</span>
+          <span class="log-title-text">GAME LOGS</span>
+          <span class="game-log-count-badge" id="game-log-count" title="Tổng số hành động">0</span>
         </div>
-        <button class="game-log-toggle-btn" id="btn-toggle-log-collapse" title="Thu gọn / Mở rộng nhật ký">
-          <span class="toggle-arrow-icon" id="log-toggle-arrow">▼</span>
+        <button class="game-log-toggle-btn" id="btn-toggle-log-collapse" title="Xem toàn bộ nhật ký ván đấu">
+          <span class="toggle-arrow-icon" id="log-toggle-arrow">⛶</span>
         </button>
       </div>
 
-      <!-- Collapsed Mini Ticker Bar (shown when collapsed) -->
-      <div class="game-log-mini-ticker hidden" id="game-log-mini-ticker" title="Bấm để mở rộng nhật ký">
-        <span class="ticker-pulse-dot"></span>
-        <div class="ticker-text-wrapper">
-          <span class="ticker-text" id="game-log-latest-text">Đang đồng bộ ván đấu...</span>
-        </div>
-        <span class="ticker-expand-icon">▲</span>
-      </div>
-
-      <!-- Expanded Full Scrollable Log Feed (shown when expanded) -->
+      <!-- Feed for 3 Recent Actions -->
       <div class="game-log-feed" id="game-log-feed">
         <div class="log-item log-empty-state">
           <span class="log-empty-icon">🌱</span>
           <span>Ván đấu đã sẵn sàng, chờ hành động đầu tiên...</span>
         </div>
+      </div>
+
+      <!-- Quick Click Bar to Open Full Logs Modal -->
+      <div class="game-log-quick-bar" id="game-log-quick-bar" title="Bấm để mở toàn bộ nhật ký ván đấu">
+        <span class="quick-bar-text" id="game-log-quick-text">📜 Xem toàn bộ lịch sử (0 hành động)</span>
+        <span class="quick-bar-arrow">↗</span>
       </div>
     </div>
 
@@ -321,7 +318,52 @@
     </div>
   </div>
 
-  <!-- 5. Game Rules Modal (Bách Khoa Toàn Thư & Luật Chơi Chi Tiết) -->
+  <!-- 5. Full Game Action Logs Modal (Logs UI as per Mockup) -->
+  <div class="modal-backdrop hidden" id="game-logs-modal" role="dialog" aria-modal="true" aria-labelledby="modal-logs-title">
+    <div class="modal-card glass-panel game-logs-modal-card">
+      <div class="modal-header logs-modal-header">
+        <div class="logs-modal-title-group">
+          <span class="logs-modal-icon">📜</span>
+          <div>
+            <h3 class="logs-modal-title" id="modal-logs-title">GAME LOGS — NHẬT KÝ VÁN ĐẤU</h3>
+            <div class="logs-modal-subtitle">Toàn bộ lịch sử các lượt hành động theo thời gian thực</div>
+          </div>
+        </div>
+        <div class="logs-modal-header-actions">
+          <div class="logs-modal-stat-pill" title="Tổng số hành động đã diễn ra trong ván">
+            <span class="stat-pill-label">Tổng hành động:</span>
+            <span class="stat-pill-count" id="modal-logs-total-count">0</span>
+          </div>
+          <button type="button" class="modal-close-btn" id="modal-logs-close" title="Đóng nhật ký (Esc)">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-body logs-modal-body">
+        <div class="logs-modal-toolbar">
+          <div class="logs-modal-status-info" id="modal-logs-status-info">
+            <span>Chi tiết từng nước đi từ khởi đầu ván đấu</span>
+          </div>
+          <button type="button" class="btn-nature-secondary btn-xs" id="btn-scroll-logs-latest" title="Cuộn xuống hành động mới nhất">
+            <span>⬇ Mới nhất</span>
+          </button>
+        </div>
+        <div class="logs-modal-feed" id="modal-logs-feed">
+          <!-- Full list of action logs rendered by GameLogUI.js -->
+        </div>
+      </div>
+
+      <div class="modal-footer logs-modal-footer">
+        <div class="logs-modal-footer-stats" id="modal-logs-footer-stats">
+          <span>Tổng số: <strong>0</strong> hành động</span>
+        </div>
+        <button type="button" class="btn-nature-primary btn-sm" id="btn-close-logs-modal">
+          <span>🌿</span> <span>Đã Hiểu & Đóng</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Game Rules Modal (Bách Khoa Toàn Thư & Luật Chơi Chi Tiết) -->
   <div class="modal-backdrop hidden" id="game-rules-modal">
     <div class="modal-card glass-panel rules-modal-card">
       <div class="modal-header rules-modal-header">

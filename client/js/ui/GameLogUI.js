@@ -1,188 +1,329 @@
 /*
    GARDEN EMPIRE — GAME ACTION LOGS COMPONENT
-   Hiển thị nhật ký hành động trực tiếp, có thể cuộn và thu gọn/mở rộng.
+   Hiển thị nhật ký hành động: 3 lượt gần nhất trên bàn đấu (Tabletop Arena)
+   và cửa sổ Modal chi tiết toàn bộ lịch sử ván đấu (Full Logs UI).
 */
 
 export class GameLogUI {
   constructor() {
+    // Widget trên bàn cờ (Top-Right Tabletop Arena)
     this.widgetEl = null;
     this.feedEl = null;
-    this.tickerEl = null;
-    this.latestTextEl = null;
-    this.toggleBtnEl = null;
-    this.toggleArrowEl = null;
     this.countBadgeEl = null;
+    this.toggleBtnEl = null;
+    this.quickBarEl = null;
+    this.quickTextEl = null;
 
-    this.isCollapsed = localStorage.getItem('garden_empire_log_collapsed') === 'true';
-    this.userScrolledUp = false;
+    // Modal hiển thị toàn bộ nhật ký (Full Logs Modal)
+    this.modalEl = null;
+    this.modalFeedEl = null;
+    this.modalCountEl = null;
+    this.modalCloseBtnEl = null;
+    this.modalFooterCloseBtnEl = null;
+    this.modalScrollLatestBtnEl = null;
+    this.modalFooterStatsEl = null;
+
+    this.actionLogs = [];
+    this.myPlayerId = '';
+    this.isModalOpen = false;
     this.lastLogCount = 0;
+    this.userModalScrolledUp = false;
   }
 
   /**
-   * Khởi tạo liên kết DOM và sự kiện
+   * Khởi tạo liên kết DOM và các sự kiện click, phím tắt
    */
   init() {
+    // Widget elements
     this.widgetEl = document.getElementById('game-log-widget');
     this.feedEl = document.getElementById('game-log-feed');
-    this.tickerEl = document.getElementById('game-log-mini-ticker');
-    this.latestTextEl = document.getElementById('game-log-latest-text');
-    this.toggleBtnEl = document.getElementById('btn-toggle-log-collapse');
-    this.toggleArrowEl = document.getElementById('log-toggle-arrow');
     this.countBadgeEl = document.getElementById('game-log-count');
+    this.toggleBtnEl = document.getElementById('btn-toggle-log-collapse');
+    this.quickBarEl = document.getElementById('game-log-quick-bar');
+    this.quickTextEl = document.getElementById('game-log-quick-text');
 
-    if (!this.widgetEl) return;
+    // Modal elements
+    this.modalEl = document.getElementById('game-logs-modal');
+    this.modalFeedEl = document.getElementById('modal-logs-feed');
+    this.modalCountEl = document.getElementById('modal-logs-total-count');
+    this.modalCloseBtnEl = document.getElementById('modal-logs-close');
+    this.modalFooterCloseBtnEl = document.getElementById('btn-close-logs-modal');
+    this.modalScrollLatestBtnEl = document.getElementById('btn-scroll-logs-latest');
+    this.modalFooterStatsEl = document.getElementById('modal-logs-footer-stats');
 
-    // Thiết lập trạng thái ban đầu từ localStorage
-    this.updateCollapseUI();
-
-    // Toggle collapse khi click nút mũi tên
-    if (this.toggleBtnEl) {
-      this.toggleBtnEl.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.toggleCollapse();
+    // 1. Nhấp vào Widget để mở Modal xem Full Logs
+    if (this.widgetEl) {
+      this.widgetEl.addEventListener('click', () => {
+        this.openModal();
       });
     }
 
-    // Toggle khi click vào mini ticker bar
-    if (this.tickerEl) {
-      this.tickerEl.addEventListener('click', () => {
-        if (this.isCollapsed) {
-          this.toggleCollapse();
+    // 2. Nút toggle / expand trên header của widget
+    if (this.toggleBtnEl) {
+      this.toggleBtnEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openModal();
+      });
+    }
+
+    // 3. Quick click bar ở đáy widget
+    if (this.quickBarEl) {
+      this.quickBarEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openModal();
+      });
+    }
+
+    // 4. Nút Nhật Ký ở Header Top Bar
+    const btnTopBarLog = document.getElementById('btn-toggle-game-log');
+    if (btnTopBarLog) {
+      btnTopBarLog.addEventListener('click', () => {
+        this.toggleModal();
+      });
+    }
+
+    // 5. Đóng modal (nút X và nút Đóng)
+    if (this.modalCloseBtnEl) {
+      this.modalCloseBtnEl.addEventListener('click', () => this.closeModal());
+    }
+    if (this.modalFooterCloseBtnEl) {
+      this.modalFooterCloseBtnEl.addEventListener('click', () => this.closeModal());
+    }
+
+    // 6. Đóng khi click ngoài backdrop
+    if (this.modalEl) {
+      this.modalEl.addEventListener('click', (e) => {
+        if (e.target === this.modalEl) {
+          this.closeModal();
         }
       });
     }
 
-    // Nút Nhật Ký ở Header Top Bar
-    const btnTopBarLog = document.getElementById('btn-toggle-game-log');
-    if (btnTopBarLog) {
-      btnTopBarLog.addEventListener('click', () => {
-        this.toggleCollapse();
+    // 7. Phím tắt Escape để đóng modal
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.isModalOpen) {
+        this.closeModal();
+      }
+    });
+
+    // 8. Nút cuộn xuống mới nhất trong modal
+    if (this.modalScrollLatestBtnEl) {
+      this.modalScrollLatestBtnEl.addEventListener('click', () => {
+        this.scrollModalToBottom(true);
       });
     }
 
-    // Nhận diện người chơi đang chủ động cuộn lên xem lịch sử cũ
-    if (this.feedEl) {
-      this.feedEl.addEventListener('scroll', () => {
-        const threshold = 35; // px từ đáy
-        const isAtBottom = this.feedEl.scrollHeight - this.feedEl.scrollTop - this.feedEl.clientHeight <= threshold;
-        this.userScrolledUp = !isAtBottom;
+    // 9. Theo dõi scroll trong modal
+    if (this.modalFeedEl) {
+      this.modalFeedEl.addEventListener('scroll', () => {
+        const threshold = 40;
+        const isAtBottom = this.modalFeedEl.scrollHeight - this.modalFeedEl.scrollTop - this.modalFeedEl.clientHeight <= threshold;
+        this.userModalScrolledUp = !isAtBottom;
       });
     }
   }
 
   /**
-   * Chuyển đổi trạng thái thu gọn / mở rộng
+   * Mở cửa sổ Modal xem toàn bộ nhật ký
    */
-  toggleCollapse() {
-    this.isCollapsed = !this.isCollapsed;
-    localStorage.setItem('garden_empire_log_collapsed', this.isCollapsed);
-    this.updateCollapseUI();
-
-    if (!this.isCollapsed) {
-      // Khi mở rộng, cuộn ngay xuống mục mới nhất
-      this.scrollToBottom(true);
-    }
+  openModal() {
+    if (!this.modalEl) return;
+    this.modalEl.classList.remove('hidden');
+    this.isModalOpen = true;
+    this.renderModal();
+    this.scrollModalToBottom(false);
   }
 
   /**
-   * Cập nhật giao diện theo trạng thái isCollapsed
+   * Đóng cửa sổ Modal
    */
-  updateCollapseUI() {
-    if (!this.widgetEl) return;
+  closeModal() {
+    if (!this.modalEl) return;
+    this.modalEl.classList.add('hidden');
+    this.isModalOpen = false;
+  }
 
-    if (this.isCollapsed) {
-      this.widgetEl.classList.add('is-collapsed');
-      if (this.feedEl) this.feedEl.classList.add('hidden');
-      if (this.tickerEl) this.tickerEl.classList.remove('hidden');
-      if (this.toggleArrowEl) this.toggleArrowEl.textContent = '▲';
-      if (this.toggleBtnEl) this.toggleBtnEl.title = 'Mở rộng nhật ký ván đấu';
+  /**
+   * Chuyển đổi trạng thái đóng / mở modal
+   */
+  toggleModal() {
+    if (this.isModalOpen) {
+      this.closeModal();
     } else {
-      this.widgetEl.classList.remove('is-collapsed');
-      if (this.feedEl) this.feedEl.classList.remove('hidden');
-      if (this.tickerEl) this.tickerEl.classList.add('hidden');
-      if (this.toggleArrowEl) this.toggleArrowEl.textContent = '▼';
-      if (this.toggleBtnEl) this.toggleBtnEl.title = 'Thu gọn nhật ký ván đấu';
+      this.openModal();
     }
   }
 
   /**
    * Render danh sách logs nhận từ GameState
+   * - Widget trên bàn cờ: Chỉ hiển thị chính xác 3 hành động gần nhất
+   * - Modal: Cập nhật nếu đang mở
    * @param {Array} actionLogs 
    * @param {string} myPlayerId 
    */
   render(actionLogs = [], myPlayerId = '') {
-    if (!this.feedEl) return;
+    this.actionLogs = Array.isArray(actionLogs) ? actionLogs : [];
+    this.myPlayerId = myPlayerId || '';
+    const total = this.actionLogs.length;
 
-    const logs = Array.isArray(actionLogs) ? actionLogs : [];
-
-    // Cập nhật số lượng
+    // Cập nhật số lượng tổng
     if (this.countBadgeEl) {
-      this.countBadgeEl.textContent = logs.length;
+      this.countBadgeEl.textContent = total;
     }
 
-    // Nếu không có log nào
-    if (logs.length === 0) {
-      this.feedEl.innerHTML = `
-        <div class="log-item log-empty-state">
-          <span class="log-empty-icon">🌱</span>
-          <span>Ván đấu đã sẵn sàng, chờ hành động đầu tiên...</span>
-        </div>
-      `;
-      if (this.latestTextEl) {
-        this.latestTextEl.textContent = 'Chờ lượt đi đầu tiên...';
-      }
-      return;
-    }
-
-    // Cập nhật thanh mini ticker với log mới nhất
-    const latestLog = logs[logs.length - 1];
-    if (this.latestTextEl && latestLog) {
-      const avatar = latestLog.playerAvatar || '🌱';
-      this.latestTextEl.innerHTML = `<strong>${avatar} ${latestLog.playerName || 'Người chơi'}:</strong> ${latestLog.message}`;
-    }
-
-    // Chỉ render lại danh sách nếu có log mới
-    if (logs.length !== this.lastLogCount) {
-      this.lastLogCount = logs.length;
-
-      const itemsHtml = logs.map((log, index) => {
-        const isMine = log.playerId && log.playerId === myPlayerId;
-        const avatar = log.playerAvatar || '🌱';
-        const timeStr = log.timestamp ? this.formatTime(log.timestamp) : '';
-        const actionTypeClass = `action-${(log.actionType || 'GENERIC').toLowerCase().replace(/_/g, '-')}`;
-
-        return `
-          <div class="log-item ${actionTypeClass} ${isMine ? 'log-item-mine' : ''}" data-log-id="${log.id || index}">
-            <div class="log-item-header">
-              <span class="log-player-avatar">${avatar}</span>
-              <span class="log-player-name ${isMine ? 'text-mine' : ''}">${log.playerName || 'Hệ thống'}</span>
-              ${timeStr ? `<span class="log-timestamp">${timeStr}</span>` : ''}
-            </div>
-            <div class="log-item-message">${this.highlightTokens(log.message || '')}</div>
+    // 1. RENDER WIDGET BÀN CỜ (CHỈ 3 HÀNH ĐỘNG GẦN NHẤT)
+    if (this.feedEl) {
+      if (total === 0) {
+        this.feedEl.innerHTML = `
+          <div class="log-item log-empty-state">
+            <span class="log-empty-icon">🌱</span>
+            <span>Ván đấu đã sẵn sàng, chờ hành động đầu tiên...</span>
           </div>
         `;
-      }).join('');
+        if (this.quickTextEl) {
+          this.quickTextEl.textContent = '📜 Bấm để xem full logs (0 hành động)';
+        }
+      } else {
+        // Lấy 3 lượt hành động gần nhất
+        const recentLogs = this.actionLogs.slice(-3);
+        const startIndex = total - recentLogs.length;
 
-      this.feedEl.innerHTML = itemsHtml;
+        const widgetHtml = recentLogs.map((log, idx) => {
+          const globalOrder = startIndex + idx + 1; // Số thứ tự 1-based toàn cục trong ván
+          const isMine = Boolean(log.playerId && log.playerId === this.myPlayerId);
+          return this.createLogItemHtml(log, globalOrder, total, isMine, false);
+        }).join('');
 
-      // Tự động cuộn xuống dưới cùng nếu người dùng không đang cuộn lên
-      if (!this.userScrolledUp) {
-        this.scrollToBottom(false);
+        this.feedEl.innerHTML = widgetHtml;
+
+        if (this.quickTextEl) {
+          this.quickTextEl.innerHTML = `📜 Xem toàn bộ lịch sử (<strong>${total}</strong> hành động) ↗`;
+        }
       }
+    }
+
+    // 2. CẬP NHẬT MODAL NẾU ĐANG MỞ
+    if (this.isModalOpen) {
+      this.renderModal();
     }
   }
 
   /**
-   * Cuộn danh sách log xuống dưới cùng
+   * Render toàn bộ danh sách hành động vào cửa sổ Modal
    */
-  scrollToBottom(smooth = true) {
-    if (!this.feedEl) return;
+  renderModal() {
+    if (!this.modalFeedEl) return;
+
+    const total = this.actionLogs.length;
+
+    // Cập nhật số lượng trên modal header & footer
+    if (this.modalCountEl) {
+      this.modalCountEl.textContent = total;
+    }
+    if (this.modalFooterStatsEl) {
+      this.modalFooterStatsEl.innerHTML = `<span>Tổng số: <strong>${total}</strong> lượt hành động đã đi trong ván đấu</span>`;
+    }
+
+    if (total === 0) {
+      this.modalFeedEl.innerHTML = `
+        <div class="log-item log-empty-state modal-empty-state">
+          <span class="log-empty-icon">🌱</span>
+          <div>
+            <strong>Ván đấu chưa có hành động nào</strong>
+            <p>Mọi nước đi bốc token, mua cây, đặt chỗ và rước khách sẽ được lưu trữ đầy đủ tại đây.</p>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    // Render toàn bộ các mục từ 1 đến N
+    const fullLogsHtml = this.actionLogs.map((log, index) => {
+      const globalOrder = index + 1;
+      const isMine = Boolean(log.playerId && log.playerId === this.myPlayerId);
+      return this.createLogItemHtml(log, globalOrder, total, isMine, true);
+    }).join('');
+
+    this.modalFeedEl.innerHTML = fullLogsHtml;
+
+    // Tự động cuộn xuống dưới cùng nếu người dùng không chủ động cuộn lên
+    if (!this.userModalScrolledUp) {
+      this.scrollModalToBottom(false);
+    }
+  }
+
+  /**
+   * Tạo HTML cho một dòng log hành động
+   * @param {Object} log 
+   * @param {number} globalOrder - Số thứ tự của hành động (#1, #2, ...)
+   * @param {number} totalCount - Tổng số hành động
+   * @param {boolean} isMine - Có phải lượt của chính người chơi này không
+   * @param {boolean} isModal - Đang render trong modal hay trên widget
+   */
+  createLogItemHtml(log, globalOrder, totalCount, isMine, isModal = false) {
+    const avatar = log.playerAvatar || '🌱';
+    const timeStr = log.timestamp ? this.formatTime(log.timestamp) : '';
+    const actionType = log.actionType || 'GENERIC';
+    const actionTypeClass = `action-${actionType.toLowerCase().replace(/_/g, '-')}`;
+    const actionTag = this.getActionTypeTag(actionType);
+
+    return `
+      <div class="log-item ${actionTypeClass} ${isMine ? 'log-item-mine' : ''} ${isModal ? 'modal-log-item' : 'widget-log-item'}" data-log-id="${log.id || globalOrder}">
+        <div class="log-item-header">
+          <span class="log-order-badge" title="Lượt hành động #${globalOrder}">#${globalOrder}</span>
+          <span class="log-player-avatar">${avatar}</span>
+          <span class="log-player-name ${isMine ? 'text-mine' : ''}">${log.playerName || 'Hệ thống'}</span>
+          ${actionTag ? `<span class="log-action-tag ${actionTypeClass}-tag">${actionTag}</span>` : ''}
+          ${timeStr ? `<span class="log-timestamp">${timeStr}</span>` : ''}
+        </div>
+        <div class="log-item-message">${this.highlightTokens(log.message || '')}</div>
+      </div>
+    `;
+  }
+
+  /**
+   * Cuộn modal xuống hành động mới nhất
+   */
+  scrollModalToBottom(smooth = true) {
+    if (!this.modalFeedEl) return;
     requestAnimationFrame(() => {
-      this.feedEl.scrollTo({
-        top: this.feedEl.scrollHeight,
+      this.modalFeedEl.scrollTo({
+        top: this.modalFeedEl.scrollHeight,
         behavior: smooth ? 'smooth' : 'instant'
       });
     });
+  }
+
+  /**
+   * Trả về nhãn tiếng Việt ngắn gọn cho từng loại hành động
+   */
+  getActionTypeTag(actionType) {
+    switch (actionType) {
+      case 'TAKE_TOKENS_DISTINCT':
+        return '🪙 Bốc 3 Token';
+      case 'TAKE_TOKENS_DOUBLE':
+        return '🪙 Bốc 2 Token';
+      case 'RESERVE_CARD_BOARD':
+        return '📑 Đặt Chỗ Thẻ';
+      case 'RESERVE_CARD_DECK':
+        return '📑 Đặt Chỗ Bài Úp';
+      case 'BUY_CARD_BOARD':
+        return '🌱 Trồng Cây';
+      case 'BUY_CARD_RESERVED':
+        return '🌱 Trồng Cây Đã Giữ';
+      case 'CLAIM_VISITOR':
+        return '🦋 Rước Khách';
+      case 'DISCARD_TOKENS':
+        return '⚠️ Trả Token Dư';
+      case 'GAME_START':
+        return '🚀 Khởi Động';
+      case 'FINAL_ROUND_TRIGGERED':
+        return '🏁 Vòng Chung Kết';
+      case 'GAME_OVER':
+        return '🏆 Kết Thúc';
+      default:
+        return '';
+    }
   }
 
   /**
@@ -212,6 +353,7 @@ export class GameLogUI {
       .replace(/🌰 Hạt Giống/g, '<span class="log-token-badge badge-seed">🌰 Hạt Giống</span>')
       .replace(/🧪 Dinh Dưỡng/g, '<span class="log-token-badge badge-nutrients">🧪 Dinh Dưỡng</span>')
       .replace(/🌾 Phân Bón/g, '<span class="log-token-badge badge-wild">🌾 Phân Bón</span>')
+      .replace(/⭐ Phân Bón Vàng/g, '<span class="log-token-badge badge-wild">⭐ Vàng WILD</span>')
       .replace(/★ \+(\d+)/g, '<span class="log-prestige-gain">★ +$1</span>');
   }
 }
