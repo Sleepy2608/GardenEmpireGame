@@ -8,25 +8,29 @@ import com.gardenempire.room.Room;
 import com.gardenempire.room.RoomManager;
 import com.gardenempire.room.RoomStatus;
 import com.gardenempire.websocket.GameMessageHandler;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-@RequiredArgsConstructor
 public class RoomService {
     private final RoomManager roomManager;
     private final GameService gameService;
     private final RoomCleanupService cleanupService;
     private final GameMessageHandler messageHandler;
 
+    public RoomService(RoomManager roomManager, GameService gameService, RoomCleanupService cleanupService, GameMessageHandler messageHandler) {
+        this.roomManager = roomManager;
+        this.gameService = gameService;
+        this.cleanupService = cleanupService;
+        this.messageHandler = messageHandler;
+    }
+
     // Map<RoomId, Map<PlayerId, ExpireTimestamp>> — dùng cho kick ng khác
     // kick cooldown: 2 phút
-    private final Map<String, Map<String, Long>> kickedCooldownMap = new ConcurrentHashMap<>();
+    private Map<String, Map<String, Long>> kickedCooldownMap = new ConcurrentHashMap<>();
 
     public List<Room> getAllRooms() {
         return roomManager.getAllRooms().stream()

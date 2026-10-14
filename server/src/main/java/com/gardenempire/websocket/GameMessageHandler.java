@@ -6,7 +6,6 @@ import com.gardenempire.dto.GameStateResponse;
 import com.gardenempire.game.ChatMessage;
 import com.gardenempire.game.GameState;
 import com.gardenempire.service.GameService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
@@ -18,16 +17,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class GameMessageHandler {
     private final GameService gameService;
     private final ObjectMapper objectMapper;
+
+    public GameMessageHandler(GameService gameService, ObjectMapper objectMapper) {
+        this.gameService = gameService;
+        this.objectMapper = objectMapper;
+    }
     
-    private final Map<String, Map<String, WebSocketSession>> gameSessions = new ConcurrentHashMap<>();
-    private final Map<String, Map<String, String>> playerSessions = new ConcurrentHashMap<>();
+    private Map<String, Map<String, WebSocketSession>> gameSessions = new ConcurrentHashMap<>();
+    private Map<String, Map<String, String>> playerSessions = new ConcurrentHashMap<>();
     // Quản lý phiên toàn cục theo playerId để phát hiện người chơi đăng nhập ở nhiều nơi
     record GlobalSessionInfo(String gameId, String sessionId, WebSocketSession session) {}
-    private final Map<String, GlobalSessionInfo> globalPlayerSessions = new ConcurrentHashMap<>();
+    private Map<String, GlobalSessionInfo> globalPlayerSessions = new ConcurrentHashMap<>();
 
     public void registerSession(String gameId, String playerId, WebSocketSession session) {
         Map<String, WebSocketSession> sessions = gameSessions.computeIfAbsent(gameId, k -> new ConcurrentHashMap<>());

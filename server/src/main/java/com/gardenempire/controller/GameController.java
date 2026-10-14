@@ -3,16 +3,18 @@ package com.gardenempire.controller;
 import com.gardenempire.dto.GameActionRequest;
 import com.gardenempire.game.GameState;
 import com.gardenempire.service.GameService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/game")
-@RequiredArgsConstructor
 public class GameController {
 
     private final GameService gameService;
+
+    public GameController(GameService gameService) {
+        this.gameService = gameService;
+    }
 
     @GetMapping("/{gameId}/state")
     public ResponseEntity<GameState> getGameState(@PathVariable String gameId) {

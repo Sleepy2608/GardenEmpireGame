@@ -4,7 +4,6 @@ import com.gardenempire.room.Room;
 import com.gardenempire.room.RoomManager;
 import com.gardenempire.room.RoomStatus;
 import com.gardenempire.websocket.GameMessageHandler;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -14,15 +13,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class RoomCleanupService {
 
     private final RoomManager roomManager;
     private final GameService gameService;
     private final GameMessageHandler messageHandler;
 
-    // Map roomId -> lastActivityTimestamp
-    private final Map<String, Long> roomLastActivity = new ConcurrentHashMap<>();
+    public RoomCleanupService(RoomManager roomManager, GameService gameService, GameMessageHandler messageHandler) {
+        this.roomManager = roomManager;
+        this.gameService = gameService;
+        this.messageHandler = messageHandler;
+    }
+
+    private Map<String, Long> roomLastActivity = new ConcurrentHashMap<>();
 
     // Inactivity threshold for abandoned rooms: 5 minutes (300,000 ms)
     private static final long IDLE_THRESHOLD_MS = 5 * 60 * 1000L;

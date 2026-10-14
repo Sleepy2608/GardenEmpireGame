@@ -6,7 +6,6 @@ import com.gardenempire.game.Game;
 import com.gardenempire.game.GameEngine;
 import com.gardenempire.game.GameState;
 import com.gardenempire.game.Player;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,12 +13,16 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-@RequiredArgsConstructor
 public class GameService {
     private final GameEngine gameEngine;
     private final com.gardenempire.room.RoomManager roomManager;
-    private final Map<String, Game> activeGames = new ConcurrentHashMap<>();
-    private final Map<String, java.util.concurrent.locks.ReentrantLock> roomLocks = new ConcurrentHashMap<>();
+    private Map<String, Game> activeGames = new ConcurrentHashMap<>();
+    private Map<String, java.util.concurrent.locks.ReentrantLock> roomLocks = new ConcurrentHashMap<>();
+
+    public GameService(GameEngine gameEngine, com.gardenempire.room.RoomManager roomManager) {
+        this.gameEngine = gameEngine;
+        this.roomManager = roomManager;
+    }
 
     public String initGame(String roomId, List<Player> players) {
         Game game = gameEngine.createNewGame(roomId, players);
