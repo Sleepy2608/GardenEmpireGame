@@ -321,32 +321,441 @@
     </div>
   </div>
 
-  <!-- 5. Game Rules Modal -->
+  <!-- 5. Game Rules Modal (Bách Khoa Toàn Thư & Luật Chơi Chi Tiết) -->
   <div class="modal-backdrop hidden" id="game-rules-modal">
-    <div class="modal-card glass-panel" style="max-width: 560px;">
-      <div class="modal-header">
-        <h3>📖 Hướng Dẫn Luật Chơi Garden Empire</h3>
-        <button class="modal-close-btn" id="modal-rules-close">✕</button>
+    <div class="modal-card glass-panel rules-modal-card">
+      <div class="modal-header rules-modal-header">
+        <div class="rules-header-title-group">
+          <div class="rules-header-main">
+            <span class="rules-header-icon">📖</span>
+            <h3 class="rules-modal-title">BÁCH KHOA TOÀN THƯ & LUẬT CHƠI GARDEN EMPIRE</h3>
+          </div>
+          <span class="rules-header-badge">🌿 Chuẩn Splendor Quốc Tế 100%</span>
+        </div>
+        <button class="modal-close-btn" id="modal-rules-close" title="Đóng hướng dẫn">✕</button>
       </div>
-      <div class="modal-body" style="max-height: 420px; overflow-y: auto; font-size: 0.9rem; line-height: 1.6;">
-        <h4 style="color: var(--text-gold); margin-bottom: 0.3rem;">🎯 Mục tiêu:</h4>
-        <p style="margin-bottom: 0.8rem;">Người chơi đầu tiên đạt từ <strong>15 Điểm Uy Tín (★)</strong> sẽ kích hoạt Vòng Chung Kết. Hết vòng, người có nhiều điểm nhất sẽ chiến thắng!</p>
-        
-        <h4 style="color: var(--color-nutrients-light); margin-bottom: 0.3rem;">⚡ 3 Hành Động Chính (Chọn 1 trong 3 mỗi lượt):</h4>
-        <ol style="padding-left: 1.2rem; margin-bottom: 0.8rem;">
-          <li><strong>Lấy Tài Nguyên:</strong> Lấy 3 token khác loại hoặc 2 token cùng loại (khi ngân hàng còn ≥ 4).</li>
-          <li><strong>Trồng Cây (Mua thẻ):</strong> Trả token tương ứng sau khi trừ giảm giá từ cây cũ, có thể bù bằng phân bón vàng (Wild).</li>
-          <li><strong>Giữ Cây:</strong> Giữ 1 thẻ bí mật (tối đa 3 thẻ trên tay) và nhận 1 token Wild từ ngân hàng.</li>
-        </ol>
 
-        <h4 style="color: var(--color-sunlight-light); margin-bottom: 0.3rem;">✨ 2 Hành Động Phụ Tự Động:</h4>
-        <ul style="padding-left: 1.2rem;">
-          <li><strong>Trả token dư:</strong> Bắt buộc trả bớt token về ngân hàng nếu tổng số trên tay vượt quá 10.</li>
-          <li><strong>Rước Khách Thăm Vườn:</strong> Tự động nhận thẻ Khách (+3★) ở cuối lượt khi sở hữu đủ số lượng cây yêu cầu.</li>
-        </ul>
+      <!-- Navigation Tabs -->
+      <nav class="rules-tabs-nav" aria-label="Game rules tabs">
+        <button type="button" class="rules-tab-btn active" data-tab="rules-panel-overview">
+          <span class="rules-tab-icon">🎯</span>
+          <span class="rules-tab-label">Mục Tiêu & Tổng Quan</span>
+        </button>
+        <button type="button" class="rules-tab-btn" data-tab="rules-panel-actions">
+          <span class="rules-tab-icon">⚡</span>
+          <span class="rules-tab-label">3 Hành Động Lượt Đi</span>
+        </button>
+        <button type="button" class="rules-tab-btn" data-tab="rules-panel-engine">
+          <span class="rules-tab-icon">✨</span>
+          <span class="rules-tab-label">Khách & Giảm Giá Vĩnh Viễn</span>
+        </button>
+        <button type="button" class="rules-tab-btn" data-tab="rules-panel-setup-victory">
+          <span class="rules-tab-icon">⚖️</span>
+          <span class="rules-tab-label">Thiết Lập & Thắng Bại</span>
+        </button>
+        <button type="button" class="rules-tab-btn" data-tab="rules-panel-tips">
+          <span class="rules-tab-icon">💡</span>
+          <span class="rules-tab-label">Cẩm Nang Chiến Thuật</span>
+        </button>
+      </nav>
+
+      <!-- Tab Content Panels -->
+      <div class="modal-body rules-modal-body">
+        
+        <!-- PANEL 1: MỤC TIÊU & TỔNG QUAN -->
+        <div class="rules-tab-panel active" id="rules-panel-overview">
+          <div class="rules-callout rules-callout-goal">
+            <div class="rules-callout-header">
+              <span class="rules-callout-icon">🏆</span>
+              <strong>MỤC TIÊU TỐI THƯỢNG</strong>
+            </div>
+            <p>
+              Người chơi đầu tiên tích lũy đạt từ <strong>15 Điểm Uy Tín (★)</strong> trở lên sẽ kích hoạt <strong>Vòng Chung Kết (Final Round)</strong>. 
+              Sau khi tất cả người chơi hoàn thành lượt đi của vòng này (đảm bảo số lượt đi ngang nhau), người chơi có <strong>nhiều điểm nhất</strong> sẽ giành chiến thắng!
+            </p>
+          </div>
+
+          <h4 class="rules-section-title">🌱 Bản Chất Trò Chơi (Engine-Building Tabletop)</h4>
+          <p class="rules-text-desc">
+            <strong>Garden Empire</strong> là tựa game chiến thuật xây dựng guồng máy tài nguyên (Engine Building) thời gian thực dành cho <strong>2 đến 4 người chơi</strong>, 
+            được chuyển thể chuẩn xác 100% từ kiệt tác board game đoạt giải quốc tế <strong>Splendor</strong> (Marc André). 
+            Bạn vào vai <em>Nghệ nhân thực vật học hoàng gia</em>: bắt đầu với bàn tay trắng, khai thác 5 nguồn năng lượng thiên nhiên để ươm mầm các giống cây từ cấp độ nhỏ (Tier 1), 
+            tận dụng mức giảm giá vĩnh viễn để mua cây quý (Tier 2, Tier 3) và thu hút muông thú quý tộc ghé thăm (+3★).
+          </p>
+
+          <h4 class="rules-section-title">🔄 Bảng Ánh Xạ Khái Niệm Giữa Splendor & Garden Empire</h4>
+          <div class="rules-table-container">
+            <table class="rules-table">
+              <thead>
+                <tr>
+                  <th>Yếu Tố Gốc (Splendor)</th>
+                  <th>Garden Empire</th>
+                  <th>Biểu Tượng</th>
+                  <th>Ý Nghĩa Chiến Thuật</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Onyx (Mã Não Đen)</strong></td>
+                  <td><strong>Đất (Dirt)</strong></td>
+                  <td><span class="rules-token-badge token-dirt">🟫 Đất</span></td>
+                  <td>Năng lượng thổ nhưỡng, dưỡng chất rễ cây</td>
+                </tr>
+                <tr>
+                  <td><strong>Sapphire (Lam Ngọc)</strong></td>
+                  <td><strong>Nước (Water)</strong></td>
+                  <td><span class="rules-token-badge token-water">💧 Nước</span></td>
+                  <td>Nguồn tưới tiêu duy trì sinh khí</td>
+                </tr>
+                <tr>
+                  <td><strong>Ruby (Hồng Ngọc)</strong></td>
+                  <td><strong>Ánh Sáng (Sunlight)</strong></td>
+                  <td><span class="rules-token-badge token-sunlight">☀️ Nắng</span></td>
+                  <td>Quang hợp giúp cây nở hoa & kết trái</td>
+                </tr>
+                <tr>
+                  <td><strong>Diamond (Kim Cương)</strong></td>
+                  <td><strong>Hạt Giống (Seed)</strong></td>
+                  <td><span class="rules-token-badge token-seed">🌰 Hạt</span></td>
+                  <td>Mầm sống khởi nguồn cho mọi giống loài</td>
+                </tr>
+                <tr>
+                  <td><strong>Emerald (Ngọc Lục Bảo)</strong></td>
+                  <td><strong>Dinh Dưỡng (Nutrient)</strong></td>
+                  <td><span class="rules-token-badge token-nutrient">🧪 Dinh Dưỡng</span></td>
+                  <td>Khoáng vi lượng thúc đẩy sinh trưởng</td>
+                </tr>
+                <tr>
+                  <td><strong>Gold Token (Vàng Tự Do)</strong></td>
+                  <td><strong>Phân Bón Vàng (WILD)</strong></td>
+                  <td><span class="rules-token-badge token-wild">⭐ WILD</span></td>
+                  <td>Token vạn năng thay thế bất kỳ tài nguyên nào</td>
+                </tr>
+                <tr>
+                  <td><strong>Development Cards</strong></td>
+                  <td><strong>Thẻ Cây Trồng</strong></td>
+                  <td><span class="rules-tag">🌱 T1</span> <span class="rules-tag">🌿 T2</span> <span class="rules-tag">🌳 T3</span></td>
+                  <td>Cung cấp Điểm Uy Tín (★) & Giảm giá vĩnh viễn</td>
+                </tr>
+                <tr>
+                  <td><strong>Noble Tiles</strong></td>
+                  <td><strong>Khách Thăm Vườn</strong></td>
+                  <td><span class="rules-tag gold-tag">🦋 +3★</span></td>
+                  <td>Tự động ghé thăm khi vườn đủ điều kiện cây</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PANEL 2: 3 HÀNH ĐỘNG LƯỢT ĐI -->
+        <div class="rules-tab-panel" id="rules-panel-actions">
+          <div class="rules-callout rules-callout-info">
+            <strong>⚡ QUY TẮC LƯỢT ĐI CỐT LÕI:</strong>
+            <p style="margin: 0.25rem 0 0;">
+              Người chơi lần lượt hành động theo chiều kim đồng hồ. Trong lượt của mình, bạn <strong>bắt buộc phải chọn DUY NHẤT 1 trong 3 hành động chính</strong> sau đây:
+            </p>
+          </div>
+
+          <div class="rules-action-cards-grid">
+            <!-- Action 1 -->
+            <div class="rules-card">
+              <div class="rules-card-header action-header-1">
+                <span class="rules-card-badge">Hành Động 1</span>
+                <h5>🪙 LẤY TOKEN NĂNG LƯỢNG (TAKE TOKENS)</h5>
+              </div>
+              <div class="rules-card-body">
+                <p>Bạn chọn 1 trong 2 phương án lấy từ Ngân Hàng:</p>
+                <ul class="rules-feature-list">
+                  <li>
+                    <strong>Cách A — Lấy 3 Token Khác Màu:</strong> Chọn 3 viên khác loại nhau trong 5 loại cơ bản (ví dụ: 1 <span class="rules-inline-token">🟫</span> + 1 <span class="rules-inline-token">💧</span> + 1 <span class="rules-inline-token">☀️</span>).
+                  </li>
+                  <li>
+                    <strong>Cách B — Lấy 2 Token Cùng Màu:</strong> Chỉ được lấy 2 viên của 1 loại duy nhất <strong>KHI VÀ CHỈ KHI</strong> chồng token loại đó trong ngân hàng còn từ <strong>4 viên trở lên (≥ 4)</strong>. Nếu chỉ còn 1, 2, hoặc 3 viên, bạn <em>không được phép</em> lấy 2 viên loại này.
+                  </li>
+                </ul>
+                <div class="rules-alert-danger">
+                  ⚠️ <strong>Cấm:</strong> Không thể lấy trực tiếp Phân Bón Vàng (⭐ WILD) bằng hành động này!
+                </div>
+              </div>
+            </div>
+
+            <!-- Action 2 -->
+            <div class="rules-card">
+              <div class="rules-card-header action-header-2">
+                <span class="rules-card-badge">Hành Động 2</span>
+                <h5>🌱 TRỒNG CÂY / MUA THẺ (BUY PLANT CARD)</h5>
+              </div>
+              <div class="rules-card-body">
+                <p>Mua 1 thẻ cây đang mở trên bàn (Tier 1, 2 hoặc 3) HOẶC 1 thẻ đang nằm trong <strong>Khay Đặt Chỗ</strong> của bạn:</p>
+                <div class="rules-formula-box">
+                  <div class="rules-formula-title">💡 Công Thức Chi Phí Thanh Toán Thực Tế:</div>
+                  <div class="rules-formula-content">
+                    <code>Token Trả = (Chi phí in trên thẻ) - (Số cây giảm giá cùng loại đã sở hữu)</code>
+                  </div>
+                </div>
+                <ul class="rules-feature-list">
+                  <li>Nếu sau khi trừ giảm giá mà bạn vẫn thiếu một số token, bạn có thể dùng <strong>Phân Bón Vàng (⭐ WILD)</strong> để bù đắp theo tỉ lệ <code>1 WILD = 1 Token thiếu bất kỳ</code>.</li>
+                  <li>Các token thanh toán sẽ được trả lại vào Ngân Hàng Năng Lượng.</li>
+                  <li>Vị trí thẻ vừa mua trên bàn sẽ lập tức được rút 1 thẻ mới cùng Tier để lấp đầy (nếu còn bài).</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Action 3 -->
+            <div class="rules-card">
+              <div class="rules-card-header action-header-3">
+                <span class="rules-card-badge">Hành Động 3</span>
+                <h5>📑 ĐẶT CHỖ THẺ CÂY (RESERVE CARD)</h5>
+              </div>
+              <div class="rules-card-body">
+                <p>Giữ lại 1 thẻ cây về khay bí mật trên tay của bạn để trồng sau này:</p>
+                <ul class="rules-feature-list">
+                  <li>Chọn 1 thẻ mở ngửa trên bàn HOẶC bốc 1 thẻ úp bí mật từ xấp bài trên cùng của Tier 1, 2 hoặc 3.</li>
+                  <li>Nhận ngay <strong>1 Token Phân Bón Vàng (⭐ WILD)</strong> từ ngân hàng (nếu ngân hàng còn). Nếu ngân hàng đã hết vàng, bạn vẫn được quyền đặt chỗ nhưng không nhận vàng.</li>
+                </ul>
+                <div class="rules-alert-warning">
+                  🚫 <strong>Giới hạn nghiêm ngặt:</strong> Mỗi người chơi chỉ được giữ tối đa <strong>3 thẻ đặt chỗ</strong> trên tay cùng lúc. Bạn không thể hủy thẻ đã giữ; chỉ có cách trồng thẻ đó thì mới trống chỗ để đặt thẻ mới!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 3: KHÁCH & GIẢM GIÁ VĨNH VIỄN -->
+        <div class="rules-tab-panel" id="rules-panel-engine">
+          <h4 class="rules-section-title">⚙️ 1. Cơ Chế Giảm Giá Vĩnh Viễn (Engine Building)</h4>
+          <p class="rules-text-desc">
+            Đây là chìa khóa để giành chiến thắng trong Garden Empire! Khi bạn trồng được bất kỳ thẻ cây nào, biểu tượng năng lượng ở góc trên bên phải của thẻ sẽ đóng vai trò như một 
+            <strong>nguồn tài nguyên vĩnh cửu</strong>:
+          </p>
+
+          <div class="rules-engine-demonstration">
+            <div class="rules-engine-step">
+              <span class="step-num">1</span>
+              <div>
+                <strong>Cây Trồng Đã Sở Hữu Không Mất Đi:</strong>
+                <p>Khác với token bị mất đi khi mua cây, các thẻ cây bạn đã trồng sẽ nằm vĩnh viễn trong khu vườn của bạn.</p>
+              </div>
+            </div>
+            <div class="rules-engine-step">
+              <span class="step-num">2</span>
+              <div>
+                <strong>Giảm Giá Tích Lũy Cộng Dồn:</strong>
+                <p>Nếu bạn đã trồng 3 cây Nước 💧, mọi thẻ cây bạn mua sau này cần Nước sẽ tự động được giảm ngay 3 Nước! Nếu thẻ chỉ yêu cầu 3 Nước, bạn được mua <em>hoàn toàn miễn phí</em>!</p>
+              </div>
+            </div>
+            <div class="rules-engine-step">
+              <span class="step-num">3</span>
+              <div>
+                <strong>Tăng Tốc Về Đích (Snowball Effect):</strong>
+                <p>Càng về cuối ván đấu, nhờ guồng máy giảm giá hùng mạnh, bạn có thể mua các đại thụ Tier 2 & Tier 3 đắt đỏ mà tốn cực ít hoặc không tốn token nào!</p>
+              </div>
+            </div>
+          </div>
+
+          <h4 class="rules-section-title" style="margin-top: 1.25rem;">✨ 2. Hai Hành Động Phụ Tự Động (Cuối Mỗi Lượt)</h4>
+          <div class="rules-passive-grid">
+            <div class="rules-passive-card">
+              <div class="rules-passive-header">
+                <span class="rules-passive-icon">📦</span>
+                <strong>Kiểm Tra Giới Hạn Cầm Cực Đại (10 Token):</strong>
+              </div>
+              <p>
+                Sau khi hoàn tất hành động lượt đi, nếu tổng số token trên tay bạn (bao gồm 5 loại thường + Phân Bón Vàng) <strong>vượt quá 10 viên</strong>, 
+                hệ thống sẽ yêu cầu bạn <strong>hoàn trả token dư thừa</strong> về lại Ngân Hàng cho đến khi số lượng trên tay còn đúng <strong>10 viên</strong>.
+              </p>
+            </div>
+
+            <div class="rules-passive-card">
+              <div class="rules-passive-header">
+                <span class="rules-passive-icon">🦋</span>
+                <strong>Rước Khách Thăm Vườn (Noble Visit +3★):</strong>
+              </div>
+              <p>
+                Khách Thăm Vườn là những sinh vật danh giá mang lại ngay lập tức <strong>+3 Điểm Uy Tín (3★)</strong>. 
+                Ở cuối mỗi lượt, hệ thống tự động kiểm tra số lượng cây bạn đang có. Nếu bạn đủ điều kiện số cây của một vị khách (ví dụ: cần 4 Nước 💧 + 4 Dinh Dưỡng 🧪), 
+                vị khách đó sẽ tự động ghé thăm vườn của bạn!
+              </p>
+              <div class="rules-hint-text">
+                📌 <em>Lưu ý: Khách chỉ kiểm tra số thẻ cây đã trồng, không trừ token hay mất thẻ cây của bạn. Mỗi lượt chỉ được rước tối đa 1 khách.</em>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 4: THIẾT LẬP & THẮNG BẠI -->
+        <div class="rules-tab-panel" id="rules-panel-setup-victory">
+          <h4 class="rules-section-title">⚖️ Thiết Lập Bàn Cờ Theo Chuẩn Quốc Tế Splendor</h4>
+          <p class="rules-text-desc">
+            Số lượng tài nguyên và khách thăm vườn sẽ tự động được điều chỉnh cân bằng chuẩn xác dựa theo số lượng người chơi tham gia trong phòng đấu:
+          </p>
+
+          <div class="rules-table-container">
+            <table class="rules-table">
+              <thead>
+                <tr>
+                  <th>Yếu Tố Bàn Cờ</th>
+                  <th style="color: #6ee7b7;">2 Người Chơi</th>
+                  <th style="color: #93c5fd;">3 Người Chơi</th>
+                  <th style="color: #fbcfe8;">4 Người Chơi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Token Năng Lượng mỗi loại</strong></td>
+                  <td><strong>4 token</strong> (Rút bớt 3)</td>
+                  <td><strong>5 token</strong> (Rút bớt 2)</td>
+                  <td><strong>7 token</strong> (Đầy đủ)</td>
+                </tr>
+                <tr>
+                  <td><strong>Tổng Token 5 loại cơ bản</strong></td>
+                  <td>20 token</td>
+                  <td>25 token</td>
+                  <td>35 token</td>
+                </tr>
+                <tr>
+                  <td><strong>Token Phân Bón Vàng (⭐ WILD)</strong></td>
+                  <td><strong>5 token</strong> (Cố định)</td>
+                  <td><strong>5 token</strong> (Cố định)</td>
+                  <td><strong>5 token</strong> (Cố định)</td>
+                </tr>
+                <tr>
+                  <td><strong>Khách Thăm Vườn (Số Người + 1)</strong></td>
+                  <td><strong>3 Khách</strong></td>
+                  <td><strong>4 Khách</strong></td>
+                  <td><strong>5 Khách</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>Thẻ Cây mở trên Chợ mỗi Tier</strong></td>
+                  <td>4 thẻ (Tổng 12 thẻ)</td>
+                  <td>4 thẻ (Tổng 12 thẻ)</td>
+                  <td>4 thẻ (Tổng 12 thẻ)</td>
+                </tr>
+                <tr>
+                  <td><strong>Thẻ đặt chỗ tối đa trên tay</strong></td>
+                  <td>3 thẻ / người</td>
+                  <td>3 thẻ / người</td>
+                  <td>3 thẻ / người</td>
+                </tr>
+                <tr>
+                  <td><strong>Giới hạn token cầm tay tối đa</strong></td>
+                  <td>10 token / người</td>
+                  <td>10 token / người</td>
+                  <td>10 token / người</td>
+                </tr>
+                <tr>
+                  <td><strong>Ngưỡng kích hoạt Vòng Chung Kết</strong></td>
+                  <td><strong>15 Điểm Uy Tín</strong></td>
+                  <td><strong>15 Điểm Uy Tín</strong></td>
+                  <td><strong>15 Điểm Uy Tín</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 class="rules-section-title" style="margin-top: 1.25rem;">🏁 Vòng Chung Kết & Phân Định Thắng Bại</h4>
+          <div class="rules-tiebreaker-box">
+            <div class="rules-tiebreaker-header">
+              <span class="rules-tiebreaker-icon">⚖️</span>
+              <div>
+                <strong>LUẬT BẺ HÒA ĐIỂM (TIE-BREAKER RULE) CHÍNH THỨC CỦA SPLENDOR</strong>
+                <div class="rules-tiebreaker-sub">Được áp dụng nghiêm ngặt trong mọi giải đấu quốc tế</div>
+              </div>
+            </div>
+            <div class="rules-tiebreaker-body">
+              <ol class="rules-numbered-list">
+                <li>
+                  <strong>Kích Hoạt Vòng Chung Kết:</strong> Ngay khi có người chơi đầu tiên đạt từ <strong>15★</strong> trở lên, ván đấu <em>chưa dừng lại ngay</em> mà sẽ chơi tiếp cho đến khi người ngồi bên phải người đi đầu tiên hoàn tất lượt. Điều này đảm bảo <strong>tất cả người chơi đều có số lượt đi bằng nhau 100%</strong>.
+                </li>
+                <li>
+                  <strong>Tiêu Chí 1 (Điểm Uy Tín Cao Nhất):</strong> Người có tổng số Điểm Uy Tín (★) cao nhất sau khi kết thúc vòng chung kết sẽ là người chiến thắng!
+                </li>
+                <li>
+                  <strong>Tiêu Chí 2 (Bẻ Hòa Điểm — Mua Ít Thẻ Hơn):</strong> Nếu có từ 2 người trở lên có cùng số điểm uy tín cao nhất, người chơi nào <strong>MUA ÍT THẺ CÂY HƠN (Fewest Plant Cards Purchased)</strong> sẽ giành chiến thắng tuyệt đối!
+                  <div class="rules-quote">
+                    <em>"Người tích lũy được cùng số điểm với ít thẻ bài hơn chứng tỏ đã xây dựng chiến thuật tối ưu, chọn lọc và xuất sắc hơn!"</em>
+                  </div>
+                </li>
+                <li>
+                  <strong>Tiêu Chí 3:</strong> Nếu điểm số và số lượng thẻ cây mua đều bằng nhau, những người chơi đó sẽ cùng chia sẻ chiến thắng vẻ vang.
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 5: MẸO CHIẾN THUẬT -->
+        <div class="rules-tab-panel" id="rules-panel-tips">
+          <h4 class="rules-section-title">💡 Bí Quyết & Mẹo Chiến Thuật Cho Người Mới Bắt Đầu</h4>
+          
+          <div class="rules-tips-grid">
+            <div class="rules-tip-card">
+              <div class="rules-tip-icon">🌱</div>
+              <div class="rules-tip-content">
+                <h5>1. Đầu Game: Xây Nền Móng Vững Chắc</h5>
+                <p>
+                  Đừng vội nhắm tới điểm số ở 3-4 lượt đầu! Hãy tập trung nhặt token và mua các thẻ <strong>Tier 1 giá rẻ (chi phí 3-4 token)</strong>. 
+                  Hãy quan sát các Khách Thăm Vườn đang có trên bàn để định hướng thu thập các màu cây giảm giá phục vụ trực tiếp cho vị khách đó.
+                </p>
+              </div>
+            </div>
+
+            <div class="rules-tip-card">
+              <div class="rules-tip-icon">🛡️</div>
+              <div class="rules-tip-content">
+                <h5>2. Giữa Game: Tận Dụng Tuyệt Chiêu "Đặt Chỗ" (Reserve)</h5>
+                <p>
+                  Hành động Đặt Chỗ không chỉ để dành thẻ cho mình, mà còn là <strong>vũ khí phòng thủ & phá chiến thuật</strong> đối phương cực mạnh. 
+                  Khi thấy đối thủ đang gom đủ tài nguyên chuẩn bị mua một cây Tier 3 điểm cao hoặc sắp đủ điều kiện rước Khách, hãy nhanh tay "cướp" đặt chỗ thẻ đó vừa chặn đứng đối thủ, vừa bỏ túi 1 token WILD ⭐!
+                </p>
+              </div>
+            </div>
+
+            <div class="rules-tip-card">
+              <div class="rules-tip-icon">🚀</div>
+              <div class="rules-tip-content">
+                <h5>3. Tối Ưu Hóa Cầm Token & Bước Nhảy Điểm Về Đích</h5>
+                <p>
+                  Đừng để phí lượt vì vượt quá 10 token. Hãy luôn nhắm tới việc tiêu token ngay khi có cơ hội. 
+                  Ở giai đoạn nước rút, việc kết hợp mua 1 thẻ Tier 3 (4–5★) cùng với 1 Khách Thăm Vườn (+3★) có thể giúp bạn tạo nên một bước nhảy vọt bất ngờ từ 8★ lên thẳng 16★ chỉ trong nháy mắt!
+                </p>
+              </div>
+            </div>
+
+            <div class="rules-tip-card">
+              <div class="rules-tip-icon">🔗</div>
+              <div class="rules-tip-content">
+                <h5>4. Nguồn Tài Liệu Tham Khảo Mở Rộng</h5>
+                <p>
+                  Bạn có thể tìm hiểu thêm các phân tích chiến thuật chuyên sâu tại:
+                </p>
+                <div class="rules-links-group">
+                  <a href="https://en.wikipedia.org/wiki/Splendor_(game)" target="_blank" rel="noopener noreferrer" class="rules-ref-link">🌐 Wikipedia Splendor</a>
+                  <a href="https://board-games.fandom.com/wiki/Splendor" target="_blank" rel="noopener noreferrer" class="rules-ref-link">📖 Board Games Fandom</a>
+                  <a href="https://boardgame.vn/blogs/tin-tuc/huong-dan-choi-splendor-tro-choi-thu-thap-da-quy-kinh-dien" target="_blank" rel="noopener noreferrer" class="rules-ref-link">🎲 BoardGame VN Cẩm Nang</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <div class="modal-footer">
-        <button class="btn-nature-primary" id="btn-rules-got-it">Đã Hiểu</button>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer rules-modal-footer">
+        <div class="rules-footer-nav">
+          <button type="button" class="btn-nature-secondary rules-nav-prev" id="btn-rules-prev-tab">
+            <span>←</span> <span>Trang Trước</span>
+          </button>
+          <span class="rules-tab-page-indicator" id="rules-tab-indicator">Trang 1 / 5</span>
+          <button type="button" class="btn-nature-secondary rules-nav-next" id="btn-rules-next-tab">
+            <span>Trang Sau</span> <span>→</span>
+          </button>
+        </div>
+        <button type="button" class="btn-nature-primary rules-btn-got-it" id="btn-rules-got-it">
+          <span>🌿</span> <span>Đã Hiểu & Đóng</span>
+        </button>
       </div>
     </div>
   </div>

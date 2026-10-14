@@ -124,20 +124,79 @@ export class BoardUI {
       closeTokenModal.addEventListener('click', () => this.closeModal('token-selector-modal'));
     }
 
-    // Open Game Rules Modal
+    // Game Rules Modal Tabs & Navigation
     const rulesBtn = document.getElementById('btn-game-rules');
     const rulesModal = document.getElementById('game-rules-modal');
     const closeRulesBtn = document.getElementById('modal-rules-close');
     const gotItRulesBtn = document.getElementById('btn-rules-got-it');
+    const prevRulesTabBtn = document.getElementById('btn-rules-prev-tab');
+    const nextRulesTabBtn = document.getElementById('btn-rules-next-tab');
+    const rulesTabIndicator = document.getElementById('rules-tab-indicator');
+    const rulesTabBtns = Array.from(document.querySelectorAll('.rules-tab-btn'));
+    const rulesPanels = Array.from(document.querySelectorAll('.rules-tab-panel'));
+    let currentRulesTabIndex = 0;
+
+    const updateRulesTab = (index) => {
+      if (!rulesTabBtns.length) return;
+      if (index < 0) index = 0;
+      if (index >= rulesTabBtns.length) index = rulesTabBtns.length - 1;
+      currentRulesTabIndex = index;
+
+      rulesTabBtns.forEach((btn, i) => {
+        btn.classList.toggle('active', i === index);
+      });
+      rulesPanels.forEach((panel, i) => {
+        panel.classList.toggle('active', i === index);
+      });
+
+      if (rulesTabIndicator) {
+        rulesTabIndicator.textContent = `Trang ${index + 1} / ${rulesTabBtns.length}`;
+      }
+      if (prevRulesTabBtn) {
+        prevRulesTabBtn.style.opacity = index === 0 ? '0.45' : '1';
+        prevRulesTabBtn.style.pointerEvents = index === 0 ? 'none' : 'auto';
+      }
+      if (nextRulesTabBtn) {
+        nextRulesTabBtn.style.opacity = index === rulesTabBtns.length - 1 ? '0.45' : '1';
+        nextRulesTabBtn.style.pointerEvents = index === rulesTabBtns.length - 1 ? 'none' : 'auto';
+      }
+
+      const modalBody = rulesModal?.querySelector('.rules-modal-body');
+      if (modalBody) modalBody.scrollTop = 0;
+    };
 
     if (rulesBtn && rulesModal) {
-      rulesBtn.addEventListener('click', () => rulesModal.classList.remove('hidden'));
+      rulesBtn.addEventListener('click', () => {
+        rulesModal.classList.remove('hidden');
+        updateRulesTab(currentRulesTabIndex);
+      });
     }
+
+    rulesTabBtns.forEach((btn, idx) => {
+      btn.addEventListener('click', () => updateRulesTab(idx));
+    });
+
+    if (prevRulesTabBtn) {
+      prevRulesTabBtn.addEventListener('click', () => updateRulesTab(currentRulesTabIndex - 1));
+    }
+
+    if (nextRulesTabBtn) {
+      nextRulesTabBtn.addEventListener('click', () => updateRulesTab(currentRulesTabIndex + 1));
+    }
+
     if (closeRulesBtn) {
       closeRulesBtn.addEventListener('click', () => this.closeModal('game-rules-modal'));
     }
     if (gotItRulesBtn) {
       gotItRulesBtn.addEventListener('click', () => this.closeModal('game-rules-modal'));
+    }
+
+    if (rulesModal) {
+      rulesModal.addEventListener('click', (e) => {
+        if (e.target === rulesModal) {
+          this.closeModal('game-rules-modal');
+        }
+      });
     }
 
     // Reset Tokens Button
