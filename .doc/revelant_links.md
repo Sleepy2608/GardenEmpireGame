@@ -4,6 +4,8 @@ Tổng hợp các liên kết tham khảo, tài liệu luật chơi và tài ngu
 
 ### 🎲 1. Luật Chơi & Cơ Chế Gốc (Splendor)
 - **Wikipedia Splendor (Game):** [https://en.wikipedia.org/wiki/Splendor_(game)](https://en.wikipedia.org/wiki/Splendor_(game))
+- **Board Games Fandom Splendor:** [https://board-games.fandom.com/wiki/Splendor](https://board-games.fandom.com/wiki/Splendor)
+- **BoardGame VN — Hướng Dẫn Chơi Splendor Kinh Điển:** [https://boardgame.vn/blogs/tin-tuc/huong-dan-choi-splendor-tro-choi-thu-thap-da-quy-kinh-dien](https://boardgame.vn/blogs/tin-tuc/huong-dan-choi-splendor-tro-choi-thu-thap-da-quy-kinh-dien?srsltid=AU7gw4UoPIPK8Fx2A7H8TXGSIVWz3_ylSITVk5mVjX_IpsfVKhHMHyCr)
 - **Space Cowboys Official Splendor Rules (PDF):** [https://www.spacecowboys.fr/splendor](https://www.spacecowboys.fr/splendor)
 - **BoardGameGeek (BGG) Splendor:** [https://boardgamegeek.com/boardgame/148228/splendor](https://boardgamegeek.com/boardgame/148228/splendor)
 

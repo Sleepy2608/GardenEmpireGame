@@ -20,6 +20,7 @@
 6. [Điều Kiện Kết Thúc Ván Đấu & Phân Định Thắng Bại](#6-điều-kiện-kết-thúc-ván-đấu--phân-định-thắng-bại)
 7. [Bí Quyết & Chiến Thuật Đỉnh Cao](#7-bí-quyết--chiến-thuật-đỉnh-cao)
 8. [Hướng Dẫn Thao Tác Trên Giao Diện Trực Tuyến](#8-hướng-dẫn-thao-tác-trên-giao-diện-trực-tuyến)
+9. [Tài Liệu & Liên Kết Tham Khảo Chuẩn Quốc Tế](#9-tài-liệu--liên-kết-tham-khảo-chuẩn-quốc-tế)
 
 ---
 
@@ -332,6 +333,26 @@ Khi tham gia trận đấu tại [Garden Empire](https://garden-empire-game.verc
    - **Gửi tin nhắn tức thời:** Gõ nội dung và nhấn `Enter` hoặc bấm nút `➤` để gửi ngay tới tất cả người chơi trong phòng đấu.
    - **Thu gọn / Mở rộng (`▼` / `▲`):** Thu gọn thành thanh Chat Bar mỏng nhẹ hiển thị tin nhắn mới nhất. Khi có người gửi tin mới trong lúc đang thu gọn, huy hiệu đỏ (Unread Badge 🔴) sẽ nhấp nháy báo hiệu kèm âm thanh pop nhẹ.
    - **Bảo mật & Tự động lưu trữ:** Khử độc mã XSS an toàn, giới hạn 120 ký tự, chống spam 600ms, lưu trữ 50 tin gần nhất trong RAM bàn đấu (tự động khôi phục 100% khi người chơi F5 / Reconnect).
+
+---
+
+## 🔗 9. Tài Liệu & Liên Kết Tham Khảo Chuẩn Quốc Tế
+
+Luật chơi và cơ chế tính toán trong **Garden Empire** tuân thủ nguyên bản 100% theo các nguồn tài liệu chính thức và bách khoa toàn thư board game thế giới:
+
+1. **Wikipedia — Splendor (Game):**
+   - [https://en.wikipedia.org/wiki/Splendor_(game)](https://en.wikipedia.org/wiki/Splendor_(game))
+   - *Nguồn tham khảo tổng quan lịch sử trò chơi, cơ chế lượt đi và quy định tie-breaker chính thức.*
+2. **Board Games Fandom — Splendor Rulebook & Mechanics:**
+   - [https://board-games.fandom.com/wiki/Splendor](https://board-games.fandom.com/wiki/Splendor)
+   - *Chi tiết phân tích cọc bài, xác suất xuất hiện quý tộc và các giới hạn hành động.*
+3. **BoardGame VN — Cẩm Nang Hướng Dẫn Chơi Splendor Thu Thập Đá Quý:**
+   - [https://boardgame.vn/blogs/tin-tuc/huong-dan-choi-splendor-tro-choi-thu-thap-da-quy-kinh-dien](https://boardgame.vn/blogs/tin-tuc/huong-dan-choi-splendor-tro-choi-thu-thap-da-quy-kinh-dien?srsltid=AU7gw4UoPIPK8Fx2A7H8TXGSIVWz3_ylSITVk5mVjX_IpsfVKhHMHyCr)
+   - *Cẩm nang tiếng Việt chi tiết, giải thích trực quan về thiết lập bàn cờ 2–4 người và mẹo xây dựng engine.*
+4. **Space Cowboys — Official Rulebook PDF (Nhà phát hành gốc):**
+   - [https://www.spacecowboys.fr/splendor](https://www.spacecowboys.fr/splendor)
+5. **BoardGameGeek (BGG) — Splendor Community Discussions & FAQs:**
+   - [https://boardgamegeek.com/boardgame/148228/splendor](https://boardgamegeek.com/boardgame/148228/splendor)
 
 ---
 
