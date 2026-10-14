@@ -181,7 +181,7 @@ export class GameLogUI {
           </div>
         `;
         if (this.quickTextEl) {
-          this.quickTextEl.textContent = '📜 Bấm để xem full logs (0 hành động)';
+          this.quickTextEl.textContent = '📜 Xem toàn bộ lịch sử (0 hành động) ↗';
         }
       } else {
         // Lấy 3 lượt hành động gần nhất
@@ -221,7 +221,7 @@ export class GameLogUI {
       this.modalCountEl.textContent = total;
     }
     if (this.modalFooterStatsEl) {
-      this.modalFooterStatsEl.innerHTML = `<span>Tổng số: <strong>${total}</strong> lượt hành động đã đi trong ván đấu</span>`;
+      this.modalFooterStatsEl.innerHTML = `<span>Tổng cộng: <strong>${total}</strong> lượt hành động đã diễn ra trong ván đấu</span>`;
     }
 
     if (total === 0) {
@@ -229,8 +229,8 @@ export class GameLogUI {
         <div class="log-item log-empty-state modal-empty-state">
           <span class="log-empty-icon">🌱</span>
           <div>
-            <strong>Ván đấu chưa có hành động nào</strong>
-            <p>Mọi nước đi bốc token, mua cây, đặt chỗ và rước khách sẽ được lưu trữ đầy đủ tại đây.</p>
+            <strong>Ván đấu vừa bắt đầu, chưa ghi nhận hành động nào</strong>
+            <p>Mọi nước đi lấy tài nguyên, trồng cây, đặt chỗ thẻ và đón khách quý sẽ được ghi chép đầy đủ tại đây.</p>
           </div>
         </div>
       `;
@@ -300,27 +300,27 @@ export class GameLogUI {
   getActionTypeTag(actionType) {
     switch (actionType) {
       case 'TAKE_TOKENS_DISTINCT':
-        return '🪙 Bốc 3 Token';
+        return '🪙 Lấy 3 Token';
       case 'TAKE_TOKENS_DOUBLE':
-        return '🪙 Bốc 2 Token';
+        return '🪙 Lấy 2 Token';
       case 'RESERVE_CARD_BOARD':
         return '📑 Đặt Chỗ Thẻ';
       case 'RESERVE_CARD_DECK':
-        return '📑 Đặt Chỗ Bài Úp';
+        return '📑 Đặt Chỗ Bài Ẩn';
       case 'BUY_CARD_BOARD':
         return '🌱 Trồng Cây';
       case 'BUY_CARD_RESERVED':
         return '🌱 Trồng Cây Đã Giữ';
       case 'CLAIM_VISITOR':
-        return '🦋 Rước Khách';
+        return '🦋 Đón Khách Quý';
       case 'DISCARD_TOKENS':
         return '⚠️ Trả Token Dư';
       case 'GAME_START':
-        return '🚀 Khởi Động';
+        return '🚀 Bắt Đầu Trận';
       case 'FINAL_ROUND_TRIGGERED':
         return '🏁 Vòng Chung Kết';
       case 'GAME_OVER':
-        return '🏆 Kết Thúc';
+        return '👑 Kết Thúc Ván';
       default:
         return '';
     }
@@ -354,7 +354,8 @@ export class GameLogUI {
       .replace(/🧪 Dinh Dưỡng/g, '<span class="log-token-badge badge-nutrients">🧪 Dinh Dưỡng</span>')
       .replace(/🌾 Phân Bón/g, '<span class="log-token-badge badge-wild">🌾 Phân Bón</span>')
       .replace(/⭐ Phân Bón Vàng/g, '<span class="log-token-badge badge-wild">⭐ Vàng WILD</span>')
-      .replace(/★ \+(\d+)/g, '<span class="log-prestige-gain">★ +$1</span>');
+      .replace(/★ \+(\d+)/g, '<span class="log-prestige-gain">★ +$1</span>')
+      .replace(/\+(\d+)★/g, '<span class="log-prestige-gain">+$1★</span>');
   }
 }
 
