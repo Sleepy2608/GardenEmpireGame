@@ -11,6 +11,9 @@ export class LobbyUI {
     this.guestName = localStorage.getItem('garden_empire_guest_name');
     this.guestAvatar = localStorage.getItem('garden_empire_guest_avatar') || '🌱';
 
+    this.isCreatingRoom = false;
+    this.isJoiningRoom = false;
+
     if (!this.guestName) {
       navigateTo('index');
       return;
@@ -195,11 +198,27 @@ export class LobbyUI {
 
   async handleCreateRoom(e) {
     e.preventDefault();
+    if (this.isCreatingRoom) return;
+
     const roomNameInput = document.getElementById('room-name');
     const maxPlayersInput = document.getElementById('max-players');
+    const createBtn = document.getElementById('btn-create-room');
 
-    const roomName = roomNameInput.value.trim();
-    const maxPlayers = parseInt(maxPlayersInput.value, 10);
+    const roomName = roomNameInput ? roomNameInput.value.trim() : '';
+    const maxPlayers = maxPlayersInput ? parseInt(maxPlayersInput.value, 10) : 4;
+
+    if (!roomName) return;
+
+    this.isCreatingRoom = true;
+    const originalBtnHtml = createBtn ? createBtn.innerHTML : '';
+
+    if (createBtn) {
+      createBtn.disabled = true;
+      createBtn.classList.add('is-loading');
+      createBtn.innerHTML = `<span>⏳ Đang khởi tạo phòng...</span>`;
+    }
+    if (roomNameInput) roomNameInput.disabled = true;
+    if (maxPlayersInput) maxPlayersInput.disabled = true;
 
     try {
       const room = await roomApi.createRoom(roomName, maxPlayers, {
@@ -210,14 +229,36 @@ export class LobbyUI {
       navigateTo('room', { roomId: room.id });
     } catch (err) {
       alert(`Lỗi tạo phòng: ${err.message}`);
+      this.isCreatingRoom = false;
+      if (createBtn) {
+        createBtn.disabled = false;
+        createBtn.classList.remove('is-loading');
+        createBtn.innerHTML = originalBtnHtml;
+      }
+      if (roomNameInput) roomNameInput.disabled = false;
+      if (maxPlayersInput) maxPlayersInput.disabled = false;
     }
   }
 
   async handleJoinByCode(e) {
     e.preventDefault();
+    if (this.isJoiningRoom) return;
+
     const codeInput = document.getElementById('join-room-code');
-    const code = codeInput.value.trim();
+    const joinCodeForm = document.getElementById('join-code-form');
+    const joinBtn = joinCodeForm ? joinCodeForm.querySelector('button[type="submit"]') : null;
+    const code = codeInput ? codeInput.value.trim() : '';
     if (!code) return;
+
+    this.isJoiningRoom = true;
+    const originalBtnHtml = joinBtn ? joinBtn.innerHTML : '';
+
+    if (joinBtn) {
+      joinBtn.disabled = true;
+      joinBtn.classList.add('is-loading');
+      joinBtn.innerHTML = `<span>⏳ Đang vào phòng...</span>`;
+    }
+    if (codeInput) codeInput.disabled = true;
 
     try {
       const room = await roomApi.joinRoomByCode(code, {
@@ -228,10 +269,23 @@ export class LobbyUI {
       navigateTo('room', { roomId: room.id });
     } catch (err) {
       alert(`Lỗi vào phòng: ${err.message}`);
+      this.isJoiningRoom = false;
+      if (joinBtn) {
+        joinBtn.disabled = false;
+        joinBtn.classList.remove('is-loading');
+        joinBtn.innerHTML = originalBtnHtml;
+      }
+      if (codeInput) codeInput.disabled = false;
     }
   }
 
   async handleJoinRoom(roomId) {
+    if (this.isJoiningRoom) return;
+    this.isJoiningRoom = true;
+
+    const allJoinBtns = document.querySelectorAll('.btn-join');
+    allJoinBtns.forEach(btn => btn.disabled = true);
+
     try {
       await roomApi.joinRoom(roomId, {
         id: this.guestId,
@@ -241,6 +295,8 @@ export class LobbyUI {
       navigateTo('room', { roomId: roomId });
     } catch (err) {
       alert(`Lỗi tham gia phòng: ${err.message}`);
+      this.isJoiningRoom = false;
+      allJoinBtns.forEach(btn => btn.disabled = false);
     }
   }
 }
