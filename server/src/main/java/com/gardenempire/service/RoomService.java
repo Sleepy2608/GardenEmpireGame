@@ -32,6 +32,11 @@ public class RoomService {
     // kick cooldown: 2 phút
     private Map<String, Map<String, Long>> kickedCooldownMap = new ConcurrentHashMap<>();
 
+    // Cooldown tạo phòng: 2.5 giây cho mỗi Host ID (chống spam RPS và double-click)
+    private static final long ROOM_CREATION_COOLDOWN_MS = 2500L;
+    private final Map<String, Long> lastRoomCreationTimeMap = new ConcurrentHashMap<>();
+    private final Map<String, String> lastCreatedRoomIdMap = new ConcurrentHashMap<>();
+
     public List<Room> getAllRooms() {
         return roomManager.getAllRooms().stream()
                 .filter(r -> r.getStatus() == RoomStatus.WAITING)
@@ -44,34 +49,79 @@ public class RoomService {
     }
 
     public Room createRoom(CreateRoomRequest request) {
-        String roomId = "GARDEN-" + (int)(Math.random() * 9000 + 1000);
+        if (request == null || request.getHostPlayer() == null) {
+            throw new GameException("Yêu cầu tạo phòng không hợp lệ");
+        }
         Player host = request.getHostPlayer();
-        if (host.getAvatar() == null || host.getAvatar().isBlank()) {
-            host.setAvatar("🌱");
+        if (host.getId() == null || host.getId().isBlank()) {
+            throw new GameException("Thông tin người chơi không hợp lệ");
         }
-        host.setHost(true);
+        String hostId = host.getId();
 
-        int maxPlayers = request.getMaxPlayers();
-        if (maxPlayers < 2 || maxPlayers > 4) {
-            maxPlayers = 4;
+        // Đồng bộ hóa theo hostId để bảo vệ khỏi concurrency race condition
+        synchronized (hostId.intern()) {
+            long now = System.currentTimeMillis();
+            Long lastCreatedTime = lastRoomCreationTimeMap.get(hostId);
+            String lastRoomId = lastCreatedRoomIdMap.get(hostId);
+
+            // 1. Kiểm tra Cooldown: Nếu gọi lại trong vòng 2.5 giây
+            if (lastCreatedTime != null && (now - lastCreatedTime) < ROOM_CREATION_COOLDOWN_MS) {
+                if (lastRoomId != null) {
+                    var existingOpt = roomManager.getRoom(lastRoomId);
+                    if (existingOpt.isPresent() && existingOpt.get().getStatus() == RoomStatus.WAITING) {
+                        // Idempotent: Trả về chính phòng vừa tạo trong cửa sổ cooldown
+                        return existingOpt.get();
+                    }
+                }
+                throw new GameException("Bạn đang tạo phòng quá nhanh. Vui lòng chờ trong giây lát...");
+            }
+
+            // 2. Tự động dọn dẹp các phòng cũ đang ở trạng thái WAITING do chính host này tạo
+            List<Room> existingWaitingRooms = roomManager.getAllRooms().stream()
+                    .filter(r -> hostId.equals(r.getHostId()) && r.getStatus() == RoomStatus.WAITING)
+                    .toList();
+            for (Room staleRoom : existingWaitingRooms) {
+                cleanupService.deleteRoomCompletely(staleRoom.getId());
+            }
+
+            // 3. Sinh mã phòng ngẫu nhiên không trùng lặp
+            String roomId;
+            do {
+                roomId = "GARDEN-" + (int)(Math.random() * 9000 + 1000);
+            } while (roomManager.getRoom(roomId).isPresent());
+
+            if (host.getAvatar() == null || host.getAvatar().isBlank()) {
+                host.setAvatar("🌱");
+            }
+            host.setHost(true);
+
+            int maxPlayers = request.getMaxPlayers();
+            if (maxPlayers < 2 || maxPlayers > 4) {
+                maxPlayers = 4;
+            }
+
+            Room room = Room.builder()
+                    .id(roomId)
+                    .code(roomId)
+                    .name(request.getRoomName() != null && !request.getRoomName().isBlank() ? request.getRoomName() : "Vườn Thượng Uyển")
+                    .hostId(host.getId())
+                    .hostName(host.getName())
+                    .hostAvatar(host.getAvatar())
+                    .maxPlayers(maxPlayers)
+                    .status(RoomStatus.WAITING)
+                    .gameId(roomId)
+                    .build();
+
+            room.getPlayers().add(host);
+            roomManager.addRoom(room);
+            cleanupService.recordActivity(roomId);
+
+            // 4. Ghi nhận cooldown
+            lastRoomCreationTimeMap.put(hostId, now);
+            lastCreatedRoomIdMap.put(hostId, roomId);
+
+            return room;
         }
-
-        Room room = Room.builder()
-                .id(roomId)
-                .code(roomId)
-                .name(request.getRoomName())
-                .hostId(host.getId())
-                .hostName(host.getName())
-                .hostAvatar(host.getAvatar())
-                .maxPlayers(maxPlayers)
-                .status(RoomStatus.WAITING)
-                .gameId(roomId)
-                .build();
-
-        room.getPlayers().add(host);
-        roomManager.addRoom(room);
-        cleanupService.recordActivity(roomId);
-        return room;
     }
 
     public Room joinRoom(String roomId, JoinRoomRequest request) {
