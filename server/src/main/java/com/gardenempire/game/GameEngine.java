@@ -30,7 +30,7 @@ public class GameEngine {
         game.getState().setFirstPlayerId(firstPlayerId);
         game.getState().setCurrentTurnPlayerId(firstPlayerId);
         
-        String startMsg = String.format("🌱 Ván đấu bắt đầu! %s là người đi đầu tiên.", firstPlayer.getName());
+        String startMsg = String.format("🌱 Ván đấu bắt đầu, %s là người nhận lượt đi đầu tiên.", firstPlayer.getName());
         addLog(game, null, "GAME_START", startMsg, Map.of("firstPlayerId", firstPlayerId, "firstPlayerName", firstPlayer.getName()));
         
         return game;
@@ -274,9 +274,9 @@ public class GameEngine {
         // Ghi log hành động trồng cây
         String sourceDesc = fromReserved ? "thẻ giữ sẵn" : "thẻ";
         String perkDesc = targetCard.getPrestigePoints() > 0
-                ? String.format("[★ +%d, vĩnh viễn %s +1]", targetCard.getPrestigePoints(), formatResourceName(bonus))
-                : String.format("[vĩnh viễn %s +1]", formatResourceName(bonus));
-        String msg = String.format("%s đã trồng %s \"%s\" (Tier %d) %s.", 
+                ? String.format("nhận +%d★ và +1 tài nguyên vĩnh viễn %s", targetCard.getPrestigePoints(), formatResourceName(bonus))
+                : String.format("nhận +1 tài nguyên vĩnh viễn %s", formatResourceName(bonus));
+        String msg = String.format("%s đã trồng %s \"%s\" (Tier %d), %s.", 
                 player.getName(), sourceDesc, targetCard.getName(), targetCard.getTier(), perkDesc);
         addLog(game, playerId, (fromReserved ? "BUY_CARD_RESERVED" : "BUY_CARD_BOARD"), msg, 
                 Map.of("cardId", targetCard.getId(), "cardName", targetCard.getName(), "tier", targetCard.getTier(), "prestigePoints", targetCard.getPrestigePoints()));
@@ -453,7 +453,8 @@ public class GameEngine {
         // 2. Kiểm tra kích hoạt Vòng chung kết (15 điểm)
         if (player.getPrestigePoints() >= 15 && !game.getState().isFinalRound()) {
             game.getState().setFinalRound(true);
-            String msg = String.format("🚨 %s đã chạm mốc %d điểm uy tín! Kích hoạt VÒNG CHUNG KẾT!", player.getName(), player.getPrestigePoints());
+            String msg = String.format("🚨 %s đã chạm mốc %d điểm uy tín! Kích hoạt <strong>VÒNG ĐI CUỐI CÙNG</strong> CHO TẤT CẢ NGƯỜI CHƠI!", 
+                    player.getName(), player.getPrestigePoints());
             addLog(game, player.getId(), "FINAL_ROUND_TRIGGERED", msg, Map.of("points", player.getPrestigePoints()));
         }
 
@@ -495,8 +496,8 @@ public class GameEngine {
 
         if (winner != null) {
             game.getState().setWinnerPlayerId(winner.getId());
-            String msg = String.format("👑 %s CHIẾN THẮNG với %d Điểm Uy Tín (sở hữu %d thẻ cây)! Ván đấu kết thúc.",
-                    winner.getName(), winner.getPrestigePoints(), winner.getPurchasedCards().size());
+            String msg = String.format("👑 %s CHIẾN THẮNG với %d Điểm Uy Tín ★<br>Ván đấu kết thúc!",
+                    winner.getName(), winner.getPrestigePoints());
             addLog(game, winner.getId(), "GAME_OVER", msg, 
                     Map.of("winnerId", winner.getId(), "points", winner.getPrestigePoints(), "cardsCount", winner.getPurchasedCards().size()));
         }
