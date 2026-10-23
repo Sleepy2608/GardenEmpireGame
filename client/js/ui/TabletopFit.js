@@ -78,9 +78,9 @@ export class TabletopFit {
     const availableWidth = effectiveRowWidth - leftWidth - rightWidth - 16;
 
     // 3. Base design target dimensions for unscaled mat
-    // Cards layout: 980px width, ~535px height (with spacious gaps and padding)
+    // Cards layout: 980px width, ~565px height (with spacious gaps and 104px cards)
     const naturalMatWidth = 980;
-    const naturalMatHeight = 535;
+    const naturalMatHeight = 565;
 
     let scaleY = 1.0;
     if (availableHeight > 0) {
