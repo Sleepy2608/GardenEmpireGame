@@ -15,7 +15,10 @@ export const roomApi = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ roomName, maxPlayers, hostPlayer })
     });
-    if (!res.ok) throw new Error('Không thể tạo phòng mới');
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || err.message || 'Không thể tạo phòng mới');
+    }
     return await res.json();
   },
 

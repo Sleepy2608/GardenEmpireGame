@@ -238,6 +238,35 @@ button:disabled {
   transform: none !important;
 }
 
+/* Button Loading State */
+.btn-loading,
+button.is-loading {
+  position: relative;
+  pointer-events: none !important;
+  opacity: 0.75 !important;
+  cursor: wait !important;
+  transform: none !important;
+}
+
+.btn-loading::after,
+button.is-loading::after {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: 0.35rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: btn-spin 0.65s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes btn-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 .btn-nature-primary {
   background: var(--grad-nutrients);
   color: #032512;

@@ -5,6 +5,18 @@ Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game**
 
 ---
 
+## 🚀 [v1.3.1] — 2026-10-16
+### 🐛 Sửa Lỗi & Ổn Định Hệ Thống (Bug Fixes & Concurrency)
+- **Khắc Phục Triệt Để Lỗi Tạo Nhiều Phòng Khi Nhấp Chuột Liên Tục (Anti-Spam & Duplicate Room Prevention):**
+  - **Phòng thủ đa tầng Client - Server:**
+    - **Frontend Lock & UX:** Bổ sung cờ mutex `isCreatingRoom` và `isJoiningRoom` trong `LobbyUI.js`. Khi bấm tạo hoặc vào phòng, lập tức vô hiệu hóa nút bấm (`disabled`), khóa các ô nhập liệu, kích hoạt trạng thái loading với spinner quay mượt mà (`⏳ Đang khởi tạo phòng...`). Tự động mở khóa an toàn trong khối `finally` kèm timeout an toàn 8 giây nếu mất kết nối.
+    - **Backend Rate-Limiting & Cooldown (2.5s):** Quy định cooldown tạo phòng 2.5 giây cho mỗi Host (`ROOM_CREATION_COOLDOWN_MS = 2500`). Đồng bộ hóa đa luồng qua `hostId.intern()` ngăn chặn race conditions trên Tomcat.
+    - **Xử Lý Thông Minh Trùng Lặp (Idempotent Reuse):** Nếu cùng một Host gửi nhiều request tạo phòng liên tiếp trong vòng 2.5 giây (do double-click hoặc độ trễ mạng), server tự động nhận diện và tái sử dụng phòng chờ vừa tạo thay vì sinh ra phòng rác mới.
+    - **Tự Động Dọn Phòng Chờ Cũ (Active Room Cleanup):** Tự động dọn dẹp triệt để bất kỳ phòng `WAITING` mồ côi nào trước đó của Host bằng `cleanupService.deleteRoomCompletely()`, đảm bảo 1 Host không bao giờ có 2 phòng chờ cùng xuất hiện trên Sảnh.
+    - **Kiểm Thử Đơn Vị Tự Động:** Bổ sung bộ kiểm thử `RoomServiceTest.java` với 4 kịch bản kiểm thử concurrency, idempotent duplicate handling và cooldown cleanup, nâng tổng số test backend lên **32/32 tests PASS 100%**.
+
+---
+
 ## 🚀 [v1.3.0] — 2026-10-14
 ### ✨ Nâng Cấp Giao Diện & Trải Nghiệm (UI/UX)
 - **Đại Tu Toàn Diện Hộp Thoại Luật Chơi Bàn Đấu (In-Game Rules Modal Overhaul):**
