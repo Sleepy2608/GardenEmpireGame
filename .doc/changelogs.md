@@ -17,6 +17,9 @@ Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game**
   - **Loại bỏ khung/thanh màu đen:** Chuyển đổi `.visitor-req-overlay` sang nền trong suốt (`background: transparent; border: none; box-shadow: none;`), loại bỏ hoàn toàn dải thanh đen chắn ngang ảnh linh vật, trả lại 100% diện tích chiêm ngưỡng tranh minh họa bướm, ong, chim én.
   - **Chip tài nguyên nổi sắc nét:** Các chip tài nguyên (`.req-chip`) nổi trực tiếp ở góc dưới bên trái ảnh với viền mỏng và bóng đổ tự nhiên sắc nét, dễ quan sát trên mọi màu nền ảnh.
   - **Cơ chế xử lý tràn & Popup chi tiết:** Tự động phát hiện khi các chip tài nguyên vượt quá độ rộng của thẻ (khi zoom to) để clip gọn gàng trong 1 hàng và hiển thị nút `···`. Nhấp vào sẽ mở Popup Glassmorphism thể hiện danh sách tài nguyên với kích thước lớn và rõ ràng.
+- **Tinh Gọn Widget Game Logs Bàn Đấu (Game Logs Widget Streamlining):**
+  - Loại bỏ hoàn toàn thanh dòng chữ dưới đáy (`📜 Xem toàn bộ lịch sử (N hành động) ↗`), giữ giao diện widget vuông vắn, tối giản và thông thoáng.
+  - Người chơi chỉ cần nhấp vào nút toggle `⛶` ở góc trên bên phải header (hoặc nhấp trực tiếp vào widget) để mở Full Logs Modal.
 
 ### 🐛 Sửa Lỗi Điều Hướng & Kết Nối Local Development (Local Routing & API Fix)
 - **Định Tuyến Clean URLs cho Local Static Server (`client/serve.json`):**
