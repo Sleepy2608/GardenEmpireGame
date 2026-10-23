@@ -749,43 +749,40 @@ html, body {
   background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
 }
 
-/* 3. Ô Yêu Cầu Tài Nguyên Thẻ Khách: Đặt cố định ở góc dưới bên trái của ảnh */
+/* 3. Ô Yêu Cầu Tài Nguyên Thẻ Khách: Hiển thị nổi trực tiếp lên ảnh, không có khung/thanh màu đen */
 .visitor-req-overlay {
   position: absolute;
-  bottom: 3px;
-  left: 3px;
-  right: 3px;
-  background: rgba(20, 20, 20, 0.88);
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 4px;
-  padding: 0.08rem 0.28rem;
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
   display: flex;
   align-items: center;
-  gap: 0.2rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+  gap: 0.25rem;
+  box-shadow: none;
   z-index: 5;
   overflow: hidden;
   min-width: 0;
+  pointer-events: none;
 }
 
 .visitor-req-tag {
-  font-size: 0.55rem;
-  font-weight: 800;
-  color: #fef08a;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  line-height: 1;
+  display: none; /* Ẩn nhãn chữ để hiển thị tối giản, thoáng đãng */
 }
 
 .visitor-req-chips {
   display: flex;
-  gap: 0.2rem;
+  gap: 0.22rem;
   align-items: center;
   flex: 1;
   min-width: 0;
   overflow: hidden;
+  pointer-events: auto;
 }
 
 /* When chips overflow → clip to single row, hide excess */
@@ -798,35 +795,41 @@ html, body {
 }
 
 .visitor-req-chips .req-chip {
-  padding: 0.06rem 0.28rem;
-  border-radius: 3px;
-  font-size: 0.6rem;
+  padding: 0.08rem 0.32rem;
+  border-radius: 4px;
+  font-size: 0.62rem;
   font-weight: 800;
   color: #fff;
   line-height: 1.1;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 
+    0 2px 5px rgba(0, 0, 0, 0.75),
+    0 0 1px rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   display: inline-flex;
   align-items: center;
-  gap: 0.12rem;
+  gap: 0.15rem;
   white-space: nowrap;
   flex-shrink: 0;
+  pointer-events: auto;
 }
 
 /* '···' overflow button next to chips */
 .visitor-req-more-btn {
   flex-shrink: 0;
-  background: rgba(245, 158, 11, 0.85);
-  border: none;
-  border-radius: 3px;
+  background: rgba(245, 158, 11, 0.9);
+  border: 1px solid rgba(251, 191, 36, 0.8);
+  border-radius: 4px;
   color: #1c0a00;
-  font-size: 0.62rem;
+  font-size: 0.65rem;
   font-weight: 900;
   line-height: 1;
-  padding: 0.06rem 0.25rem;
+  padding: 0.08rem 0.32rem;
   cursor: pointer;
   letter-spacing: 0.04em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.75);
   transition: background 0.15s, transform 0.15s;
   z-index: 6;
+  pointer-events: auto;
 }
 .visitor-req-more-btn:hover {
   background: rgba(251, 191, 36, 1);
