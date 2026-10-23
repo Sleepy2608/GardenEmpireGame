@@ -11,6 +11,16 @@ export class TabletopFit {
     window.addEventListener('resize', () => TabletopFit.adjustFit());
     window.addEventListener('orientationchange', () => TabletopFit.adjustFit());
 
+    // Observe fullscreen changes across all browser engines
+    ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
+      document.addEventListener(evt, () => {
+        TabletopFit.adjustFit();
+        setTimeout(() => TabletopFit.adjustFit(), 50);
+        setTimeout(() => TabletopFit.adjustFit(), 150);
+        setTimeout(() => TabletopFit.adjustFit(), 300);
+      });
+    });
+
     // Observe arena container with ResizeObserver for ultra-responsive adjustments
     const arena = document.getElementById('tabletop-arena');
     if (arena && window.ResizeObserver) {
@@ -54,7 +64,9 @@ export class TabletopFit {
     const availableHeight = Math.min(theoreticalAvailableHeight, middleRowHeight > 0 ? middleRowHeight : theoreticalAvailableHeight);
 
     // 2. Available width for playing mat (clearing left/right opponent seats)
-    const arenaWidth = arena.clientWidth;
+    const effectiveRowWidth = (middleRow && middleRow.clientWidth > 0)
+      ? middleRow.clientWidth
+      : arena.clientWidth;
     const seatLeft = document.getElementById('seat-left');
     const seatRight = document.getElementById('seat-right');
     const leftWidth = (seatLeft && !seatLeft.classList.contains('hidden'))
@@ -63,7 +75,7 @@ export class TabletopFit {
     const rightWidth = (seatRight && !seatRight.classList.contains('hidden'))
       ? seatRight.offsetWidth + 12
       : 0;
-    const availableWidth = arenaWidth - leftWidth - rightWidth - 16;
+    const availableWidth = effectiveRowWidth - leftWidth - rightWidth - 16;
 
     // 3. Base design target dimensions for unscaled mat
     // Cards layout: 980px width, ~535px height (with spacious gaps and padding)
@@ -81,8 +93,16 @@ export class TabletopFit {
     }
 
     // Pick uniform scale to prevent distortion
-    // Clamp: min 0.40 (ensures fit even on small screens/high zoom), max 1.0
-    const finalScale = Math.max(0.40, Math.min(1.0, Math.min(scaleX, scaleY)));
+    // Clamp: min 0.40 (small screen/high zoom), max 1.55 in fullscreen / 1.25 on wide desktop
+    const isFs = !!(
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement ||
+      document.body.classList.contains('is-fullscreen')
+    );
+    const maxScale = isFs ? 1.55 : 1.25;
+    const finalScale = Math.max(0.40, Math.min(maxScale, Math.min(scaleX, scaleY)));
 
     mat.style.setProperty('--mat-auto-scale', finalScale.toFixed(3));
   }

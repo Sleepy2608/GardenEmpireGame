@@ -222,6 +222,7 @@ html, body {
   width: 100%;
   transform: scale(var(--mat-auto-scale, 1));
   transform-origin: center center;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* Visitors Row on Mat — Căn thẳng hàng hoàn hảo với các tầng Deck bên dưới */
@@ -1984,6 +1985,89 @@ html, body {
 }
 
 /* =============================================================================
+   FULLSCREEN / ZOOM WIDGET (Top-Left Tabletop Arena — As per Mockup UI Match)
+   ============================================================================= */
+.fullscreen-widget-btn {
+  position: absolute;
+  top: 8px;
+  left: 14px;
+  z-index: 85;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.95rem;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.85) 0%, rgba(30, 58, 138, 0.92) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(147, 197, 253, 0.55);
+  border-radius: 12px;
+  box-shadow: 
+    0 10px 24px rgba(0, 0, 0, 0.65),
+    0 0 16px rgba(59, 130, 246, 0.28);
+  color: #f0f9ff;
+  font-family: var(--font-ui, 'Be Vietnam Pro', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.fullscreen-widget-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%);
+  border-color: #bfdbfe;
+  box-shadow: 
+    0 14px 30px rgba(0, 0, 0, 0.75),
+    0 0 22px rgba(96, 165, 250, 0.55);
+  color: #ffffff;
+}
+
+.fullscreen-widget-btn:hover .fs-icon {
+  transform: scale(1.18);
+}
+
+.fullscreen-widget-btn:active {
+  transform: translateY(1px);
+}
+
+.fullscreen-widget-btn .fs-icon {
+  font-size: 1rem;
+  line-height: 1;
+  color: #93c5fd;
+  transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fullscreen-widget-btn .fs-text {
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Fullscreen Mode Active State */
+.fullscreen-widget-btn.is-fullscreen {
+  background: linear-gradient(135deg, rgba(180, 83, 9, 0.85) 0%, rgba(120, 53, 15, 0.92) 100%);
+  border-color: rgba(251, 191, 36, 0.75);
+  box-shadow: 
+    0 10px 24px rgba(0, 0, 0, 0.65),
+    0 0 16px rgba(245, 158, 11, 0.35);
+  color: #fef3c7;
+}
+
+.fullscreen-widget-btn.is-fullscreen .fs-icon {
+  color: #fde047;
+}
+
+.fullscreen-widget-btn.is-fullscreen:hover {
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.95) 0%, rgba(180, 83, 9, 0.95) 100%);
+  border-color: #fef08a;
+  box-shadow: 
+    0 14px 30px rgba(0, 0, 0, 0.75),
+    0 0 22px rgba(245, 158, 11, 0.65);
+}
+
+/* =============================================================================
    GAME ACTION LOGS WIDGET (Top-Right Tabletop Arena)
    ============================================================================= */
 .game-log-widget {
@@ -3617,4 +3701,50 @@ html, body {
   align-items: center;
   gap: 0.4rem;
   font-size: 0.84rem;
+}
+
+/* =============================================================================
+   FULLSCREEN MODE — UI EXTEND & EXPAND RULES
+   Khi người chơi bật Phóng to, toàn bộ layout giãn ra để fit full screen của UI
+   ============================================================================= */
+html:fullscreen, body:fullscreen,
+body.is-fullscreen {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+body.is-fullscreen .top-action-bar,
+:fullscreen .top-action-bar {
+  margin: 0.25rem 0.65rem 0 0.65rem;
+  padding: 0.3rem 1rem;
+  height: 44px;
+}
+
+body.is-fullscreen .tabletop-arena,
+:fullscreen .tabletop-arena {
+  height: calc(100vh - 48px);
+  max-height: calc(100vh - 48px);
+  padding: 0.15rem 0.65rem 0.25rem;
+}
+
+body.is-fullscreen .tabletop-middle-row,
+:fullscreen .tabletop-middle-row {
+  max-width: calc(100vw - 24px);
+  gap: 1.85rem;
+}
+
+body.is-fullscreen .player-master-dashboard,
+:fullscreen .player-master-dashboard {
+  max-width: calc(100vw - 28px);
+}
+
+@media (max-width: 768px) {
+  .fullscreen-widget-btn {
+    top: 6px;
+    left: 8px;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.75rem;
+    border-radius: 8px;
+  }
 }
