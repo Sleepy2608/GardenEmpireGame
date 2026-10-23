@@ -1,0 +1,10 @@
+{
+  "public": ".",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/lobby", "destination": "/lobby.html" },
+    { "source": "/room", "destination": "/waiting-room.html" },
+    { "source": "/waiting-room", "destination": "/waiting-room.html" },
+    { "source": "/game", "destination": "/game.html" }
+  ]
+}
