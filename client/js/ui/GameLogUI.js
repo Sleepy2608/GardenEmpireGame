@@ -39,8 +39,6 @@ export class GameLogUI {
     this.feedEl = document.getElementById('game-log-feed');
     this.countBadgeEl = document.getElementById('game-log-count');
     this.toggleBtnEl = document.getElementById('btn-toggle-log-collapse');
-    this.quickBarEl = document.getElementById('game-log-quick-bar');
-    this.quickTextEl = document.getElementById('game-log-quick-text');
 
     // Modal elements
     this.modalEl = document.getElementById('game-logs-modal');
@@ -66,15 +64,7 @@ export class GameLogUI {
       });
     }
 
-    // 3. Quick click bar ở đáy widget
-    if (this.quickBarEl) {
-      this.quickBarEl.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.openModal();
-      });
-    }
-
-    // 4. Nút Nhật Ký ở Header Top Bar
+    // 3. Nút Nhật Ký ở Header Top Bar
     const btnTopBarLog = document.getElementById('btn-toggle-game-log');
     if (btnTopBarLog) {
       btnTopBarLog.addEventListener('click', () => {
@@ -180,9 +170,6 @@ export class GameLogUI {
             <span>Ván đấu đã sẵn sàng, chờ hành động đầu tiên...</span>
           </div>
         `;
-        if (this.quickTextEl) {
-          this.quickTextEl.textContent = '📜 Xem toàn bộ lịch sử (0 hành động) ↗';
-        }
       } else {
         // Lấy 3 lượt hành động gần nhất
         const recentLogs = this.actionLogs.slice(-3);
@@ -195,10 +182,6 @@ export class GameLogUI {
         }).join('');
 
         this.feedEl.innerHTML = widgetHtml;
-
-        if (this.quickTextEl) {
-          this.quickTextEl.innerHTML = `📜 Xem toàn bộ lịch sử (<strong>${total}</strong> hành động) ↗`;
-        }
       }
     }
 
