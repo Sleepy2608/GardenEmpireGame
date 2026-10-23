@@ -116,7 +116,7 @@ export class VisitorUI {
     revealedRow.className = 'visitors-revealed-row';
 
     if (visitors.length === 0) {
-      revealedRow.innerHTML = `<span class="text-muted" style="font-size: 0.85rem; align-self: center; padding: 0.5rem;">Tất cả khách đã được rước về vườn.</span>`;
+      revealedRow.innerHTML = `<div class="visitors-empty-state"><span>🦋 Tất cả khách đã được rước về vườn.</span></div>`;
     } else {
       visitors.forEach(v => {
         revealedRow.appendChild(VisitorUI.renderVisitor(v));
