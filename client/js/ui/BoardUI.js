@@ -71,6 +71,106 @@ export class BoardUI {
   }
 
   initEventListeners() {
+    // Fullscreen / Zoom Toggle (Phóng to / Thu nhỏ toàn màn hình)
+    const fullscreenBtn = document.getElementById('btn-toggle-fullscreen');
+    if (fullscreenBtn) {
+      const fsIcon = fullscreenBtn.querySelector('.fs-icon');
+      const fsText = fullscreenBtn.querySelector('.fs-text');
+
+      const updateFullscreenUI = () => {
+        const isFs = !!(
+          document.fullscreenElement ||
+          document.webkitFullscreenElement ||
+          document.mozFullScreenElement ||
+          document.msFullscreenElement ||
+          document.body.classList.contains('is-fullscreen')
+        );
+
+        if (isFs) {
+          fullscreenBtn.classList.add('is-fullscreen');
+          document.body.classList.add('is-fullscreen');
+          if (fsIcon) fsIcon.textContent = '🗗';
+          if (fsText) fsText.textContent = 'Thu nhỏ';
+          fullscreenBtn.title = 'Thu nhỏ màn hình (Esc hoặc bấm để thoát)';
+        } else {
+          fullscreenBtn.classList.remove('is-fullscreen');
+          document.body.classList.remove('is-fullscreen');
+          if (fsIcon) fsIcon.textContent = '⛶';
+          if (fsText) fsText.textContent = 'Phóng to';
+          fullscreenBtn.title = 'Phóng to toàn màn hình (Fit Fullscreen)';
+        }
+
+        TabletopFit.adjustFit();
+        setTimeout(() => TabletopFit.adjustFit(), 50);
+        setTimeout(() => TabletopFit.adjustFit(), 150);
+        setTimeout(() => TabletopFit.adjustFit(), 300);
+      };
+
+      fullscreenBtn.addEventListener('click', async () => {
+        try {
+          const isCurrentlyFs = !!(
+            document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.mozFullScreenElement ||
+            document.msFullscreenElement ||
+            document.body.classList.contains('is-fullscreen')
+          );
+
+          if (!isCurrentlyFs) {
+            // Enter Fullscreen
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+              await elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+              await elem.webkitRequestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+              await elem.mozRequestFullScreen();
+            } else if (elem.msRequestFullscreen) {
+              await elem.msRequestFullscreen();
+            } else {
+              document.body.classList.add('is-fullscreen');
+              updateFullscreenUI();
+              this.showToast('⛶ Đã phóng to toàn giao diện');
+              return;
+            }
+            this.showToast('⛶ Đã phóng to toàn màn hình');
+          } else {
+            // Exit Fullscreen
+            if (
+              document.fullscreenElement ||
+              document.webkitFullscreenElement ||
+              document.mozFullScreenElement ||
+              document.msFullscreenElement
+            ) {
+              if (document.exitFullscreen) {
+                await document.exitFullscreen();
+              } else if (document.webkitExitFullscreen) {
+                await document.webkitExitFullscreen();
+              } else if (document.mozCancelFullScreen) {
+                await document.mozCancelFullScreen();
+              } else if (document.msExitFullscreen) {
+                await document.msExitFullscreen();
+              }
+            }
+            document.body.classList.remove('is-fullscreen');
+            updateFullscreenUI();
+            this.showToast('🗗 Đã thu nhỏ màn hình');
+          }
+        } catch (err) {
+          console.warn('Fullscreen request rejected or not supported, falling back to CSS toggle:', err);
+          document.body.classList.toggle('is-fullscreen');
+          updateFullscreenUI();
+          const active = document.body.classList.contains('is-fullscreen');
+          this.showToast(active ? '⛶ Đã phóng to toàn giao diện' : '🗗 Đã thu nhỏ giao diện');
+        }
+      });
+
+      // Synchronize with native fullscreen change events (e.g. Esc key or F11)
+      ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
+        document.addEventListener(evt, updateFullscreenUI);
+      });
+    }
+
     // Sound Mute Toggle
     const soundBtn = document.getElementById('btn-toggle-sound');
     const soundIcon = document.getElementById('sound-icon');

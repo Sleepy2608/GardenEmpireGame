@@ -178,7 +178,7 @@ html, body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  gap: 1rem;
+  gap: 1.35rem;
   height: 100%;
   min-height: 0;
   max-width: 1540px;
@@ -188,11 +188,16 @@ html, body {
 
 .seat-left,
 .seat-right {
-  width: 190px;
+  width: 195px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  z-index: 10;
+}
+
+.seat-right {
+  margin-top: 0.5rem;
 }
 
 /* Central Board Mat (Chiếu Bàn Cờ Cố Định — Không Hiệu Ứng Float) */
@@ -209,14 +214,15 @@ html, body {
     inset 0 1px 2px rgba(255, 255, 255, 0.12),
     inset 0 0 50px rgba(0, 0, 0, 0.65),
     0 0 25px rgba(74, 222, 128, 0.06);
-  padding: 0.55rem 0.85rem;
+  padding: 0.65rem 0.95rem;
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  max-width: 960px;
+  gap: 0.75rem;
+  max-width: 980px;
   width: 100%;
   transform: scale(var(--mat-auto-scale, 1));
   transform-origin: center center;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* Visitors Row on Mat — Căn thẳng hàng hoàn hảo với các tầng Deck bên dưới */
@@ -224,12 +230,13 @@ html, body {
   padding: 0;
   background: transparent;
   border: none;
+  margin-bottom: 0.2rem;
 }
 
 .visitors-row-wrapper {
   display: grid;
   grid-template-columns: 96px 1fr;
-  gap: 0.65rem;
+  gap: 0.75rem;
   align-items: center;
 }
 
@@ -325,24 +332,44 @@ html, body {
 
 .visitors-revealed-row {
   display: flex;
-  gap: 0.65rem;
+  gap: 0.75rem;
   overflow-x: auto;
   align-items: center;
+  min-height: 94px;
+  padding: 8px 4px;
+  margin: -8px -4px;
+}
+
+.visitors-revealed-row .visitors-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 94px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px dashed rgba(245, 158, 11, 0.35);
+  border-radius: var(--radius-md);
+  color: var(--text-gold);
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-style: italic;
+  padding: 0.5rem 1rem;
 }
 
 /* Resource Bank Strip on Mat */
 .resource-bank-mat-section {
-  background: rgba(0, 0, 0, 0.28);
+  background: rgba(0, 0, 0, 0.32);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 0.35rem 0.65rem;
+  padding: 0.45rem 0.75rem;
+  margin-top: 0.25rem;
 }
 
 .bank-strip-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
 }
 
 .bank-title {
@@ -724,50 +751,231 @@ html, body {
   background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
 }
 
-/* 3. Ô Cách Lấy: Đặt cố định ở góc dưới bên trái của ảnh theo Hình 1 */
+/* 3. Ô Yêu Cầu Tài Nguyên Thẻ Khách: Hiển thị nổi trực tiếp lên ảnh, không có khung/thanh màu đen */
 .visitor-req-overlay {
   position: absolute;
-  bottom: 3px;
-  left: 3px;
-  background: rgba(30, 30, 30, 0.82);
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 4px;
-  padding: 0.1rem 0.25rem;
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: none;
   z-index: 5;
+  overflow: hidden;
+  min-width: 0;
+  pointer-events: none;
 }
 
 .visitor-req-tag {
-  font-size: 0.55rem;
-  font-weight: 800;
-  color: #fef08a;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  line-height: 1;
+  display: none; /* Ẩn nhãn chữ để hiển thị tối giản, thoáng đãng */
 }
 
 .visitor-req-chips {
   display: flex;
-  gap: 0.2rem;
+  gap: 0.22rem;
   align-items: center;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+/* When chips overflow → clip to single row, hide excess */
+.visitor-req-chips.is-clipped {
+  flex-wrap: nowrap;
+  overflow: hidden;
+  /* Soft gradient fade on the right so it doesn't look abrupt */
+  -webkit-mask-image: linear-gradient(to right, black 70%, transparent 100%);
+  mask-image: linear-gradient(to right, black 70%, transparent 100%);
 }
 
 .visitor-req-chips .req-chip {
-  padding: 0.06rem 0.28rem;
-  border-radius: 3px;
-  font-size: 0.6rem;
+  padding: 0.08rem 0.32rem;
+  border-radius: 4px;
+  font-size: 0.62rem;
   font-weight: 800;
   color: #fff;
   line-height: 1.1;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 
+    0 2px 5px rgba(0, 0, 0, 0.75),
+    0 0 1px rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   display: inline-flex;
   align-items: center;
-  gap: 0.12rem;
+  gap: 0.15rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  pointer-events: auto;
+}
+
+/* '···' overflow button next to chips */
+.visitor-req-more-btn {
+  flex-shrink: 0;
+  background: rgba(245, 158, 11, 0.9);
+  border: 1px solid rgba(251, 191, 36, 0.8);
+  border-radius: 4px;
+  color: #1c0a00;
+  font-size: 0.65rem;
+  font-weight: 900;
+  line-height: 1;
+  padding: 0.08rem 0.32rem;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.75);
+  transition: background 0.15s, transform 0.15s;
+  z-index: 6;
+  pointer-events: auto;
+}
+.visitor-req-more-btn:hover {
+  background: rgba(251, 191, 36, 1);
+  transform: scale(1.1);
+}
+.visitor-req-more-btn.hidden {
+  display: none;
+}
+
+/*
+   ─────────────────────────────────────────────────────────────
+   VISITOR RESOURCE REQUIREMENT POPUP (click '···' to open)
+   ─────────────────────────────────────────────────────────────
+*/
+.visitor-req-popup {
+  position: fixed;
+  z-index: 9999;
+  min-width: 185px;
+  max-width: 280px;
+  background: rgba(10, 22, 14, 0.96);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  border-radius: 12px;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.8),
+    0 0 18px rgba(245, 158, 11, 0.15);
+  padding: 0.65rem 0.8rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  animation: req-popup-appear 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes req-popup-appear {
+  from { opacity: 0; transform: translateY(6px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.req-popup-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.req-popup-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.req-popup-title {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #fef08a;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.req-popup-close-btn {
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+  padding: 0;
+  line-height: 1;
+}
+.req-popup-close-btn:hover {
+  background: rgba(255, 80, 80, 0.3);
+  color: #fff;
+}
+
+.req-popup-subtitle {
+  font-size: 0.58rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.3;
+}
+
+.req-popup-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.req-popup-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  border-radius: 8px;
+  padding: 0.4rem 0.55rem;
+  min-width: 54px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+}
+
+.req-popup-chip-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.req-popup-chip-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+}
+
+.req-popup-chip-emoji {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.req-popup-chip-count {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
+.req-popup-chip-name {
+  font-size: 0.52rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  line-height: 1.2;
   white-space: nowrap;
 }
 
@@ -821,14 +1029,14 @@ html, body {
 .plant-market {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.75rem;
   flex: 1;
 }
 
 .plant-tier-row {
   display: grid;
   grid-template-columns: 96px repeat(4, minmax(0, 1fr));
-  gap: 0.65rem;
+  gap: 0.75rem;
   align-items: stretch;
 }
 
@@ -840,7 +1048,8 @@ html, body {
   align-items: center;
   justify-content: center;
   padding: 0.35rem;
-  height: 88px;
+  height: 104px;
+  min-height: 104px;
   box-sizing: border-box;
   position: relative;
   cursor: pointer;
@@ -984,11 +1193,11 @@ html, body {
   background: var(--bg-surface-card);
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius-md);
-  padding: 0.4rem 0.55rem;
+  padding: 0.42rem 0.55rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 0.2rem;
+  gap: 0.25rem;
   position: relative;
   box-shadow: 
     0 2px 4px rgba(0, 0, 0, 0.4),
@@ -997,8 +1206,8 @@ html, body {
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease;
   cursor: pointer;
   user-select: none;
-  min-height: 88px;
-  height: 88px;
+  min-height: 104px;
+  height: 104px;
   box-sizing: border-box;
 }
 
@@ -1041,16 +1250,18 @@ html, body {
 .plant-card.card-affordable::after {
   content: '✨ CÓ THỂ TRỒNG';
   position: absolute;
-  top: -8px;
-  right: 8px;
+  top: -6px;
+  right: 6px;
   background: var(--grad-nutrients);
   color: #032512;
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   font-weight: 800;
-  padding: 0.12rem 0.45rem;
+  padding: 0.1rem 0.42rem;
   border-radius: var(--radius-full);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
   letter-spacing: 0.02em;
+  pointer-events: none;
+  z-index: 5;
 }
 
 .plant-card.card-locked {
@@ -1062,6 +1273,8 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-height: 24px;
+  flex-shrink: 0;
 }
 
 .card-prestige-badge {
@@ -1071,51 +1284,71 @@ html, body {
   color: var(--text-gold);
   text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
   min-width: 24px;
+  line-height: 1;
 }
 
 .card-bonus-gem {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   box-shadow: var(--shadow-sm);
   border: 1px solid rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
 }
 
 /* Card Body */
 .card-body-meta {
   text-align: center;
-  margin: 0.2rem 0;
+  margin: 0.1rem 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
 }
 
 .card-plant-name {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: var(--text-pure);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 1.25;
 }
 
 /* Card Footer Costs */
 .card-cost-strip {
   display: flex;
-  gap: 0.25rem;
-  flex-wrap: wrap;
+  gap: 0.22rem;
+  flex-wrap: nowrap;
+  align-items: center;
+  flex-shrink: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.card-cost-strip::-webkit-scrollbar {
+  display: none;
 }
 
 .cost-chip {
-  padding: 0.15rem 0.4rem;
+  padding: 0.12rem 0.36rem;
   border-radius: var(--radius-xs);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 800;
   color: #fff;
   display: inline-flex;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.18rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /*
@@ -1138,14 +1371,15 @@ html, body {
 .resources-bank {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 0.55rem;
+  gap: 0.65rem;
 }
 
 .bank-token-card {
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.4) 100%);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-md);
-  padding: 0.3rem 0.35rem;
+  padding: 0.35rem 0.45rem;
+  min-height: 56px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1180,11 +1414,15 @@ html, body {
 }
 
 .token-name-label {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: var(--text-secondary);
   text-transform: uppercase;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 /* 3D Specular Highlighted Orbs */
@@ -1375,6 +1613,7 @@ html, body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.35rem;
+  margin-top: 0.35rem;
 }
 
 .reserved-slot {
@@ -1402,6 +1641,15 @@ html, body {
 
 .reserved-card-thumb .plant-name {
   font-size: 0.65rem !important;
+}
+
+.reserved-card-thumb.card-affordable::after {
+  content: '✨ TRỒNG' !important;
+  top: -4px !important;
+  right: 2px !important;
+  font-size: 0.5rem !important;
+  padding: 0.04rem 0.25rem !important;
+  letter-spacing: 0 !important;
 }
 
 .reserved-slot:hover {
@@ -1765,13 +2013,96 @@ html, body {
 }
 
 /* =============================================================================
+   FULLSCREEN / ZOOM WIDGET (Top-Left Tabletop Arena — As per Mockup UI Match)
+   ============================================================================= */
+.fullscreen-widget-btn {
+  position: absolute;
+  top: 8px;
+  left: 14px;
+  z-index: 85;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.95rem;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.85) 0%, rgba(30, 58, 138, 0.92) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(147, 197, 253, 0.55);
+  border-radius: 12px;
+  box-shadow: 
+    0 10px 24px rgba(0, 0, 0, 0.65),
+    0 0 16px rgba(59, 130, 246, 0.28);
+  color: #f0f9ff;
+  font-family: var(--font-ui, 'Be Vietnam Pro', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.fullscreen-widget-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%);
+  border-color: #bfdbfe;
+  box-shadow: 
+    0 14px 30px rgba(0, 0, 0, 0.75),
+    0 0 22px rgba(96, 165, 250, 0.55);
+  color: #ffffff;
+}
+
+.fullscreen-widget-btn:hover .fs-icon {
+  transform: scale(1.18);
+}
+
+.fullscreen-widget-btn:active {
+  transform: translateY(1px);
+}
+
+.fullscreen-widget-btn .fs-icon {
+  font-size: 1rem;
+  line-height: 1;
+  color: #93c5fd;
+  transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fullscreen-widget-btn .fs-text {
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Fullscreen Mode Active State */
+.fullscreen-widget-btn.is-fullscreen {
+  background: linear-gradient(135deg, rgba(180, 83, 9, 0.85) 0%, rgba(120, 53, 15, 0.92) 100%);
+  border-color: rgba(251, 191, 36, 0.75);
+  box-shadow: 
+    0 10px 24px rgba(0, 0, 0, 0.65),
+    0 0 16px rgba(245, 158, 11, 0.35);
+  color: #fef3c7;
+}
+
+.fullscreen-widget-btn.is-fullscreen .fs-icon {
+  color: #fde047;
+}
+
+.fullscreen-widget-btn.is-fullscreen:hover {
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.95) 0%, rgba(180, 83, 9, 0.95) 100%);
+  border-color: #fef08a;
+  box-shadow: 
+    0 14px 30px rgba(0, 0, 0, 0.75),
+    0 0 22px rgba(245, 158, 11, 0.65);
+}
+
+/* =============================================================================
    GAME ACTION LOGS WIDGET (Top-Right Tabletop Arena)
    ============================================================================= */
 .game-log-widget {
   position: absolute;
   top: 8px;
   right: 14px;
-  width: 290px;
+  width: 305px;
   max-width: calc(100vw - 28px);
   z-index: 85;
   background: rgba(45, 27, 14, 0.94);
@@ -1860,49 +2191,13 @@ html, body {
 
 /* Feed for 3 Recent Actions */
 .game-log-feed {
-  max-height: 220px;
-  overflow-y: hidden;
-  padding: 0.45rem 0.55rem;
+  max-height: 320px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.45rem 0.55rem 0.65rem 0.55rem;
   display: flex;
   flex-direction: column;
   gap: 0.38rem;
-}
-
-/* Quick Bar at bottom of widget */
-.game-log-quick-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.35rem 0.65rem;
-  background: rgba(20, 11, 5, 0.65);
-  border-top: 1px solid rgba(217, 119, 6, 0.25);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
-}
-
-.game-log-quick-bar:hover {
-  background: rgba(217, 119, 6, 0.22);
-}
-
-.quick-bar-text {
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: #fde047;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.quick-bar-arrow {
-  font-size: 0.72rem;
-  color: #fbbf24;
-  transition: transform 0.2s ease;
-  flex-shrink: 0;
-}
-
-.game-log-widget:hover .quick-bar-arrow {
-  transform: translate(2px, -2px);
 }
 
 .game-log-feed::-webkit-scrollbar {
@@ -1925,14 +2220,14 @@ html, body {
 
 /* Log Item Cards */
 .log-item {
-  padding: 0.42rem 0.55rem;
+  padding: 0.45rem 0.55rem 0.5rem 0.55rem;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.035);
   border-left: 3px solid rgba(255, 255, 255, 0.15);
   font-size: 0.74rem;
   display: flex;
   flex-direction: column;
-  gap: 0.22rem;
+  gap: 0.24rem;
   transition: background 0.15s ease;
 }
 
@@ -2358,19 +2653,20 @@ html, body {
 /* Responsive adjustments */
 @media (max-width: 1200px) {
   .game-log-widget {
-    width: 240px;
+    width: 275px;
     top: 6px;
     right: 10px;
   }
   .chat-widget {
-    width: 240px;
+    width: 260px;
     left: 10px;
   }
 }
 
 @media (max-height: 750px) {
   .game-log-feed {
-    max-height: 170px;
+    max-height: 260px;
+    overflow-y: auto;
   }
   .chat-feed {
     height: 115px;
@@ -3398,4 +3694,50 @@ html, body {
   align-items: center;
   gap: 0.4rem;
   font-size: 0.84rem;
+}
+
+/* =============================================================================
+   FULLSCREEN MODE — UI EXTEND & EXPAND RULES
+   Khi người chơi bật Phóng to, toàn bộ layout giãn ra để fit full screen của UI
+   ============================================================================= */
+html:fullscreen, body:fullscreen,
+body.is-fullscreen {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+body.is-fullscreen .top-action-bar,
+:fullscreen .top-action-bar {
+  margin: 0.25rem 0.65rem 0 0.65rem;
+  padding: 0.3rem 1rem;
+  height: 44px;
+}
+
+body.is-fullscreen .tabletop-arena,
+:fullscreen .tabletop-arena {
+  height: calc(100vh - 48px);
+  max-height: calc(100vh - 48px);
+  padding: 0.15rem 0.65rem 0.25rem;
+}
+
+body.is-fullscreen .tabletop-middle-row,
+:fullscreen .tabletop-middle-row {
+  max-width: calc(100vw - 24px);
+  gap: 1.85rem;
+}
+
+body.is-fullscreen .player-master-dashboard,
+:fullscreen .player-master-dashboard {
+  max-width: calc(100vw - 28px);
+}
+
+@media (max-width: 768px) {
+  .fullscreen-widget-btn {
+    top: 6px;
+    left: 8px;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.75rem;
+    border-radius: 8px;
+  }
 }

@@ -71,7 +71,7 @@ export class VisitorUI {
       : `<div class="visitor-img-fallback">${meta.icon}</div>`;
 
     el.innerHTML = `
-      <!-- 1. Hàng Tiêu Đề: Tên (trái) + Điểm (phải) chuẩn Hình 1 -->
+      <!-- 1. Hàng Tiêu Đề: Tên (trái) + Điểm (phải) -->
       <div class="visitor-header-bar">
         <div class="visitor-name-cell" title="${displayName}">
           <span class="visitor-mini-avatar">${meta.icon}</span>
@@ -82,19 +82,117 @@ export class VisitorUI {
         </div>
       </div>
 
-      <!-- 2. Thân Thẻ: Ảnh Linh Vật + Khung Cách Lấy (ở góc dưới bên trái) chuẩn Hình 1 -->
+      <!-- 2. Thân Thẻ: Ảnh Linh Vật + Khung Yêu Cầu -->
       <div class="visitor-image-frame">
         ${imgTag}
-        <div class="visitor-req-overlay" title="Điều kiện rước về: ${reqSummary}">
-          <span class="visitor-req-tag">Cách lấy</span>
-          <div class="visitor-req-chips">
+        <div class="visitor-req-overlay">
+          <div class="visitor-req-chips" data-req-summary="${reqSummary}">
             ${reqHtml}
           </div>
+          <button class="visitor-req-more-btn hidden" title="Xem đầy đủ tài nguyên yêu cầu" aria-label="Xem thêm tài nguyên">···</button>
         </div>
       </div>
     `;
 
+    // After DOM insertion, check if chips overflow → show '...' button
+    requestAnimationFrame(() => {
+      const overlay = el.querySelector('.visitor-req-overlay');
+      const chipsEl = el.querySelector('.visitor-req-chips');
+      const moreBtn = el.querySelector('.visitor-req-more-btn');
+      if (!overlay || !chipsEl || !moreBtn) return;
+
+      const overlayW = overlay.clientWidth;
+      const chipsScrollW = chipsEl.scrollWidth;
+      if (chipsScrollW > overlayW - 4) {
+        // Chips overflow: clip them and show '...' button
+        chipsEl.classList.add('is-clipped');
+        moreBtn.classList.remove('hidden');
+        moreBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          VisitorUI.openReqPopup(el, visitor, meta);
+        });
+      }
+    });
+
     return el;
+  }
+
+  /**
+   * Mở popup hiển thị đầy đủ tài nguyên yêu cầu của thẻ Khách.
+   * @param {HTMLElement} anchorEl - Phần tử .visitor-tile gốc
+   * @param {object} visitor - Dữ liệu thẻ Khách
+   * @param {object} meta - Metadata linh vật
+   */
+  static openReqPopup(anchorEl, visitor, meta) {
+    // Remove existing popup if any
+    const existing = document.getElementById('visitor-req-popup');
+    if (existing) existing.remove();
+
+    const reqList = Object.entries(visitor.requirements || {});
+    const displayName = visitor.name || meta.name;
+
+    const chipsHtml = reqList.map(([res, count]) => {
+      const resMeta = ResourceUI.getResourceMeta(res);
+      const iconImg = resMeta.img
+        ? `<img src="${resMeta.img}" alt="${resMeta.name}" class="req-popup-chip-img" onerror="this.style.display='none'" />`
+        : `<span class="req-popup-chip-emoji">${resMeta.icon}</span>`;
+      return `
+        <div class="req-popup-chip badge-${resMeta.class}">
+          <div class="req-popup-chip-icon">${iconImg}</div>
+          <span class="req-popup-chip-count">×${count}</span>
+          <span class="req-popup-chip-name">${resMeta.name}</span>
+        </div>
+      `;
+    }).join('');
+
+    const popup = document.createElement('div');
+    popup.id = 'visitor-req-popup';
+    popup.className = 'visitor-req-popup glass-panel';
+    popup.innerHTML = `
+      <div class="req-popup-header">
+        <span class="req-popup-icon">${meta.icon}</span>
+        <span class="req-popup-title">${displayName}</span>
+        <button class="req-popup-close-btn" id="req-popup-close" title="Đóng">✕</button>
+      </div>
+      <div class="req-popup-subtitle">Điều kiện để rước về vườn (+${visitor.prestigePoints || 3}★)</div>
+      <div class="req-popup-chips">${chipsHtml}</div>
+    `;
+
+    // Position popup near anchor
+    document.body.appendChild(popup);
+    const rect = anchorEl.getBoundingClientRect();
+    const popupW = popup.offsetWidth || 200;
+    const popupH = popup.offsetHeight || 120;
+    let top = rect.bottom + 6;
+    let left = rect.left;
+    if (left + popupW > window.innerWidth - 8) left = window.innerWidth - popupW - 8;
+    if (top + popupH > window.innerHeight - 8) top = rect.top - popupH - 6;
+    popup.style.top = `${top + window.scrollY}px`;
+    popup.style.left = `${left + window.scrollX}px`;
+
+    // Close on button
+    document.getElementById('req-popup-close').addEventListener('click', () => popup.remove());
+
+    // Close on click-outside (next frame to avoid immediate dismissal)
+    requestAnimationFrame(() => {
+      const dismissHandler = (e) => {
+        if (!popup.contains(e.target)) {
+          popup.remove();
+          document.removeEventListener('click', dismissHandler);
+        }
+      };
+      document.addEventListener('click', dismissHandler);
+
+      // Close on Escape
+      const keyHandler = (e) => {
+        if (e.key === 'Escape') {
+          popup.remove();
+          document.removeEventListener('keydown', keyHandler);
+          document.removeEventListener('click', dismissHandler);
+        }
+      };
+      document.addEventListener('keydown', keyHandler);
+    });
   }
 
   static renderVisitorsList(container, visitors = [], deckCount = 0) {
@@ -116,7 +214,7 @@ export class VisitorUI {
     revealedRow.className = 'visitors-revealed-row';
 
     if (visitors.length === 0) {
-      revealedRow.innerHTML = `<span class="text-muted" style="font-size: 0.85rem; align-self: center; padding: 0.5rem;">Tất cả khách đã được rước về vườn.</span>`;
+      revealedRow.innerHTML = `<div class="visitors-empty-state"><span>🦋 Tất cả khách đã được rước về vườn.</span></div>`;
     } else {
       visitors.forEach(v => {
         revealedRow.appendChild(VisitorUI.renderVisitor(v));

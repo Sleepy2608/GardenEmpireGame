@@ -3,6 +3,37 @@
 Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game** được ghi chép và lưu trữ đầy đủ tại tài liệu này từ giai đoạn khởi tạo ban đầu (v0.0.0).  
 Định dạng dựa trên [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), và dự án tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 🚀 [v1.3.2] — 2026-10-23
+### ✨ Nâng Cấp Giao Diện Bàn Đấu & Tính Năng Phóng To (Fullscreen & UI Enhancements)
+- **Nút Phóng To Toàn Màn Hình (Fullscreen Toggle Widget):**
+  - Bổ sung nút **`⛶ Phóng to`** phong cách sapphire glassmorphism tại góc trên bên trái bàn cờ (`tabletop-arena`), đối xứng hoàn hảo với Widget `GAME LOGS` và nằm phía trên hàng ghế bên trái.
+  - Tích hợp chuẩn Fullscreen API đa nền tảng (`requestFullscreen` / `exitFullscreen`), kèm cơ chế fallback CSS toàn diện nếu môi trường trình duyệt hạn chế quyền.
+  - Lắng nghe và đồng bộ tự động với các sự kiện `fullscreenchange` khi người chơi bấm nút, nhấn phím `Esc` hoặc `F11`; tự động chuyển đổi nhãn/icon giữa `⛶ Phóng to` $\leftrightarrow$ `🗗 Thu nhỏ` kèm tooltip hướng dẫn trực quan.
+- **Tự Động Mở Rộng & Co Giãn Khớp Màn Hình (Tabletop Auto-Fit Screen Extension):**
+  - Nâng cấp thuật toán trong `TabletopFit.js`: Trong chế độ toàn màn hình, trần co giãn (`maxScale`) được mở rộng từ `1.0x` lên tới `1.55x` (và `1.25x` trên desktop rộng) để bàn cờ tự động mở rộng tối đa vừa khít toàn bộ diện tích màn hình mà không bao giờ chèn ép hay đè lên các ghế người chơi và bảng điều khiển đáy.
+  - Bổ sung hiệu ứng chuyển động `transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1)` giúp quá trình chuyển đổi giữa cửa sổ thường và toàn màn hình diễn ra mượt mà, sống động.
+  - Mở rộng bố cục lưới `.tabletop-middle-row` và `.player-master-dashboard` đạt tới `calc(100vw - 24px)` trong chế độ phóng to, giải phóng không gian trung tâm cho chợ cây và hàng khách.
+- **Tinh Chỉnh Hiển Thị Thẻ Khách Thăm Vườn (Visitor Card UI Clean-Up):**
+  - **Loại bỏ khung/thanh màu đen:** Chuyển đổi `.visitor-req-overlay` sang nền trong suốt (`background: transparent; border: none; box-shadow: none;`), loại bỏ hoàn toàn dải thanh đen chắn ngang ảnh linh vật, trả lại 100% diện tích chiêm ngưỡng tranh minh họa bướm, ong, chim én.
+  - **Chip tài nguyên nổi sắc nét:** Các chip tài nguyên (`.req-chip`) nổi trực tiếp ở góc dưới bên trái ảnh với viền mỏng và bóng đổ tự nhiên sắc nét, dễ quan sát trên mọi màu nền ảnh.
+  - **Cơ chế xử lý tràn & Popup chi tiết:** Tự động phát hiện khi các chip tài nguyên vượt quá độ rộng của thẻ (khi zoom to) để clip gọn gàng trong 1 hàng và hiển thị nút `···`. Nhấp vào sẽ mở Popup Glassmorphism thể hiện danh sách tài nguyên với kích thước lớn và rõ ràng.
+- **Tối Ưu & Chống Cắt Chữ Widget Game Logs (Game Logs Widget Streamlining & Anti-Clipping):**
+  - **Tinh gọn giao diện:** Loại bỏ hoàn toàn thanh dòng chữ dưới đáy (`📜 Xem toàn bộ lịch sử (N hành động) ↗`), giữ giao diện widget vuông vắn, tối giản và thông thoáng. Người chơi sử dụng nút toggle `⛶` ở góc trên bên phải header (hoặc nhấp trực tiếp vào widget) để mở Full Logs Modal.
+  - **Khắc phục lỗi cắt chữ mục log thứ 3:** Mở rộng trần chiều cao `.game-log-feed` từ `220px` lên `320px`, tăng chiều rộng lên `305px`, bổ sung khoảng đệm đáy `0.65rem` và tích hợp `overflow-y: auto; overflow-x: hidden;` giúp 3 dòng thông báo gần nhất luôn hiển thị đầy đủ 100% văn bản và badge tài nguyên mà không bao giờ bị cắt cụt mép dưới.
+  - **Đồng bộ media query màn hình thấp (`@media (max-height: 750px)`):** Nâng trần chiều cao lên `260px` có cuộn mượt tự động.
+- **Tối Ưu Bố Cục Thẻ Cây Chợ Cây & Chống Đè Chữ (Plant Card Spacing & Anti-Overlap):**
+  - **Nâng chiều cao thẻ bài chuẩn:** Tăng chiều cao của `.plant-card` và `.tier-deck-card` từ `92px` lên `104px` (tăng ~12px chiều dọc cho cả 3 tầng bài), tạo không gian thở thông thoáng cho 3 khối nội dung riêng biệt.
+  - **Căn giữa tên cây linh hoạt (`flex: 1; align-items: center;`):** Tên cây nằm cân đối chính giữa thẻ, có khoảng đệm an toàn cả trên và dưới, khắc phục triệt để tình trạng tên cây bị đè hay dính sát vào dải chi phí trên các thẻ yêu cầu 3 - 4 loại chi phí (như *Đại Thụ Baobab*, *Cây Bàng Vuông*).
+  - **Giữ dải chi phí trên 1 hàng ngang duy nhất (`flex-wrap: nowrap`):** Tinh chỉnh kích cỡ font chip (`0.72rem`) và khoảng đệm để tối đa 4 loại chi phí vẫn hiển thị ngay ngắn, thẳng hàng ở đáy thẻ kèm `overflow-x: auto; scrollbar-width: none;` chống tràn khung.
+  - **Đồng bộ tỷ lệ bàn đấu tự động co giãn (`TabletopFit.js`):** Cập nhật kích thước chiếu cờ chuẩn `naturalMatHeight = 565` (thay vì `535`), giúp thuật toán auto-fit co giãn toàn bộ chiếu cờ vừa vặn 100% không gian hiển thị trên mọi độ phân giải màn hình.
+
+### 🐛 Sửa Lỗi Điều Hướng & Kết Nối Local Development (Local Routing & API Fix)
+- **Định Tuyến Clean URLs cho Local Static Server (`client/serve.json`):**
+  - Khắc phục lỗi `404 The requested path could not be found` khi chạy local bằng `npx serve` lúc chuyển trang giữa `/lobby`, `/room`, `/game` nhờ tệp cấu hình `serve.json` ánh xạ rewrites chính xác.
+- **Chuẩn Hóa Kết Nối Backend Local (`client/js/config.js`):**
+  - Loại bỏ điều kiện giả định cổng `port === 3000` là Nginx proxy; đảm bảo mọi môi trường chạy local (`localhost` hoặc `127.0.0.1`) luôn kết nối chuẩn xác đến Backend Spring Boot tại `http://localhost:8080` (REST API) và `ws://localhost:8080` (WebSocket).
+  - Khắc phục triệt để lỗi không thể tạo phòng hoặc không tải được danh sách phòng (`Lỗi tạo phòng: Không thể tạo phòng mới`) khi chạy Frontend trên cổng 3000.
+
 ---
 
 ## 🚀 [v1.3.1] — 2026-10-16
