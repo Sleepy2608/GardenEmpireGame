@@ -82,11 +82,10 @@ export class VisitorUI {
         </div>
       </div>
 
-      <!-- 2. Thân Thẻ: Ảnh Linh Vật + Khung Cách Lấy (ở góc dưới bên trái) chuẩn Hình 1 -->
+      <!-- 2. Thân Thẻ: Ảnh Linh Vật + Khung Yêu Cầu (ở góc dưới bên trái) -->
       <div class="visitor-image-frame">
         ${imgTag}
         <div class="visitor-req-overlay" title="Điều kiện rước về: ${reqSummary}">
-          <span class="visitor-req-tag">Cách lấy</span>
           <div class="visitor-req-chips">
             ${reqHtml}
           </div>
