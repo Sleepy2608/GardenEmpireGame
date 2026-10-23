@@ -753,6 +753,7 @@ html, body {
   position: absolute;
   bottom: 3px;
   left: 3px;
+  right: 3px;
   background: rgba(20, 20, 20, 0.88);
   backdrop-filter: blur(4px);
   border: 1px solid rgba(255, 255, 255, 0.35);
@@ -763,6 +764,8 @@ html, body {
   gap: 0.2rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
   z-index: 5;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .visitor-req-tag {
@@ -779,6 +782,18 @@ html, body {
   display: flex;
   gap: 0.2rem;
   align-items: center;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* When chips overflow → clip to single row, hide excess */
+.visitor-req-chips.is-clipped {
+  flex-wrap: nowrap;
+  overflow: hidden;
+  /* Soft gradient fade on the right so it doesn't look abrupt */
+  -webkit-mask-image: linear-gradient(to right, black 70%, transparent 100%);
+  mask-image: linear-gradient(to right, black 70%, transparent 100%);
 }
 
 .visitor-req-chips .req-chip {
@@ -792,6 +807,169 @@ html, body {
   display: inline-flex;
   align-items: center;
   gap: 0.12rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* '···' overflow button next to chips */
+.visitor-req-more-btn {
+  flex-shrink: 0;
+  background: rgba(245, 158, 11, 0.85);
+  border: none;
+  border-radius: 3px;
+  color: #1c0a00;
+  font-size: 0.62rem;
+  font-weight: 900;
+  line-height: 1;
+  padding: 0.06rem 0.25rem;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.15s, transform 0.15s;
+  z-index: 6;
+}
+.visitor-req-more-btn:hover {
+  background: rgba(251, 191, 36, 1);
+  transform: scale(1.1);
+}
+.visitor-req-more-btn.hidden {
+  display: none;
+}
+
+/*
+   ─────────────────────────────────────────────────────────────
+   VISITOR RESOURCE REQUIREMENT POPUP (click '···' to open)
+   ─────────────────────────────────────────────────────────────
+*/
+.visitor-req-popup {
+  position: fixed;
+  z-index: 9999;
+  min-width: 185px;
+  max-width: 280px;
+  background: rgba(10, 22, 14, 0.96);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  border-radius: 12px;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.8),
+    0 0 18px rgba(245, 158, 11, 0.15);
+  padding: 0.65rem 0.8rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  animation: req-popup-appear 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes req-popup-appear {
+  from { opacity: 0; transform: translateY(6px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.req-popup-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.req-popup-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.req-popup-title {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #fef08a;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.req-popup-close-btn {
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+  padding: 0;
+  line-height: 1;
+}
+.req-popup-close-btn:hover {
+  background: rgba(255, 80, 80, 0.3);
+  color: #fff;
+}
+
+.req-popup-subtitle {
+  font-size: 0.58rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.3;
+}
+
+.req-popup-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.req-popup-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  border-radius: 8px;
+  padding: 0.4rem 0.55rem;
+  min-width: 54px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+}
+
+.req-popup-chip-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.req-popup-chip-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+}
+
+.req-popup-chip-emoji {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.req-popup-chip-count {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
+.req-popup-chip-name {
+  font-size: 0.52rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  line-height: 1.2;
   white-space: nowrap;
 }
 
