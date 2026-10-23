@@ -6,6 +6,27 @@ Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game**
 ---
 
 ## 🚀 [v1.3.1] — 2026-10-16
+### ✨ Nâng Cấp Giao Diện & Nhật Ký Ván Đấu (Action Logs & UI)
+- **Tối Ưu Widget Nhật Ký Bàn Đấu (3 Recent Logs Tabletop Widget):**
+  - Chuyển đổi khung Action Logs trên bàn cờ sang chế độ thu gọn chỉ hiển thị **3 hành động gần nhất**, giúp giao diện bàn cờ luôn thông thoáng, không che khuất khu vực thẻ cây và thông tin người chơi.
+  - Đánh số thứ tự hành động toàn cục theo định dạng 1-based (`#1, #2, ... #N`) giúp người chơi dễ dàng theo dõi tiến trình và nhịp độ ván đấu.
+- **Hộp Thoại Xem Toàn Bộ Lịch Sử Ván Đấu (Full Game Logs Modal):**
+  - Bổ sung Modal xem toàn bộ lịch sử ván đấu từ `#1` đến `#N` với giao diện khung gỗ thiên nhiên sang trọng, đồng bộ phong cách với Bách Khoa Toàn Thư Luật Chơi.
+  - Hỗ trợ mở modal linh hoạt bằng nhiều cách: Click trực tiếp vào Widget logs bàn cờ, click nút mở rộng (`⛶`), thanh Bottom Quick Bar hoặc nút `📜 Nhật Ký` trên Top Bar.
+  - Tích hợp huy hiệu đếm tổng số hành động, nút `⬇ Mới nhất` tự động cuộn nhanh xuống đáy, hỗ trợ đóng nhanh bằng phím `Esc` hoặc nhấp chuột ngoài vùng viền (Backdrop).
+- **Chuẩn Hóa & Làm Mượt Câu Từ Thông Báo Log (Action Message Refinement):**
+  - **Lấy 3 Token:** `[Tên] đã lấy 1 🟫 Đất, 1 💧 Nước, 1 ☀️ Sáng từ ngân hàng.`
+  - **Lấy 2 Token:** `[Tên] đã lấy 2 🧪 Dinh Dưỡng từ ngân hàng.`
+  - **Trồng cây:** `[Tên] đã trồng thẻ "Thảo Dược" (Tier 1), nhận +1★ và +1 tài nguyên vĩnh viễn 🟫 Đất.` (hoặc `thẻ giữ sẵn` nếu mua từ tay), sử dụng dấu phẩy phân tách câu mạch lạc, tự nhiên.
+  - **Giữ thẻ cây:** `[Tên] đã giữ thẻ "Cây Húng Quế" (Tier 1) và nhận +1 🌾 Phân Bón.` hoặc `[Tên] đã giữ 1 thẻ ẩn từ chồng bài Tier 2 (không nhận Phân Bón do kho đã hết).`
+  - **Trả token dư:** `[Tên] đã trả lại 1 🟫 Đất do vượt quá 10 token.`
+  - **Đón Khách Thăm Vườn:** `✨ [Tên] đã đón Khách Thăm Vườn "Nghệ Nhân Hoa" về vườn (+3★)!`
+  - **Cảnh báo Vòng Cuối:** Bôi đậm thông báo `🚨 [Tên] đã chạm mốc 15 điểm uy tín! Kích hoạt <strong>VÒNG ĐI CUỐI CÙNG</strong> CHO TẤT CẢ NGƯỜI CHƠI!`
+  - **Chiến thắng ván đấu:** Định dạng phân 2 dòng trực quan: `👑 [Tên] CHIẾN THẮNG với 15 Điểm Uy Tín ★`<br>`Ván đấu kết thúc!`
+- **Tô Màu Nổi Bật Điểm Uy Tín (Prestige Badge Regex Highlighting):**
+  - Tự động nhận diện và bao bọc các chuỗi điểm số `+\d+★` và `(+3★)` bằng class `.log-prestige-gain`, hiển thị hiệu ứng màu vàng kim óng ánh (`#fbbf24`).
+  - Chuẩn hóa nhãn phân loại thẻ hành động (`🪙 Lấy 3 Token`, `🪙 Lấy 2 Token`, `🌱 Trồng Cây`, `📑 Đặt Chỗ Thẻ`, `🦋 Đón Khách Quý`, `🏁 Vòng Chung Kết`, `👑 Kết Thúc Ván`).
+
 ### 🐛 Sửa Lỗi & Ổn Định Hệ Thống (Bug Fixes & Concurrency)
 - **Khắc Phục Triệt Để Lỗi Tạo Nhiều Phòng Khi Nhấp Chuột Liên Tục (Anti-Spam & Duplicate Room Prevention):**
   - **Phòng thủ đa tầng Client - Server:**
@@ -14,6 +35,12 @@ Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game**
     - **Xử Lý Thông Minh Trùng Lặp (Idempotent Reuse):** Nếu cùng một Host gửi nhiều request tạo phòng liên tiếp trong vòng 2.5 giây (do double-click hoặc độ trễ mạng), server tự động nhận diện và tái sử dụng phòng chờ vừa tạo thay vì sinh ra phòng rác mới.
     - **Tự Động Dọn Phòng Chờ Cũ (Active Room Cleanup):** Tự động dọn dẹp triệt để bất kỳ phòng `WAITING` mồ côi nào trước đó của Host bằng `cleanupService.deleteRoomCompletely()`, đảm bảo 1 Host không bao giờ có 2 phòng chờ cùng xuất hiện trên Sảnh.
     - **Kiểm Thử Đơn Vị Tự Động:** Bổ sung bộ kiểm thử `RoomServiceTest.java` với 4 kịch bản kiểm thử concurrency, idempotent duplicate handling và cooldown cleanup, nâng tổng số test backend lên **32/32 tests PASS 100%**.
+
+### 🧪 Kiểm Thử Tự Động & Tài Liệu (Testing & Docs)
+- **Kiểm thử logic Client:** Xây dựng bộ test `tests/test_game_log_toggle_3_recent.js` xác thực thuật toán trích xuất 3 hành động gần nhất, số thứ tự toàn cục và danh sách modal (100% PASS).
+- **Kiểm thử Backend:** Đảm bảo 32/32 Unit & Integration tests trong `mvn clean test` vượt qua 100%.
+- **Cập nhật tài liệu:** Bổ sung hướng dẫn sử dụng Widget 3 hành động và Modal toàn bộ lịch sử trong [`.doc/how_to_play.md`](file:///c:/University%20Coding%20Project/GardenEmpireGame/.doc/how_to_play.md).
+- **Đồng bộ phiên bản:** Nâng cấp số hiệu phiên bản lên **v1.3.1** đồng bộ trên tất cả các trang giao diện (`index.html`, `lobby.html`, `waiting-room.html`) và cấu hình `pom.xml`.
 
 ---
 
