@@ -133,40 +133,88 @@ export class PlayerUI {
     const bonuses = opponent.bonuses || {};
     const totalPlants = opponent.purchasedCards?.length || 0;
     const totalReserved = opponent.reservedCards?.length || 0;
-    const totalTokens = Object.values(opponent.tokens || {}).reduce((a, b) => a + b, 0);
+    const oppTokens = opponent.tokens || {};
     const oppVisitors = opponent.visitors || opponent.claimedVisitors || [];
     const totalVisitors = oppVisitors.length;
 
+    // Total tokens held in hand (DIRT, WATER, SUNLIGHT, SEED, NUTRIENTS, WILD)
+    const tokenOrder = ['DIRT', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS', 'WILD'];
+    const totalTokens = tokenOrder.reduce((sum, res) => {
+      const cnt = (oppTokens[res] || 0) + (res === 'DIRT' ? (oppTokens['EARTH'] || 0) : (res === 'WILD' ? (oppTokens['FERTILIZER'] || 0) : 0));
+      return sum + cnt;
+    }, 0);
+
+    // Section 2: Permanent bonuses (5 base resources)
     const bonusPillsHtml = ['DIRT', 'WATER', 'SUNLIGHT', 'SEED', 'NUTRIENTS']
       .map(res => {
         const cnt = (bonuses[res] || 0) + (res === 'DIRT' ? (bonuses['EARTH'] || 0) : 0);
         const meta = ResourceUI.getResourceMeta(res);
-        return `<div class="mini-bonus-pill badge-${meta.class}" title="${meta.name}: +${cnt}">${cnt}</div>`;
+        const isDim = cnt === 0;
+        return `<div class="mini-bonus-pill badge-${meta.class} ${isDim ? 'bonus-empty' : ''}" title="${meta.name} (Vĩnh viễn): +${cnt}">${cnt}</div>`;
       }).join('');
 
+    // Section 3: Bank tokens currently held in hand (6 resources)
+    const tokenChipsHtml = tokenOrder.map(res => {
+      const cnt = (oppTokens[res] || 0) + (res === 'DIRT' ? (oppTokens['EARTH'] || 0) : (res === 'WILD' ? (oppTokens['FERTILIZER'] || 0) : 0));
+      const meta = ResourceUI.getResourceMeta(res);
+      const isDim = cnt === 0;
+      return `<div class="mini-token-chip badge-${meta.class} ${isDim ? 'chip-empty' : ''}" title="${meta.name} (Cầm tay): ${cnt} viên">${cnt}</div>`;
+    }).join('');
+
+    // Section 5: Claimed Visitors badges
     const visitorsBadgesHtml = oppVisitors.length > 0
-      ? `<div class="opponent-visitors-strip" title="Khách đã đón: ${oppVisitors.map(v => v.name).join(', ')}">
+      ? `<div class="opponent-visitors-strip">
           ${oppVisitors.map(v => {
             const meta = VisitorUI.getVisitorMeta(v.id, v.name);
-            return `<span title="${meta.icon} ${v.name}">${meta.icon}</span>`;
-          }).join(' ')}
+            return `<span class="opponent-visitor-pill" title="${meta.icon} ${v.name || meta.name} (+${v.prestigePoints || 3}★)">${meta.icon}</span>`;
+          }).join('')}
         </div>`
       : '';
 
     el.innerHTML = `
-      <div class="opponent-card-header">
-        <span class="opponent-name">${opponent.name || 'Đối thủ'} ${opponent.isHost ? '👑' : ''}</span>
-        <span class="opponent-score-badge">★ ${opponent.prestigePoints || 0}</span>
+      <!-- Section 1: Header (Tên & Điểm) -->
+      <div class="player-box-section player-box-header opponent-card-header">
+        <span class="player-box-name opponent-name" title="${opponent.name || 'Đối thủ'}">${opponent.name || 'Đối thủ'} ${opponent.isHost ? '👑' : ''}</span>
+        <span class="player-box-score-badge opponent-score-badge">★ ${opponent.prestigePoints || 0}</span>
       </div>
-      <div class="opponent-stats-row">
-        <span>🌳 Cây: <strong>${totalPlants}</strong></span>
-        <span>📑 Giữ: <strong>${totalReserved}</strong></span>
-        <span>🪙 Token: <strong>${totalTokens}</strong></span>
-        <span>🦋 Khách: <strong>${totalVisitors}</strong></span>
+
+      <!-- Section 2: Cây đã trồng & Tài nguyên vĩnh viễn -->
+      <div class="player-box-section player-box-section-trees">
+        <div class="player-box-row">
+          <span class="player-box-label">🌳 Cây:</span>
+          <strong class="player-box-val">${totalPlants}</strong>
+        </div>
+        <div class="player-box-bonuses-strip opponent-bonuses-strip">
+          ${bonusPillsHtml}
+        </div>
       </div>
-      ${visitorsBadgesHtml}
-      <div class="opponent-bonuses-strip">
-        ${bonusPillsHtml}
+
+      <!-- Section 3: Tài nguyên lấy từ ngân hàng đang cầm trên tay -->
+      <div class="player-box-section player-box-section-tokens">
+        <div class="player-box-row">
+          <span class="player-box-label">🪙 Tài nguyên:</span>
+          <strong class="player-box-val ${totalTokens > 10 ? 'warning' : ''}">${totalTokens} / 10</strong>
+        </div>
+        <div class="player-box-tokens-strip">
+          ${tokenChipsHtml}
+        </div>
+      </div>
+
+      <!-- Section 4: Giữ bài (Số lượng bài đang cầm trên tay / 3) -->
+      <div class="player-box-section player-box-section-reserved">
+        <div class="player-box-row">
+          <span class="player-box-label">📑 Giữ bài:</span>
+          <strong class="player-box-val">${totalReserved} / 3</strong>
+        </div>
+      </div>
+
+      <!-- Section 5: Khách (Số lượng khách quý) -->
+      <div class="player-box-section player-box-section-visitors">
+        <div class="player-box-row">
+          <span class="player-box-label">🦋 Khách:</span>
+          <strong class="player-box-val">${totalVisitors}</strong>
+        </div>
+        ${visitorsBadgesHtml}
       </div>
     `;
 
