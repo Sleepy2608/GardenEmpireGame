@@ -3,6 +3,37 @@
 Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game** được ghi chép và lưu trữ đầy đủ tại tài liệu này từ giai đoạn khởi tạo ban đầu (v0.0.0).  
 Định dạng dựa trên [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), và dự án tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 🚀 [v1.3.3] — 2026-11-01
+### ✨ Tái Thiết Kế Hộp Thông Tin Người Chơi & Hiển Thị Chi Tiết Token Cầm Tay (Players' Box & Opponents' Tokens Visibility)
+- **Hiển Thị Chi Tiết 6 Loại Token Cầm Tay Của Đối Thủ (Opponent Hand Tokens Breakdown):**
+  - **Bóc tách tài nguyên thời gian thực:** Bóc tách toàn bộ tài nguyên ngân hàng mà đối thủ đang cầm trên tay (`opponent.tokens`) thành dải 6 chip tròn (`.mini-token-chip`) riêng biệt:
+    * 🟫 **Đất** (`DIRT` / `EARTH`)
+    * 💧 **Nước** (`WATER`)
+    * ☀️ **Ánh Sáng** (`SUNLIGHT`)
+    * 🌰 **Hạt Giống** (`SEED`)
+    * 🧪 **Dinh Dưỡng** (`NUTRIENTS`)
+    * 🌾 **Phân Bón Vàng / Wild** (`WILD` / `FERTILIZER`)
+  - **Trực quan hóa trạng thái sở hữu:** Các loại token có số lượng $> 0$ hiển thị màu ngọc sáng nổi khối 3D; các token $= 0$ được làm mờ nhẹ (`opacity: 0.28`) giúp người chơi dễ dàng quan sát đối thủ đang tích lũy hay thiếu loại tài nguyên nào để tính toán chiến thuật cướp bài hoặc chặn tài nguyên.
+  - **Cảnh báo vượt mốc 10 Token:** Tự động kích hoạt nhãn đỏ cảnh báo (`.warning`) khi tổng số token cầm tay $> 10$.
+- **Khắc Phục Triệt Để Lỗi Rớt Dòng Chữ/Số & Đè Khung (Anti-Clipping & Full Flexibility):**
+  - **Khóa hàng ngang (`white-space: nowrap; flex-shrink: 0;`):** Cố định toàn bộ các cụm icon + nhãn + số (`🌳 Cây: 10`, `🪙 Tài nguyên: 8/10`, `📑 Giữ bài: 1/3`, `🦋 Khách: 1`) trên cùng 1 hàng duy nhất, loại bỏ hoàn toàn hiện tượng nhãn `Token:` trên một hàng và số lượng `8` rớt xuống hàng thứ hai.
+  - **Tự động co giãn theo tỷ lệ (`flex: 1`):** Cả 5 ô bonus (`.mini-bonus-pill`) và 6 ô token (`.mini-token-chip`) sử dụng `flex: 1` và `justify-content: space-between`, tự động co giãn đều đặn theo độ rộng của khung ở mọi độ phân giải.
+  - **Mở rộng ghế ngồi & Đệm cách ly an toàn:** Nâng chiều rộng `.seat-left`, `.seat-right` lên `215px`, đồng bộ `.seat-top .opponent-card` chuẩn `215px`; bổ sung `margin-top: 1.25rem` cho `.seat-right` để cách ly độc lập hoàn toàn với Widget `GAME LOGS` phía trên.
+- **Chuẩn Hóa Khung Players' Box Theo Wireframe 5 Phân Khu:**
+  - Tái cấu trúc thẻ người chơi thành 5 phân khu rõ rệt phân tách bởi đường kẻ viền ánh kim hoàng gia (`border-bottom: 1px solid rgba(245, 158, 11, 0.22);`):
+    1. **Phân khu 1 (Header):** Tên người chơi (kèm vương miện 👑 nếu là Host) & Huy hiệu điểm uy tín ★ mạ vàng.
+    2. **Phân khu 2 (Cây & Bonus thường trực):** `🌳 Cây: {số lượng}` + dải 5 ô vuông bonus thường trực.
+    3. **Phân khu 3 (Tài nguyên ngân hàng cầm tay):** `🪙 Tài nguyên: {tổng}/10` + dải 6 chip tròn token.
+    4. **Phân khu 4 (Giữ bài):** `📑 Giữ bài: {số lượng} / 3`, tự động bật màu vàng kim `.reserved-max` khi đã giữ đủ tối đa 3 thẻ.
+    5. **Phân khu 5 (Khách quý):** `🦋 Khách: {số lượng}` + huy hiệu tròn các thú linh vật đã rước về.
+
+### 🧪 Kiểm Thử Tự Động & Nghiệm Thu Trực Quan (Testing & Visual Verification)
+- **Bộ Kiểm Thử Đơn Vị Tự Động (`tests/test_player_box_ui.js`):** Xây dựng 5 nhóm Test Cases với 46 ca kiểm thử độc lập (Happy Path 5 phân khu, bóc tách 6 token, trạng thái rỗng biên 0, trạng thái cực đại cảnh báo, thuật toán xếp ghế 2–4 người) đạt **46/46 PASS 100%**.
+- **Xác Thực Trực Quan Bằng Headless Edge & OCR (Optical Character Recognition):** Chụp màn hình thực tế bằng Microsoft Edge Headless tại `tests/screenshots/player_box_visual_check.png` và dùng Windows Native WinRT OCR bóc tách pixel, đối soát 100% số liệu chữ/số khớp với Game State.
+- **Bảo toàn tính năng cũ (Regression Tests):** Toàn bộ 32/32 tests backend (`mvn test`) và 4/4 game log tests đều vượt qua tuyệt đối.
+
+---
+
 ## 🚀 [v1.3.2] — 2026-10-23
 ### ✨ Nâng Cấp Giao Diện Bàn Đấu & Tính Năng Phóng To (Fullscreen & UI Enhancements)
 - **Nút Phóng To Toàn Màn Hình (Fullscreen Toggle Widget):**

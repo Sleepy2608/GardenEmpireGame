@@ -4,7 +4,7 @@
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/Version-v1.3.2-10B981?style=for-the-badge&logo=semver&logoColor=white)](https://garden-empire-game.vercel.app)
+[![Version](https://img.shields.io/badge/Version-v1.3.3-10B981?style=for-the-badge&logo=semver&logoColor=white)](https://garden-empire-game.vercel.app)
 
 [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://garden-empire-game.vercel.app) [![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://gardenempiregame.onrender.com) [![Clever Cloud](https://img.shields.io/badge/Clever%20Cloud-2C3E50?style=for-the-badge&logo=clevercloud&logoColor=white)](https://console.clever-cloud.com) [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://console.clever-cloud.com) [![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/) [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot) [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
@@ -32,6 +32,7 @@
 - **Thu thập năng lượng thiên nhiên** (Đất, Nước, Ánh Sáng, Hạt Giống, Dinh Dưỡng, Phân Bón Vàng).
 - **Nuôi trồng thẻ cây** thuộc 3 cấp độ (Tier 1, Tier 2, Tier 3) để tích lũy điểm uy tín vĩnh viễn và tạo hiệu ứng giảm giá mua cây tiếp theo.
 - **Bàn cờ Tabletop 3D (Around-the-Table Arena):** Chiếu cờ 3D sinh động ở trung tâm, các đối thủ ngồi bao quanh bàn và thanh điều khiển của bạn cố định ở đáy, tự động co giãn (`TabletopFit`) vừa vặn mọi màn hình.
+- **Hộp thông tin người chơi & Bóc tách tài nguyên cầm tay (Players' Box & Opponent Tokens Visibility):** Tái thiết kế toàn diện khung đối thủ chuẩn Wireframe 5 phân khu phân tách bởi đường viền ánh kim hoàng gia; bóc tách chi tiết từng viên trong **6 loại token đối thủ đang cầm trên tay** (Đất, Nước, Ánh Sáng, Hạt Giống, Dinh Dưỡng, Phân Bón Vàng), tích hợp dải giảm giá vĩnh viễn, cảnh báo chạm trần bài giữ (3/3) và chống tràn/gãy dòng tuyệt đối.
 - **Nhật ký hành động thời gian thực (Game Action Logs):** Ghi lại chi tiết từng lượt bốc token, giữ thẻ, trồng cây, đón khách quý, chạm mốc 15 điểm chung kết; tích hợp widget cuộn mượt và nút mũi tên `▼`/`▲` thu gọn thành 1 dòng mini ticker mỏng nhẹ.
 - **Khung trò chuyện trực tuyến (In-Game Chat Box):** Tương tác thời gian thực tại góc dưới bên trái bàn đấu, đối xứng với Game Logs; hỗ trợ phím tắt `Enter` mở nhanh/gửi tin, thu gọn/mở rộng với huy hiệu tin chưa đọc (Unread badge), âm thanh pop nhẹ nhàng, lưu trữ in-memory RAM (khôi phục sau F5) và cơ chế chống spam/khử độc XSS an toàn.
 - **Phòng chờ & Quản lý chủ phòng (Waiting Room):** Quản lý chủ phòng (Room Host), chỉ chủ phòng có quyền bắt đầu trận đấu khi đủ 2–4 người chơi, tính năng kick người chơi kèm lệnh cấm 2 phút (cooldown ban) và chọn ngẫu nhiên lượt đi đầu tiên.

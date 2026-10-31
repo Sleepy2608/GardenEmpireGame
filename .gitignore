@@ -33,7 +33,7 @@ Thumbs.db
 .plan/
 .agents/
 
-# Temporary scratch & test scripts
+# Temporary scratch, test scripts and test subjects
 .scratch/
 scratch/
-
+tests/screenshots/
