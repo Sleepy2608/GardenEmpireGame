@@ -320,8 +320,13 @@ Khi tham gia trận đấu tại [Garden Empire](https://garden-empire-game.verc
      - Nhấp **"Đặt Chỗ (Giữ)"** nếu bạn muốn giữ thẻ về tay và nhận 1 Phân Bón Vàng WILD ⭐.
 3. **Đặt chỗ thẻ bài úp từ xấp bài:**
    - Nhấp trực tiếp vào biểu tượng xấp bài úp ở đầu mỗi hàng Tier 1, Tier 2 hoặc Tier 3 để giữ thẻ bí mật.
-4. **Theo Dõi Đối Thủ Xung Quanh Bàn Đấu:**
-   - Các đối thủ ngồi quanh bàn cờ (Trái, Trên, Phải) hiển thị chi tiết số điểm uy tín, số token cầm tay, số lượng giảm giá bonus của từng người giúp bạn tính toán đối sách kịp thời.
+4. **Theo Dõi Đối Thủ Xung Quanh Bàn Đấu (Players' Box):**
+   - Các đối thủ ngồi quanh bàn cờ (Trái, Trên, Phải) được thiết kế theo cấu trúc **5 phân khu chuẩn Wireframe** có đường kẻ viền ánh kim hoàng gia:
+     - **Header:** Tên đối thủ (kèm biểu tượng vương miện 👑 nếu là Host) và Điểm uy tín ★.
+     - **Cây & Tài nguyên vĩnh viễn:** Nhãn `🌳 Cây: {số lượng}` và dải 5 ô vuông màu đại diện cho các năng lượng giảm giá thường trực đã tích lũy (Đất, Nước, Nắng, Hạt, Dinh dưỡng).
+     - **Tài nguyên cầm tay:** Nhãn `🪙 Tài nguyên: {tổng}/10` (bật cảnh báo đỏ khi $> 10$) kèm dải **6 chip tròn chi tiết** hiển thị chính xác số lượng từng viên token đối thủ đang giữ (kể cả Phân bón vàng WILD ⭐). Các loại token có số lượng $= 0$ được làm mờ nhẹ để bạn dễ dàng nhìn ra đối thủ đang thừa hay thiếu tài nguyên nào.
+     - **Giữ bài:** `📑 Giữ bài: {số lượng} / 3` (tự động bật cảnh báo vàng khi đối thủ đã giữ đủ tối đa 3 thẻ).
+     - **Khách quý:** `🦋 Khách: {số lượng}` cùng huy hiệu tròn của các vị khách đã rước về.
 5. **Theo Dõi Nhật Ký Ván Đấu (Game Action Logs):**
    - **Vị trí:** Nằm ở góc trên bên phải bàn đấu (Top-Right, phía trên Player 4).
    - **Hiển thị 3 lượt hành động gần nhất:** Widget trên bàn cờ luôn hiển thị 3 nước đi gần đây nhất kèm số thứ tự (#X), avatar, tên người chơi và chi tiết tài nguyên/điểm số để người chơi nắm bắt diễn biến nhanh chóng mà không chiếm diện tích bàn cờ.
