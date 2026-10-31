@@ -204,7 +204,7 @@ export class PlayerUI {
       <div class="player-box-section player-box-section-reserved">
         <div class="player-box-row">
           <span class="player-box-label">📑 Giữ bài:</span>
-          <strong class="player-box-val">${totalReserved} / 3</strong>
+          <strong class="player-box-val ${totalReserved >= 3 ? 'reserved-max' : ''}">${totalReserved} / 3</strong>
         </div>
       </div>
 

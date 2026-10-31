@@ -476,16 +476,20 @@ html, body {
 }
 
 .opponent-card {
-  background: rgba(10, 24, 16, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(245, 158, 11, 0.25);
+  background: rgba(10, 24, 16, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(245, 158, 11, 0.35);
   border-radius: var(--radius-md);
-  padding: 0.45rem 0.65rem;
+  padding: 0.48rem 0.65rem;
   transition: all var(--transition-normal);
   position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  overflow: visible;
+  box-shadow: 
+    0 4px 14px rgba(0, 0, 0, 0.5),
+    inset 0 1px 1px rgba(255, 255, 255, 0.08);
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .opponent-card.active-turn {
@@ -500,8 +504,8 @@ html, body {
 
 /* 5 Structured Sections as per Wireframe (Image 2) */
 .player-box-section {
-  padding: 0.28rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.32rem 0;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.22);
 }
 
 .player-box-section:last-child {
@@ -512,6 +516,8 @@ html, body {
 .player-box-section.player-box-header,
 .opponent-card-header {
   padding-top: 0;
+  padding-bottom: 0.35rem;
+  border-bottom: 1.5px solid rgba(245, 158, 11, 0.35);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -521,7 +527,7 @@ html, body {
 .player-box-name,
 .opponent-name {
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   color: var(--text-pure);
   white-space: nowrap;
   overflow: hidden;
@@ -533,16 +539,17 @@ html, body {
 .opponent-score-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.2rem;
-  background: rgba(245, 158, 11, 0.2);
+  gap: 0.25rem;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(217, 119, 6, 0.15) 100%);
   border: 1px solid var(--border-gold);
   color: var(--text-gold);
   font-weight: 800;
-  padding: 0.12rem 0.45rem;
+  padding: 0.12rem 0.5rem;
   border-radius: var(--radius-full);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   white-space: nowrap;
   flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .player-box-row,
@@ -575,6 +582,10 @@ html, body {
 
 .player-box-val.warning {
   color: #f87171;
+}
+
+.player-box-val.reserved-max {
+  color: #f59e0b;
 }
 
 /* Permanent Bonuses Strip (5 Resources) */
