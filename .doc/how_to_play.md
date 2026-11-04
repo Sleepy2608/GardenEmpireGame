@@ -254,6 +254,16 @@ Nếu bạn có thêm 2 viên Phân Bón Vàng (WILD ⭐), bạn chỉ cần dù
    - Hệ thống sẽ đếm tổng số lượng Thẻ Cây mà mỗi người đã mua trong suốt ván đấu.
    - **Người chơi nào mua ÍT THẺ CÂY HƠN sẽ giành chiến thắng!** (Bởi vì người đó đã tối ưu hóa chiến lược hiệu quả hơn, mua những cây đắt giá và chất lượng hơn thay vì mua dàn trải).
 
+### Pop-up Vinh Danh & Đồng Hồ Đếm Ngược Đóng Phòng (Endgame Announcement — v1.3.4):
+- **Phát sóng đồng bộ tức thì:** Ngay khi lượt đi cuối cùng kết thúc, hệ thống sẽ tự động phát sóng pop-up vinh danh lộng lẫy tới **toàn bộ người chơi trong phòng**:
+  * **Quán quân:** Hiển thị thông điệp ăn mừng rực rỡ `🎉 XUẤT SẮC! BẠN ĐÃ ĐOẠT DANH HIỆU TÂN VƯƠNG ĐẾ CHẾ!` và huy hiệu `👑 Bạn là Quán quân (#1)`.
+  * **Người chơi khác:** Hiển thị banner vinh danh Tân vương kèm thứ hạng của bản thân (`🌿 Bạn đạt Á quân / Hạng #{rank}`).
+- **Bảng vàng vinh danh (Podium Rankings):** Hiển thị đầy đủ 4 thứ hạng (🥇 🥈 🥉 4️⃣) kèm chi tiết Avatar, Tên, Vương miện, Điểm Uy Tín ★, Số thẻ cây trồng, Số khách thăm đã đón và Tổng số token cầm tay.
+- **Đồng hồ đếm ngược 20 giây (Auto-Exit Countdown):**
+  * Tự động đếm lùi 20 giây kèm thanh progress bar chuyển màu trực quan.
+  * Nút `Quay Về Sảnh Ngay` cho phép rời phòng lập tức.
+  * Nút `🔍 Xem Lại Bàn Cờ`: Thu nhỏ modal thành thanh nổi **Endgame Floating Bar** ở đáy màn hình để bạn thong thả ngắm lại bàn cờ, khu vườn đối thủ, khung chat hoặc nhật ký ván đấu. Khi đếm ngược về 0s, phòng sẽ được tự động giải phóng sạch sẽ và chuyển người chơi về trang sảnh (`lobby.html`).
+
 ---
 
 ## 🧠 7. Bí Quyết & Chiến Thuật Đỉnh Cao
@@ -338,6 +348,11 @@ Khi tham gia trận đấu tại [Garden Empire](https://garden-empire-game.verc
    - **Gửi tin nhắn tức thời:** Gõ nội dung và nhấn `Enter` hoặc bấm nút `➤` để gửi ngay tới tất cả người chơi trong phòng đấu.
    - **Thu gọn / Mở rộng (`▼` / `▲`):** Thu gọn thành thanh Chat Bar mỏng nhẹ hiển thị tin nhắn mới nhất. Khi có người gửi tin mới trong lúc đang thu gọn, huy hiệu đỏ (Unread Badge 🔴) sẽ nhấp nháy báo hiệu kèm âm thanh pop nhẹ.
    - **Bảo mật & Tự động lưu trữ:** Khử độc mã XSS an toàn, giới hạn 120 ký tự, chống spam 600ms, lưu trữ 50 tin gần nhất trong RAM bàn đấu (tự động khôi phục 100% khi người chơi F5 / Reconnect).
+7. **Pop-up Vinh Danh & Đếm Ngược Đóng Phòng (Endgame Announcement & Auto-Exit — v1.3.4):**
+   - **Tự động kích hoạt toàn màn hình:** Khi ván đấu kết thúc, Pop-up vinh danh Quán quân tự động bật lên đồng bộ cho tất cả người chơi trong phòng.
+   - **Bảng thứ hạng chi tiết:** Xem nhanh Quán quân, Á quân và vị trí của chính bạn với viền sáng và tag `Bạn` ngọc lục bảo.
+   - **Đếm ngược tự động 20 giây:** Tránh tình trạng phòng bị treo vô tận. Đồng hồ đếm lùi `20s -> 0s` sẽ tự động dọn dẹp phòng và đưa tất cả người chơi về Sảnh Chờ (`lobby.html`).
+   - **Chế độ Xem Lại Bàn Cờ (Floating Bar):** Bấm `🔍 Xem Lại Bàn Cờ` để thu nhỏ pop-up thành thanh thông báo nổi **Endgame Floating Bar** ở đáy màn hình; bấm `[🏆 Xem Kết Quả]` trên thanh nổi để mở lại pop-up bất cứ lúc nào.
 
 ---
 
