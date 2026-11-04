@@ -165,6 +165,18 @@ public class GameMessageHandler {
     }
 
     /**
+     * Broadcast sự kiện đóng phòng tới tất cả người chơi trong phòng.
+     * Frontend lắng nghe type = "ROOM_CLOSED"
+     */
+    public void broadcastRoomClosed(String roomId, String reason) {
+        Map<String, Object> message = new java.util.LinkedHashMap<>();
+        message.put("type", "ROOM_CLOSED");
+        message.put("roomId", roomId);
+        message.put("reason", reason != null ? reason : "Phòng đã kết thúc và được đóng.");
+        broadcastToRoom(roomId, message);
+    }
+
+    /**
      * Gửi sự kiện YOU_ARE_KICKED đến đúng session của người bị kick.
      * Những người khác đã nhận ROOM_UPDATE trước đó.
      */
