@@ -258,4 +258,23 @@ public class RoomService {
 
         return room;
     }
+
+    /**
+     * Đóng phòng chơi: Cho phép chủ phòng hoặc bất kỳ người chơi nào đóng phòng khi ván đấu đã kết thúc (FINISHED).
+     * Gửi WebSocket ROOM_CLOSED cho toàn bộ người chơi và dọn dẹp phòng triệt để.
+     */
+    public void closeRoom(String roomId, String playerId) {
+        Room room = roomManager.getRoom(roomId).orElse(null);
+        if (room == null) return;
+
+        boolean isHost = playerId != null && playerId.equals(room.getHostId());
+        boolean isFinished = room.getStatus() == RoomStatus.FINISHED;
+
+        if (!isHost && !isFinished) {
+            throw new GameException("Chỉ chủ phòng hoặc khi ván đấu kết thúc mới có thể đóng phòng");
+        }
+
+        messageHandler.broadcastRoomClosed(roomId, "Phòng đã kết thúc và được đóng.");
+        cleanupService.deleteRoomCompletely(roomId);
+    }
 }

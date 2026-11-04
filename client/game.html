@@ -306,21 +306,64 @@
     </div>
   </div>
 
-  <!-- 4. Victory Podium Modal -->
-  <div class="modal-backdrop hidden" id="victory-modal">
+  <!-- 4. Victory Podium & End Game Announcement Modal -->
+  <div class="modal-backdrop hidden" id="victory-modal" role="dialog" aria-modal="true" aria-labelledby="victory-modal-title">
     <div class="modal-card glass-panel victory-card">
       <div class="victory-header">
         <div class="victory-crown anim-float">👑</div>
-        <h2>VÁN ĐẤU KẾT THÚC!</h2>
-        <p id="victory-announcement">Chúc mừng Tân Vương Đế Chế Vườn Sinh Thái!</p>
+        <h2 id="victory-modal-title">VÁN ĐẤU KẾT THÚC!</h2>
+        <div class="victory-winner-banner" id="victory-announcement">Chúc mừng Tân Vương Đế Chế Vườn Sinh Thái!</div>
+        <div class="victory-my-status-pill" id="victory-my-status">Bạn đạt Hạng #1 (Chiến thắng!)</div>
       </div>
+
+      <!-- Countdown Progress & Time Section -->
+      <div class="victory-countdown-section">
+        <div class="victory-countdown-bar-wrap">
+          <div class="victory-countdown-bar" id="victory-countdown-bar" style="width: 100%;"></div>
+        </div>
+        <div class="victory-countdown-label">
+          <span>⏱️ Tự động đóng phòng và về sảnh sau:</span>
+          <span class="countdown-seconds-badge" id="victory-countdown-seconds">20s</span>
+        </div>
+      </div>
+
+      <!-- Podium Ranking List -->
       <div class="victory-podium" id="victory-podium-list"></div>
-      <p class="victory-tiebreaker-hint">⚖️ *Khi bằng điểm uy tín, người có ít thẻ cây trồng hơn sẽ giành chiến thắng.*</p>
+
+      <!-- Tiebreaker Hint -->
+      <p class="victory-tiebreaker-hint">
+        ⚖️ <em>Quy tắc xếp hạng: Người có Điểm Uy Tín cao hơn sẽ đứng trên. Nếu bằng điểm, người sở hữu ít thẻ cây trồng hơn sẽ chiến thắng.</em>
+      </p>
+
+      <!-- Action Footer -->
       <div class="victory-footer">
-        <button class="btn-nature-primary" id="btn-back-to-lobby">
-          <span>🏡</span> <span>Quay Về Sảnh Chờ</span>
+        <button type="button" class="btn-nature-secondary" id="btn-review-board" title="Thu nhỏ thông báo để quan sát lại bàn cờ">
+          <span>🔍</span> <span>Xem Lại Bàn Cờ</span>
+        </button>
+        <button type="button" class="btn-nature-primary" id="btn-back-to-lobby" title="Rời phòng và quay về sảnh ngay lập tức">
+          <span>🏡</span> <span id="btn-back-to-lobby-text">Quay Về Sảnh Ngay (20s)</span>
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- 4.1. Endgame Floating Bar (When user minimizes Victory Modal to inspect board) -->
+  <div class="endgame-floating-bar hidden" id="endgame-floating-bar">
+    <div class="floating-bar-left">
+      <span class="floating-crown">🏆</span>
+      <div class="floating-bar-info">
+        <span class="floating-bar-title">Ván Đấu Kết Thúc</span>
+        <span class="floating-bar-desc" id="floating-bar-winner-desc">Quán quân đang đăng quang</span>
+      </div>
+    </div>
+    <div class="floating-bar-right">
+      <span class="floating-countdown-pill" id="floating-countdown-pill">⏱️ 20s</span>
+      <button type="button" class="btn-floating-action btn-floating-restore" id="btn-restore-victory-modal">
+        🏆 Xem Kết Quả
+      </button>
+      <button type="button" class="btn-floating-action btn-floating-leave" id="btn-floating-back-to-lobby">
+        🏡 Về Sảnh
+      </button>
     </div>
   </div>
 

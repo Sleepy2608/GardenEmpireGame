@@ -134,4 +134,71 @@ class RoomServiceTest {
         assertTrue(roomManager.getRoom(oldRoomId).isEmpty(), "Phòng WAITING cũ của cùng host phải được tự động dọn dẹp");
         assertTrue(roomManager.getRoom(newRoom.getId()).isPresent(), "Phòng mới phải tồn tại");
     }
+
+    @Test
+    @DisplayName("Chủ phòng có thể đóng phòng thành công và phòng bị dọn dẹp khỏi hệ thống")
+    void testHostCanCloseRoom() {
+        String hostId = "host-close-" + System.currentTimeMillis();
+        Player host = Player.builder().id(hostId).name("Chủ Phòng").avatar("👑").build();
+        CreateRoomRequest req = new CreateRoomRequest();
+        req.setRoomName("Phòng Sắp Đóng");
+        req.setMaxPlayers(4);
+        req.setHostPlayer(host);
+
+        Room room = roomService.createRoom(req);
+        String roomId = room.getId();
+        assertTrue(roomManager.getRoom(roomId).isPresent(), "Phòng phải tồn tại sau khi tạo");
+
+        // Chủ phòng đóng phòng
+        roomService.closeRoom(roomId, hostId);
+
+        // Phòng phải bị xoá hoàn toàn
+        assertTrue(roomManager.getRoom(roomId).isEmpty(), "Phòng phải bị xoá hoàn toàn sau khi đóng");
+    }
+
+    @Test
+    @DisplayName("Người chơi không phải Host không được đóng phòng khi đang WAITING (ném GameException)")
+    void testNonHostCannotCloseActiveRoom() {
+        String hostId = "host-protect-" + System.currentTimeMillis();
+        Player host = Player.builder().id(hostId).name("Chủ Phòng Xịn").avatar("👑").build();
+        CreateRoomRequest req = new CreateRoomRequest();
+        req.setRoomName("Phòng Bảo Mật");
+        req.setMaxPlayers(4);
+        req.setHostPlayer(host);
+
+        Room room = roomService.createRoom(req);
+        String roomId = room.getId();
+
+        // Guest cố tình đóng phòng khi ván đấu chưa kết thúc
+        String guestId = "guest-hacker-" + System.currentTimeMillis();
+        assertThrows(com.gardenempire.exception.GameException.class, () -> {
+            roomService.closeRoom(roomId, guestId);
+        }, "Chỉ chủ phòng hoặc khi game kết thúc mới được đóng phòng");
+
+        // Phòng vẫn phải an toàn tồn tại
+        assertTrue(roomManager.getRoom(roomId).isPresent(), "Phòng vẫn phải tồn tại khi người khác cố tình đóng");
+    }
+
+    @Test
+    @DisplayName("Khi phòng ở trạng thái FINISHED, bất kỳ người chơi nào cũng có thể kích hoạt đóng phòng")
+    void testAnyPlayerCanCloseFinishedRoom() {
+        String hostId = "host-finished-" + System.currentTimeMillis();
+        Player host = Player.builder().id(hostId).name("Chủ Ván Đấu").avatar("👑").build();
+        CreateRoomRequest req = new CreateRoomRequest();
+        req.setRoomName("Phòng Đã Xong Trận");
+        req.setMaxPlayers(4);
+        req.setHostPlayer(host);
+
+        Room room = roomService.createRoom(req);
+        String roomId = room.getId();
+        // Giả lập trạng thái game đã kết thúc
+        room.setStatus(RoomStatus.FINISHED);
+
+        String guestId = "guest-finished-" + System.currentTimeMillis();
+        assertDoesNotThrow(() -> {
+            roomService.closeRoom(roomId, guestId);
+        }, "Khi trạng thái là FINISHED, bất kỳ người chơi nào cũng có thể kích hoạt dọn phòng");
+
+        assertTrue(roomManager.getRoom(roomId).isEmpty(), "Phòng FINISHED phải được dọn dẹp sau khi gọi đóng phòng");
+    }
 }

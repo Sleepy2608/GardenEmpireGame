@@ -3,6 +3,38 @@
 Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game** được ghi chép và lưu trữ đầy đủ tại tài liệu này từ giai đoạn khởi tạo ban đầu (v0.0.0).  
 Định dạng dựa trên [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), và dự án tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 🚀 [v1.3.4] — 2026-11-04
+### ✨ Pop-up Thông Báo Kết Thúc Ván Đấu & Đếm Ngược Đóng Phòng Tự Động (Endgame Announcement & Countdown Timer — Issue #18)
+- **Pop-up Vinh Danh & Thông Báo Kết Thúc Game Cho Toàn Bộ Phòng (Victory Announcement Modal):**
+  - **Broadcast tức thời tới mọi người chơi:** Khi bất kỳ ai đạt điều kiện thắng và ván đấu kết thúc (`isGameOver = true`), pop-up vinh danh lộng lẫy xuất hiện đồng bộ trên màn hình của tất cả người chơi trong phòng (thay thế việc chỉ hiển thị 1 dòng log ngầm).
+  - **Thông điệp cá nhân hóa sắc nét:**
+    * Quán quân: Thông điệp ăn mừng rực rỡ `🎉 XUẤT SẮC! BẠN ĐÃ ĐOẠT DANH HIỆU TÂN VƯƠNG ĐẾ CHẾ!` kèm huy hiệu `👑 Bạn là Quán quân (#1) với {X} Điểm Uy Tín!`.
+    * Người chơi khác: Banner chúc mừng `★ Chúc mừng {Winner} đã đăng quang với {X} Điểm Uy Tín! ★` kèm vị trí của bản thân (`🌿 Bạn đạt Á quân / Hạng #{rank} với {Y} Điểm Uy Tín`).
+  - **Bảng Xếp Hạng Chung Cuộc (Podium Rankings List):**
+    * Tự động sắp xếp thứ tự cả phòng theo Điểm Uy Tín giảm dần; áp dụng chuẩn luật Tiebreaker (bằng điểm thì người sở hữu ít thẻ cây hơn thắng).
+    * Thẻ Hạng 1 (`rank-1`) nổi bật với hiệu ứng mạ vàng kim cương và vương miện 👑.
+    * Thẻ của chính người xem (`.is-me`) được bao bọc bởi viền ngọc lục bảo và tag `Bạn`.
+    * Hiển thị thống kê chi tiết từng người chơi: Điểm Uy Tín ★, Số thẻ cây trồng, Số khách thăm đã đón, và Tổng số token cầm tay.
+- **Đồng Hồ Đếm Ngược Đóng Phòng & Thoát Sảnh Tự Động (Auto-Exit Countdown Timer):**
+  - **Thanh thời gian trực quan:** Đồng hồ đếm ngược 20 giây hiển thị kèm thanh progress bar chuyển màu mượt mà: `⏱️ Tự động đóng phòng và về sảnh sau: {countdown}s`.
+  - **Nút hành động nhanh:** Nút `Quay Về Sảnh Ngay ({countdown}s)` cho phép rời phòng ngay lập tức mà không cần chờ hết 20 giây.
+  - **Tính năng Xem Lại Bàn Cờ (Review Board):**
+    * Nút `🔍 Xem Lại Bàn Cờ` cho phép người chơi tạm thời thu nhỏ modal để quan sát vườn cây, bàn cờ, chatbox hoặc nhật ký ván đấu.
+    * Khi thu nhỏ, thanh thông báo nổi **Endgame Floating Bar** (`#endgame-floating-bar`) xuất hiện tinh gọn ở đáy màn hình: `🏆 Ván Đấu Kết Thúc | Quán quân: {Winner} | ⏱️ {countdown}s | [🏆 Xem Kết Quả] [🏡 Về Sảnh]`.
+    * Đồng hồ đếm ngược tiếp tục chạy đồng bộ; người chơi có thể bấm `[🏆 Xem Kết Quả]` để mở lại modal bất kỳ lúc nào.
+  - **Giải phóng phòng sạch sẽ khi hết giờ (0s):** Tự động kích hoạt API dọn phòng (`closeRoom` / `leaveRoom`), ngắt WebSocket và điều hướng mượt mà về sảnh (`lobby.html`).
+- **Nâng Cấp Backend (Room Closing API & WebSocket Event `ROOM_CLOSED`):**
+  - Thêm endpoint `POST /api/rooms/{roomId}/close` trong `RoomController` và nghiệp vụ `closeRoom` trong `RoomService`.
+  - Hỗ trợ giải phóng phòng tức thời khi Host hoặc bất kỳ người chơi nào yêu cầu sau khi ván đấu kết thúc (`RoomStatus.FINISHED`).
+  - Broadcast sự kiện WebSocket `ROOM_CLOSED` tới toàn bộ kết nối trong phòng để mọi tab của người chơi được điều hướng đồng bộ về sảnh.
+
+### 🧪 Kiểm Thử Tự Động & Đối Soát OCR Trực Quan (Testing & Visual Verification)
+- **Bộ Kiểm Thử Đơn Vị Tự Động (`tests/test_endgame_announcement_ui.js`):** Xây dựng 5 nhóm Test Cases với 15 ca kiểm thử chuẩn Arrange-Act-Assert (AAA) kiểm tra xếp hạng, tiebreaker, cá nhân hóa, countdown timer, thu nhỏ/phóng to floating bar, và sự kiện WebSocket `ROOM_CLOSED` $\rightarrow$ Đạt **15/15 PASS 100%**.
+- **Xác Thực Trực Quan Bằng Headless Edge & OCR (Optical Character Recognition):** Chụp màn hình thực tế tại `tests/screenshots/endgame_announcement_visual_check.png` và chạy Windows Native WinRT OCR nhận dạng chữ/số hiển thị thực tế $\rightarrow$ Đối chiếu state đạt **100% trùng khớp**.
+- **Bảo toàn kiểm thử hồi quy (Regression Test):** Toàn bộ 35/35 Maven backend tests (`mvn test`), 46/46 Player Box UI tests (`test_player_box_ui.js`), 4/4 Game Log tests (`test_game_log_toggle_3_recent.js`) đều vượt qua tuyệt đối (**0 fail**).
+
+---
+
 ## 🚀 [v1.3.3] — 2026-11-01
 ### ✨ Tái Thiết Kế Hộp Thông Tin Người Chơi & Hiển Thị Chi Tiết Token Cầm Tay (Players' Box & Opponents' Tokens Visibility)
 - **Hiển Thị Chi Tiết 6 Loại Token Cầm Tay Của Đối Thủ (Opponent Hand Tokens Breakdown):**

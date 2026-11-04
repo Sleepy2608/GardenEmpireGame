@@ -90,5 +90,16 @@ export const roomApi = {
       throw new Error(err.message || 'Không thể đuổi người chơi');
     }
     return await res.json();
+  },
+
+  async closeRoom(roomId, playerId) {
+    const res = await fetch(`${getApiBase()}/${roomId}/close?playerId=${encodeURIComponent(playerId || '')}`, {
+      method: 'POST'
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'Không thể đóng phòng');
+    }
+    return true;
   }
 };

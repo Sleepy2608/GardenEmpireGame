@@ -47,6 +47,10 @@ export class BoardUI {
     this.isCardFromReserved = false;
     this.hasPlayedVictorySound = false;
     this.lastClaimedVisitorCount = 0;
+    this.endgameCountdownSeconds = 20;
+    this.endgameTimerInterval = null;
+    this.isVictoryModalOpen = false;
+    this.hasStartedEndgameCountdown = false;
 
     this.init();
   }
@@ -311,18 +315,28 @@ export class BoardUI {
       confirmTokensBtn.addEventListener('click', () => this.onConfirmTakeTokens());
     }
 
-    // Back to Lobby on Game Over
+    // Endgame Action: Back to Lobby immediately
     const backToLobbyBtn = document.getElementById('btn-back-to-lobby');
     if (backToLobbyBtn) {
-      backToLobbyBtn.addEventListener('click', async () => {
-        try {
-          await roomApi.leaveRoom(this.roomId, this.guestId);
-        } catch (e) {
-          // Ignore if already cleaned up
-        }
-        this.socket.disconnect();
-        navigateTo('lobby');
-      });
+      backToLobbyBtn.addEventListener('click', () => this.exitGameAndCloseRoom());
+    }
+
+    // Endgame Action: Floating Bar Back to Lobby
+    const floatingLeaveBtn = document.getElementById('btn-floating-back-to-lobby');
+    if (floatingLeaveBtn) {
+      floatingLeaveBtn.addEventListener('click', () => this.exitGameAndCloseRoom());
+    }
+
+    // Endgame Action: Minimize Victory Modal to Review Board
+    const reviewBoardBtn = document.getElementById('btn-review-board');
+    if (reviewBoardBtn) {
+      reviewBoardBtn.addEventListener('click', () => this.minimizeVictoryModal());
+    }
+
+    // Endgame Action: Restore Victory Modal from Floating Bar
+    const restoreVictoryBtn = document.getElementById('btn-restore-victory-modal');
+    if (restoreVictoryBtn) {
+      restoreVictoryBtn.addEventListener('click', () => this.openVictoryModal());
     }
   }
 
@@ -345,6 +359,16 @@ export class BoardUI {
       this.checkSpecialGameStates();
     } else if (message.type === 'CHAT_MESSAGE_RECEIVED') {
       chatUI.onMessageReceived(message.message, this.guestId);
+    } else if (message.type === 'ROOM_CLOSED') {
+      if (this.endgameTimerInterval) {
+        clearInterval(this.endgameTimerInterval);
+        this.endgameTimerInterval = null;
+      }
+      this.showToast(`🔒 ${message.reason || 'Phòng đã kết thúc và được đóng.'}`);
+      setTimeout(() => {
+        if (this.socket) this.socket.disconnect();
+        navigateTo('lobby');
+      }, 1200);
     } else if (message.type === 'ERROR') {
       SoundFX.playErrorSound();
       this.showToast(`⚠️ ${message.message || 'Hành động không hợp lệ'}`);
@@ -716,9 +740,61 @@ export class BoardUI {
         this.hasPlayedVictorySound = true;
         SoundFX.playVictorySound();
       }
+      if (!this.hasStartedEndgameCountdown) {
+        this.openVictoryModal();
+        this.startEndgameCountdown(20);
+      }
+    }
+  }
+
+  openVictoryModal() {
+    const victoryModal = document.getElementById('victory-modal');
+    const floatingBar = document.getElementById('endgame-floating-bar');
+    if (floatingBar) floatingBar.classList.add('hidden');
+    if (victoryModal) {
       victoryModal.classList.remove('hidden');
+      this.isVictoryModalOpen = true;
       this.renderVictoryPodium();
     }
+  }
+
+  minimizeVictoryModal() {
+    const victoryModal = document.getElementById('victory-modal');
+    const floatingBar = document.getElementById('endgame-floating-bar');
+    if (victoryModal) victoryModal.classList.add('hidden');
+    if (floatingBar) {
+      floatingBar.classList.remove('hidden');
+      this.isVictoryModalOpen = false;
+      this.updateEndgameFloatingBar();
+    }
+  }
+
+  updateEndgameFloatingBar() {
+    const desc = document.getElementById('floating-bar-winner-desc');
+    const pill = document.getElementById('floating-countdown-pill');
+    if (pill) {
+      pill.textContent = `⏱️ ${this.endgameCountdownSeconds}s`;
+    }
+    if (desc) {
+      const winner = this.getWinnerPlayer();
+      if (winner) {
+        desc.textContent = `Quán quân: ${winner.name} (★${winner.prestigePoints || 0})`;
+      }
+    }
+  }
+
+  getWinnerPlayer() {
+    const sorted = [...this.gameState.players].sort((a, b) => {
+      if ((b.prestigePoints || 0) !== (a.prestigePoints || 0)) {
+        return (b.prestigePoints || 0) - (a.prestigePoints || 0);
+      }
+      return (a.purchasedCards?.length || 0) - (b.purchasedCards?.length || 0);
+    });
+    if (this.gameState.winnerPlayerId) {
+      const p = this.gameState.players.find(x => x.id === this.gameState.winnerPlayerId);
+      if (p) return p;
+    }
+    return sorted[0];
   }
 
   renderReturnTokensModal(player, excessCount) {
@@ -765,6 +841,7 @@ export class BoardUI {
   renderVictoryPodium() {
     const list = document.getElementById('victory-podium-list');
     const announcement = document.getElementById('victory-announcement');
+    const myStatus = document.getElementById('victory-my-status');
     if (!list) return;
 
     list.innerHTML = '';
@@ -774,36 +851,137 @@ export class BoardUI {
       }
       return (a.purchasedCards?.length || 0) - (b.purchasedCards?.length || 0);
     });
-    const winner = sorted[0];
+    const winner = this.getWinnerPlayer() || sorted[0];
 
+    // Announcement banner
     if (announcement && winner) {
-      announcement.textContent = `★ Chúc mừng ${winner.name} đã giành chiến thắng với ${winner.prestigePoints} Điểm Uy Tín ★!`;
+      if (winner.id === this.guestId) {
+        announcement.textContent = `🎉 XUẤT SẮC! BẠN ĐÃ ĐOẠT DANH HIỆU TÂN VƯƠNG ĐẾ CHẾ!`;
+      } else {
+        announcement.textContent = `★ Chúc mừng ${winner.name} đã đăng quang với ${winner.prestigePoints} Điểm Uy Tín! ★`;
+      }
+    }
+
+    // My personal status pill
+    if (myStatus) {
+      const myIndex = sorted.findIndex(p => p.id === this.guestId);
+      const myPlayer = this.gameState.players.find(p => p.id === this.guestId);
+      if (myIndex === 0) {
+        myStatus.className = 'victory-my-status-pill is-winner';
+        myStatus.textContent = `👑 Bạn là Quán quân (#1) với ${myPlayer?.prestigePoints || 0} Điểm Uy Tín!`;
+      } else if (myIndex > 0) {
+        myStatus.className = 'victory-my-status-pill';
+        const rankLabels = ['Quán quân', 'Á quân', 'Hạng 3', 'Hạng 4'];
+        const label = rankLabels[myIndex] || `Hạng #${myIndex + 1}`;
+        myStatus.textContent = `🌿 Bạn đạt ${label} với ${myPlayer?.prestigePoints || 0} Điểm Uy Tín`;
+      } else {
+        myStatus.className = 'victory-my-status-pill';
+        myStatus.textContent = `Ván đấu đã khép lại`;
+      }
     }
 
     const rankIcons = ['🥇', '🥈', '🥉', '4️⃣'];
 
     sorted.forEach((p, idx) => {
       const rankIcon = rankIcons[idx] || `#${idx + 1}`;
+      const isWinner = (winner && p.id === winner.id) || idx === 0;
+      const isMe = p.id === this.guestId;
       const card = document.createElement('div');
-      card.className = `podium-rank-card ${idx === 0 ? 'rank-1' : ''}`;
+      card.className = `podium-rank-card ${isWinner ? 'rank-1' : ''} ${isMe ? 'is-me' : ''}`;
 
       const avatar = p.avatar || '🌿';
       const cardCount = p.purchasedCards?.length || 0;
       const visitorCount = p.visitors?.length || p.claimedVisitors?.length || 0;
+      const tokenCount = Object.values(p.tokens || {}).reduce((a, b) => a + b, 0);
 
       card.innerHTML = `
         <div class="podium-left">
           <span class="podium-badge">${rankIcon}</span>
           <span style="font-size: 1.4rem;">${avatar}</span>
-          <span class="podium-name">${p.name} ${idx === 0 ? '👑' : ''}</span>
+          <div class="podium-name-group">
+            <span class="podium-name">${p.name} ${isWinner ? '👑' : ''}</span>
+            ${isMe ? '<span class="podium-me-tag">Bạn</span>' : ''}
+          </div>
         </div>
         <div class="podium-right">
           <span class="podium-score">★ ${p.prestigePoints || 0} Uy Tín</span>
-          <span class="podium-meta">${cardCount} cây trồng • ${visitorCount} khách</span>
+          <span class="podium-meta">${cardCount} cây trồng • ${visitorCount} khách • ${tokenCount} token</span>
         </div>
       `;
       list.appendChild(card);
     });
+
+    this.updateEndgameFloatingBar();
+  }
+
+  startEndgameCountdown(totalSeconds = 20) {
+    this.hasStartedEndgameCountdown = true;
+    this.endgameCountdownSeconds = totalSeconds;
+
+    const updateUI = () => {
+      const secondsBadge = document.getElementById('victory-countdown-seconds');
+      const progressBar = document.getElementById('victory-countdown-bar');
+      const lobbyBtnText = document.getElementById('btn-back-to-lobby-text');
+      const floatingPill = document.getElementById('floating-countdown-pill');
+
+      if (secondsBadge) {
+        secondsBadge.textContent = `${this.endgameCountdownSeconds}s`;
+      }
+      if (progressBar) {
+        const pct = Math.max(0, (this.endgameCountdownSeconds / totalSeconds) * 100);
+        progressBar.style.width = `${pct}%`;
+      }
+      if (lobbyBtnText) {
+        lobbyBtnText.textContent = `Quay Về Sảnh Ngay (${this.endgameCountdownSeconds}s)`;
+      }
+      if (floatingPill) {
+        floatingPill.textContent = `⏱️ ${this.endgameCountdownSeconds}s`;
+      }
+    };
+
+    updateUI();
+
+    if (this.endgameTimerInterval) clearInterval(this.endgameTimerInterval);
+    this.endgameTimerInterval = setInterval(() => {
+      this.endgameCountdownSeconds--;
+      if (this.endgameCountdownSeconds <= 0) {
+        clearInterval(this.endgameTimerInterval);
+        this.endgameTimerInterval = null;
+        this.exitGameAndCloseRoom();
+      } else {
+        updateUI();
+      }
+    }, 1000);
+  }
+
+  async exitGameAndCloseRoom() {
+    if (this.endgameTimerInterval) {
+      clearInterval(this.endgameTimerInterval);
+      this.endgameTimerInterval = null;
+    }
+
+    const backBtn = document.getElementById('btn-back-to-lobby');
+    const floatingLeaveBtn = document.getElementById('btn-floating-back-to-lobby');
+    if (backBtn) backBtn.disabled = true;
+    if (floatingLeaveBtn) floatingLeaveBtn.disabled = true;
+
+    this.showToast('⏱️ Đang rời phòng và quay về Sảnh Chờ...');
+
+    try {
+      const myPlayer = this.gameState.players.find(p => p.id === this.guestId);
+      if (myPlayer?.host) {
+        await roomApi.closeRoom(this.roomId, this.guestId).catch(() => {});
+      } else {
+        await roomApi.leaveRoom(this.roomId, this.guestId).catch(() => {});
+      }
+    } catch (e) {
+      // Bỏ qua lỗi mạng
+    }
+
+    if (this.socket) {
+      this.socket.disconnect();
+    }
+    navigateTo('lobby');
   }
 
   closeModal(modalId) {

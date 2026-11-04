@@ -60,4 +60,14 @@ public class RoomController {
             @RequestBody com.gardenempire.dto.KickRequest request) {
         return ResponseEntity.ok(roomService.kickPlayer(roomId, request.getHostId(), request.getTargetPlayerId()));
     }
+
+    @PostMapping("/{roomId}/close")
+    public ResponseEntity<Void> closeRoom(
+            @PathVariable String roomId,
+            @RequestParam(required = false) String playerId,
+            @RequestParam(required = false) String hostId) {
+        String actorId = playerId != null ? playerId : hostId;
+        roomService.closeRoom(roomId, actorId);
+        return ResponseEntity.ok().build();
+    }
 }
