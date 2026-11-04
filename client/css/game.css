@@ -1992,51 +1992,127 @@ html, body {
   }
 }
 
-/* Victory Podium Modal */
+/* Victory Podium & End Game Announcement Modal */
 .victory-card {
-  max-width: 580px;
+  max-width: 620px;
   width: 95%;
   text-align: center;
   border-color: var(--border-gold);
-  box-shadow: 0 0 35px rgba(245, 158, 11, 0.35);
+  box-shadow: 0 0 45px rgba(245, 158, 11, 0.4), 0 20px 40px rgba(0, 0, 0, 0.7);
+  animation: victoryModalPopIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes victoryModalPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .victory-header {
-  padding: 1.75rem 1.5rem 1rem;
-  background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.25) 0%, transparent 70%);
+  padding: 1.75rem 1.5rem 0.85rem;
+  background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.3) 0%, transparent 75%);
 }
 
 .victory-crown {
-  font-size: 3.5rem;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 0 20px rgba(245, 158, 11, 0.8);
+  font-size: 3.6rem;
+  margin-bottom: 0.35rem;
+  text-shadow: 0 0 22px rgba(245, 158, 11, 0.85);
 }
 
 .victory-header h2 {
-  font-size: 1.75rem;
+  font-size: 1.85rem;
   color: var(--text-pure);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-shadow: 0 0 16px rgba(245, 158, 11, 0.5);
+  margin-bottom: 0.4rem;
 }
 
-.victory-header p {
+.victory-winner-banner {
+  color: var(--text-gold);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+  margin-bottom: 0.45rem;
+}
+
+.victory-my-status-pill {
+  display: inline-block;
+  padding: 0.25rem 0.85rem;
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 9999px;
+  color: #6ee7b7;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.victory-my-status-pill.is-winner {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: rgba(245, 158, 11, 0.5);
+  color: #fde68a;
+}
+
+/* Countdown Progress & Bar */
+.victory-countdown-section {
+  padding: 0.6rem 1.5rem 0.25rem;
+}
+
+.victory-countdown-bar-wrap {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 0.45rem;
+}
+
+.victory-countdown-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #f59e0b 60%, #ef4444 100%);
+  border-radius: 9999px;
+  transition: width 1s linear;
+}
+
+.victory-countdown-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
   color: var(--text-secondary);
-  font-size: 0.95rem;
-  margin-top: 0.4rem;
+}
+
+.countdown-seconds-badge {
+  font-weight: 800;
+  color: var(--text-gold);
+  background: rgba(245, 158, 11, 0.18);
+  padding: 0.1rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  display: inline-block;
+  min-width: 32px;
 }
 
 .victory-podium {
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.55rem;
+  max-height: 40vh;
+  overflow-y: auto;
 }
 
 .podium-rank-card {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.45);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  padding: 0.85rem 1.25rem;
+  padding: 0.75rem 1.15rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2044,58 +2120,216 @@ html, body {
 }
 
 .podium-rank-card.rank-1 {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(251, 191, 36, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(251, 191, 36, 0.12) 100%);
   border: 1.5px solid var(--border-gold-focus);
   box-shadow: 0 0 18px rgba(245, 158, 11, 0.3);
-  transform: scale(1.02);
+  transform: scale(1.015);
+}
+
+.podium-rank-card.is-me {
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+  border-color: rgba(16, 185, 129, 0.45);
 }
 
 .podium-left {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
 .podium-badge {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 800;
+  min-width: 28px;
+}
+
+.podium-name-group {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-align: left;
 }
 
 .podium-name {
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--text-pure);
+}
+
+.podium-me-tag {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.35rem;
+  background: rgba(16, 185, 129, 0.25);
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  border-radius: 4px;
+  color: #6ee7b7;
+  font-weight: 700;
 }
 
 .podium-right {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.2rem;
+  gap: 0.15rem;
 }
 
 .podium-score {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 900;
   color: var(--text-gold);
 }
 
 .podium-meta {
-  font-size: 0.75rem;
+  font-size: 0.73rem;
   color: var(--text-muted);
 }
 
 .victory-tiebreaker-hint {
-  font-size: 0.75rem;
+  font-size: 0.73rem;
   color: var(--text-muted);
   padding: 0 1.5rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.35;
 }
 
 .victory-footer {
-  padding: 1rem 1.5rem 1.5rem;
+  padding: 0.85rem 1.5rem 1.35rem;
   display: flex;
   justify-content: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.btn-nature-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-pure);
+  padding: 0.7rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all var(--transition-fast);
+}
+
+.btn-nature-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+/* 4.1. Endgame Floating Bar (Minimized view) */
+.endgame-floating-bar {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid var(--border-gold);
+  border-radius: 9999px;
+  padding: 0.6rem 1.25rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(245, 158, 11, 0.35);
+  animation: floatingBarSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 92vw;
+}
+
+@keyframes floatingBarSlideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.floating-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.floating-crown {
+  font-size: 1.5rem;
+}
+
+.floating-bar-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.floating-bar-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-pure);
+}
+
+.floating-bar-desc {
+  font-size: 0.72rem;
+  color: var(--text-gold);
+}
+
+.floating-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.floating-countdown-pill {
+  font-size: 0.8rem;
+  font-weight: 800;
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--text-gold);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+}
+
+.btn-floating-action {
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 0.35rem 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: none;
+}
+
+.btn-floating-restore {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #000;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+.btn-floating-restore:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+.btn-floating-leave {
+  background: rgba(239, 68, 68, 0.25);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+}
+
+.btn-floating-leave:hover {
+  background: rgba(239, 68, 68, 0.4);
+  transform: translateY(-1px);
 }
 
 /* Toast Notifications */
