@@ -19,6 +19,11 @@ public class RoomController {
         this.roomService = roomService;
     }
 
+    @GetMapping("/ping")
+    public ResponseEntity<java.util.Map<String, String>> ping() {
+        return ResponseEntity.ok(java.util.Map.of("status", "UP"));
+    }
+
     @GetMapping
     public ResponseEntity<List<Room>> getAllRooms() {
         return ResponseEntity.ok(roomService.getAllRooms());

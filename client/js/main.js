@@ -2,12 +2,20 @@ import { sessionGuard } from './utils/sessionGuard.js';
 import { navigateTo } from './utils/navigation.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 🚀 Pre-warm backend: Đánh thức Render server ngay khi người dùng mở trang chủ
+  // 🚀 Pre-warm backend & Prefetch rooms: Đánh thức Render và nạp sẵn danh sách phòng vào bộ nhớ đệm (0ms tại Sảnh)
   try {
     const customApi = localStorage.getItem('garden_empire_api_url');
-    const targetApi = customApi || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : 'https://gardenempiregame.onrender.com');
+    const targetApi = customApi || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8080' : 'https://gardenempiregame.onrender.com');
     if (targetApi) {
-      fetch(`${targetApi}/api/rooms`, { method: 'GET', mode: 'cors' }).catch(() => {});
+      fetch(`${targetApi}/api/rooms`, { method: 'GET', mode: 'cors' })
+        .then(r => (r.ok ? r.json() : null))
+        .then(allRooms => {
+          if (Array.isArray(allRooms)) {
+            const waitingRooms = allRooms.filter(r => r.status === 'WAITING' || !r.status);
+            sessionStorage.setItem('garden_empire_cached_rooms', JSON.stringify(waitingRooms));
+          }
+        })
+        .catch(() => {});
     }
   } catch (_) {}
 

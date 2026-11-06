@@ -102,7 +102,7 @@ export class LobbyUI {
       coldStartTimer = setTimeout(() => {
         const hint = listContainer.querySelector('.loading-hint');
         if (hint) {
-          hint.innerHTML = `<em>Vui lòng đợi giây lát...</em>`;
+          hint.innerHTML = `<em>🌱 Máy chủ đang thức giấc từ chế độ nghỉ (~20-30s), vui lòng đợi giây lát...</em>`;
         }
       }, 3500);
     }
@@ -220,14 +220,22 @@ export class LobbyUI {
     if (roomNameInput) roomNameInput.disabled = true;
     if (maxPlayersInput) maxPlayersInput.disabled = true;
 
+    const wakeTimer = setTimeout(() => {
+      if (createBtn && this.isCreatingRoom) {
+        createBtn.innerHTML = `<span>🌱 Đang đánh thức máy chủ (~20s)...</span>`;
+      }
+    }, 3000);
+
     try {
       const room = await roomApi.createRoom(roomName, maxPlayers, {
         id: this.guestId,
         name: this.guestName,
         avatar: this.guestAvatar
       });
+      clearTimeout(wakeTimer);
       navigateTo('room', { roomId: room.id });
     } catch (err) {
+      clearTimeout(wakeTimer);
       alert(`Lỗi tạo phòng: ${err.message}`);
       this.isCreatingRoom = false;
       if (createBtn) {
