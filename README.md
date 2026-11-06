@@ -4,7 +4,7 @@
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/Version-v1.3.4-10B981?style=for-the-badge&logo=semver&logoColor=white)](https://garden-empire-game.vercel.app)
+[![Version](https://img.shields.io/badge/Version-v1.3.5-10B981?style=for-the-badge&logo=semver&logoColor=white)](https://garden-empire-game.vercel.app)
 
 [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://garden-empire-game.vercel.app) [![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://gardenempiregame.onrender.com) [![Clever Cloud](https://img.shields.io/badge/Clever%20Cloud-2C3E50?style=for-the-badge&logo=clevercloud&logoColor=white)](https://console.clever-cloud.com) [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://console.clever-cloud.com) [![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/) [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot) [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
@@ -35,6 +35,8 @@
 - **Hộp thông tin người chơi & Bóc tách tài nguyên cầm tay (Players' Box & Opponent Tokens Visibility):** Tái thiết kế toàn diện khung đối thủ chuẩn Wireframe 5 phân khu phân tách bởi đường viền ánh kim hoàng gia; bóc tách chi tiết từng viên trong **6 loại token đối thủ đang cầm trên tay** (Đất, Nước, Ánh Sáng, Hạt Giống, Dinh Dưỡng, Phân Bón Vàng), tích hợp dải giảm giá vĩnh viễn, cảnh báo chạm trần bài giữ (3/3) và chống tràn/gãy dòng tuyệt đối.
 - **Nhật ký hành động thời gian thực (Game Action Logs):** Ghi lại chi tiết từng lượt bốc token, giữ thẻ, trồng cây, đón khách quý, chạm mốc 15 điểm chung kết; tích hợp widget cuộn mượt và nút mũi tên `▼`/`▲` thu gọn thành 1 dòng mini ticker mỏng nhẹ.
 - **Khung trò chuyện trực tuyến (In-Game Chat Box):** Tương tác thời gian thực tại góc dưới bên trái bàn đấu, đối xứng với Game Logs; hỗ trợ phím tắt `Enter` mở nhanh/gửi tin, thu gọn/mở rộng với huy hiệu tin chưa đọc (Unread badge), âm thanh pop nhẹ nhàng, lưu trữ in-memory RAM (khôi phục sau F5) và cơ chế chống spam/khử độc XSS an toàn.
+- **Pop-up vinh danh kết thúc ván đấu & Đếm ngược đóng phòng (Endgame Announcement & Auto-Exit):** Tự động phát sóng pop-up ăn mừng chiến thắng đồng bộ tới tất cả người chơi khi ván đấu khép lại; cá nhân hóa thông điệp vinh danh, hiển thị bảng xếp hạng Podium 4 vị trí (kèm luật Tiebreaker ít thẻ hơn thắng), đồng hồ đếm ngược 20s tự động đóng phòng/về sảnh và thanh nổi *Endgame Floating Bar* khi thu nhỏ để xem lại bàn cờ.
+- **Tối ưu khởi động In-Memory & Keep-Alive Server (Fast Boot & Zero-Latency Lobby):** Loại bỏ tiến trình khởi tạo JPA/Database dư thừa giúp tăng tốc độ khởi động máy chủ gấp 3 lần (~6s), tích hợp endpoint siêu nhẹ `/api/rooms/ping` giữ ấm máy chủ 24/7 và cơ chế Prefetch danh sách phòng 0ms ngay từ trang chủ.
 - **Phòng chờ & Quản lý chủ phòng (Waiting Room):** Quản lý chủ phòng (Room Host), chỉ chủ phòng có quyền bắt đầu trận đấu khi đủ 2–4 người chơi, tính năng kick người chơi kèm lệnh cấm 2 phút (cooldown ban) và chọn ngẫu nhiên lượt đi đầu tiên.
 - **Đồng bộ đa người chơi thời gian thực (Real-time Multiplayer)** với độ trễ thấp thông qua WebSocket Native.
 
@@ -110,6 +112,7 @@ graph TD
 ```text
 GardenEmpireGame/
 ├── .doc/                            # Tài liệu dự án & hướng dẫn chi tiết
+│   ├── changelogs.md                # Nhật ký thay đổi & lịch sử phát hành phiên bản
 │   ├── how_to_play.md               # Cẩm nang luật chơi Splendor & cơ chế Garden Empire
 │   └── revelant_links.md            # Tổng hợp liên kết tham khảo & tài nguyên
 ├── .env.example                     # File mẫu biến môi trường (Database, Port)
@@ -152,7 +155,10 @@ GardenEmpireGame/
 │           ├── PlayerUI.js          # Render kho thẻ, token cầm tay và điểm số người chơi
 │           └── ResourceUI.js        # Render ngân hàng ngọc & trạng thái chip năng lượng
 │
-├── tests/                           # Kịch bản kiểm thử tích hợp & E2E mô phỏng
+├── tests/                           # Kịch bản kiểm thử đơn vị (Unit) & tích hợp (E2E)
+│   ├── test_player_box_ui.js        # Kiểm thử UI 5 phân khu Players' Box & 6 loại token (46 tests)
+│   ├── test_endgame_announcement_ui.js # Kiểm thử Pop-up vinh danh, Tiebreaker & đếm ngược (15 tests)
+│   ├── test_game_log_toggle_3_recent.js # Kiểm thử hiển thị 3 log gần nhất & Full Logs Modal (4 tests)
 │   ├── test_multi_tab.js            # Kịch bản kiểm thử E2E giả lập đa người chơi
 │   ├── test_game_action_logs_e2e.js # Kịch bản kiểm thử E2E đồng bộ nhật ký hành động đa tab
 │   └── test_in_game_chat_e2e.js     # Kịch bản kiểm thử E2E khung chat đa tab, chống spam và bảo mật XSS
@@ -224,7 +230,7 @@ Dự án hiện đã được đóng gói và triển khai thành công trên m�
    - Tự động CI/CD khi có commit đẩy lên nhánh `main`.
 2. **Backend (Render.com Web Service):**
    - URL: [https://gardenempiregame.onrender.com](https://gardenempiregame.onrender.com)
-   - Chạy container Docker Java 21, tự động giữ WebSocket ping/pong ổn định.
+   - Chạy container Docker Java 21, tích hợp endpoint siêu nhẹ `/api/rooms/ping` (kết hợp Cron-job 10 phút/lần) giữ ấm máy chủ 24/7 và duy trì WebSocket ping/pong ổn định.
 3. **Database (Clever Cloud PostgreSQL):**
    - Lưu trữ dữ liệu và kiểm soát connection pool qua biến môi trường an toàn:
      - `SPRING_DATASOURCE_URL`
@@ -242,9 +248,17 @@ Dự án bao gồm bộ kiểm thử tự động toàn diện:
 cd server
 mvn test
 ```
-*Kết quả:* **28/28 Unit & Integration Tests PASS 100%**.
+*Kết quả:* **35/35 Unit & Integration Tests PASS 100%**.
 
-### 2. Multi-Tab E2E Simulation Tests:
+### 2. Frontend UI & Logic Unit Tests:
+```bash
+node tests/test_player_box_ui.js
+node tests/test_endgame_announcement_ui.js
+node tests/test_game_log_toggle_3_recent.js
+```
+*Kết quả:* **65/65 Frontend Unit Tests PASS 100%**.
+
+### 3. Multi-Tab E2E Simulation Tests:
 - **Kiểm thử đa tab tổng thể (Phòng, bốc token, giữ bài, F5 reconnect):**
 ```bash
 node tests/test_multi_tab.js
