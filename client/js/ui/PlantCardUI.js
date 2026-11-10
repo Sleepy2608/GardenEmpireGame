@@ -53,6 +53,24 @@ export class PlantCardUI {
     return icons[resourceKey] || '🌿';
   }
 
+  /**
+   * Lấy đường dẫn hình ảnh minh hoạ theo Cấp thẻ (Tier 1: Mầm non, Tier 2: Cây hoa, Tier 3: Cổ thụ)
+   */
+  static getTierImage(tier) {
+    if (tier === 3) return 'assets/images/plants/tier3_tree.webp';
+    if (tier === 2) return 'assets/images/plants/tier2_flower.webp';
+    return 'assets/images/plants/tier1_sprout.webp';
+  }
+
+  /**
+   * Lấy hình ảnh của thẻ: Ưu tiên ảnh riêng của thẻ nếu có, fallback về ảnh theo Tier
+   */
+  static getCardImage(card) {
+    if (card?.image) return card.image;
+    const tier = card?.tier || 1;
+    return PlantCardUI.getTierImage(tier);
+  }
+
   static renderCard(card, player = null, onClick = null) {
     const cardEl = document.createElement('div');
     const tier = card.tier || 1;
@@ -76,6 +94,7 @@ export class PlantCardUI {
 
     const bonusIcon = PlantCardUI.getResourceIcon(card.bonusResource);
     const bonusName = PlantCardUI.getResourceNameVi(card.bonusResource);
+    const cardImg = PlantCardUI.getCardImage(card);
 
     cardEl.innerHTML = `
       <div class="card-header-bar">
@@ -85,7 +104,8 @@ export class PlantCardUI {
         </div>
       </div>
       <div class="card-body-meta">
-        <div class="card-plant-name">${card.name || `Cây Tier ${tier}`}</div>
+        <img class="card-art-thumb" src="${cardImg}" alt="${card.name || `Tier ${tier}`}" loading="lazy" onerror="this.style.display='none'" />
+        <div class="card-plant-name" title="${card.name || `Cây Tier ${tier}`}">${card.name || `Cây Tier ${tier}`}</div>
       </div>
       <div class="card-cost-strip">
         ${costHtml}
