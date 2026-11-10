@@ -236,10 +236,10 @@ global.document = {
   createElement: (tag) => new MockElement(tag)
 };
 
-runTest('4.1. renderCard() hiển thị ảnh thực tế riêng cho thẻ t1_e1 (Cỏ May Mắn)', () => {
+runTest('4.1. renderCard() hiển thị ảnh thực tế riêng cho thẻ t1_e1 (Cỏ Ba Lá)', () => {
   const card = {
     id: 't1_e1',
-    name: 'Cỏ May Mắn',
+    name: 'Cỏ Ba Lá',
     tier: 1,
     cost: { DIRT: 1, SUNLIGHT: 1 },
     prestigePoints: 0,
@@ -250,7 +250,7 @@ runTest('4.1. renderCard() hiển thị ảnh thực tế riêng cho thẻ t1_e1
   assert.ok(el.className.includes('tier-1'), 'Element phải có class tier-1');
   assert.ok(el.innerHTML.includes('<img class="card-art-thumb"'), 'Phải chứa thẻ img card-art-thumb');
   assert.ok(el.innerHTML.includes('assets/images/plants/t1_e1.webp'), 'Phải có src trỏ tới t1_e1.webp');
-  assert.ok(el.innerHTML.includes('Cỏ May Mắn'), 'Phải hiển thị tên cây');
+  assert.ok(el.innerHTML.includes('Cỏ Ba Lá'), 'Phải hiển thị tên cây');
 });
 
 runTest('4.2. renderCard() hiển thị ảnh thực tế riêng cho thẻ t2_n1 (Hoa Hồng Nhung)', () => {
@@ -270,10 +270,10 @@ runTest('4.2. renderCard() hiển thị ảnh thực tế riêng cho thẻ t2_n1
   assert.ok(el.innerHTML.includes('★ 1'), 'Phải hiển thị prestige point ★ 1');
 });
 
-runTest('4.3. renderCard() hiển thị ảnh thực tế riêng cho thẻ t3_e1 (Đại Thụ Baobab)', () => {
+runTest('4.3. renderCard() hiển thị ảnh thực tế riêng cho thẻ t3_e1 (Cây Baobab)', () => {
   const card = {
     id: 't3_e1',
-    name: 'Đại Thụ Baobab',
+    name: 'Cây Baobab',
     tier: 3,
     cost: { SEED: 3, SUNLIGHT: 3, WATER: 3, NUTRIENTS: 5 },
     prestigePoints: 3,
@@ -283,7 +283,7 @@ runTest('4.3. renderCard() hiển thị ảnh thực tế riêng cho thẻ t3_e1
   const el = PlantCardUI.renderCard(card);
   assert.ok(el.className.includes('tier-3'), 'Element phải có class tier-3');
   assert.ok(el.innerHTML.includes('assets/images/plants/t3_e1.webp'), 'Phải có src trỏ tới t3_e1.webp');
-  assert.ok(el.innerHTML.includes('Đại Thụ Baobab'), 'Phải hiển thị tên Đại Thụ Baobab');
+  assert.ok(el.innerHTML.includes('Cây Baobab'), 'Phải hiển thị tên Cây Baobab');
   assert.ok(el.innerHTML.includes('★ 3'), 'Phải hiển thị prestige point ★ 3');
 });
 

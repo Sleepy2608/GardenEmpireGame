@@ -31,36 +31,36 @@ public class CardCatalog {
         // ==================================================
         // TIER 1 — BLACK (DIRT Bonus) — 8 thẻ
         // ==================================================
-        list.add(new PlantCard("t1_e1", "Cỏ May Mắn", 1, cost(0, 1, 1, 1, 1), 0, Resource.DIRT));
-        list.add(new PlantCard("t1_e2", "Dây Trầu", 1, cost(0, 0, 1, 0, 2), 0, Resource.DIRT));
+        list.add(new PlantCard("t1_e1", "Cỏ Ba Lá", 1, cost(0, 1, 1, 1, 1), 0, Resource.DIRT));
+        list.add(new PlantCard("t1_e2", "Cây Trầu Không", 1, cost(0, 0, 1, 0, 2), 0, Resource.DIRT));
         list.add(new PlantCard("t1_e3", "Cây Sen Đá", 1, cost(0, 2, 0, 0, 2), 0, Resource.DIRT));
         list.add(new PlantCard("t1_e4", "Cây Lưỡi Hổ", 1, cost(1, 0, 3, 0, 1), 0, Resource.DIRT));
         list.add(new PlantCard("t1_e5", "Cây Kim Tiền", 1, cost(0, 0, 0, 0, 3), 0, Resource.DIRT));
-        list.add(new PlantCard("t1_e6", "Bí Ngô Mini", 1, cost(0, 1, 1, 2, 1), 0, Resource.DIRT));
-        list.add(new PlantCard("t1_e7", "Khoai Lang Mầm", 1, cost(0, 2, 1, 2, 0), 0, Resource.DIRT));
+        list.add(new PlantCard("t1_e6", "Cây Bí Ngô", 1, cost(0, 1, 1, 2, 1), 0, Resource.DIRT));
+        list.add(new PlantCard("t1_e7", "Cây Khoai Lang", 1, cost(0, 2, 1, 2, 0), 0, Resource.DIRT));
         list.add(new PlantCard("t1_e8", "Củ Cải Đỏ", 1, cost(0, 0, 4, 0, 0), 1, Resource.DIRT));
 
         // ==================================================
         // TIER 1 — WHITE (SEED Bonus) — 8 thẻ
         // ==================================================
-        list.add(new PlantCard("t1_s1", "Hạt Mầm Đậu Đen", 1, cost(1, 0, 0, 2, 2), 0, Resource.SEED));
-        list.add(new PlantCard("t1_s2", "Hạt Mè Đen", 1, cost(1, 0, 2, 0, 0), 0, Resource.SEED));
-        list.add(new PlantCard("t1_s3", "Đậu Hà Lan", 1, cost(1, 0, 1, 1, 1), 0, Resource.SEED));
-        list.add(new PlantCard("t1_s4", "Ngô Non", 1, cost(0, 0, 0, 3, 0), 0, Resource.SEED));
-        list.add(new PlantCard("t1_s5", "Hạt Đậu Phộng", 1, cost(0, 0, 0, 2, 2), 0, Resource.SEED));
-        list.add(new PlantCard("t1_s6", "Lúa Mạch Non", 1, cost(1, 0, 1, 1, 2), 0, Resource.SEED));
-        list.add(new PlantCard("t1_s7", "Hạt Sen Tươi", 1, cost(1, 3, 0, 1, 0), 0, Resource.SEED));
-        list.add(new PlantCard("t1_s8", "Đậu Tằm", 1, cost(0, 0, 0, 0, 4), 1, Resource.SEED));
+        list.add(new PlantCard("t1_s1", "Cây Đậu Đen", 1, cost(1, 0, 0, 2, 2), 0, Resource.SEED));
+        list.add(new PlantCard("t1_s2", "Cây Mè Đen", 1, cost(1, 0, 2, 0, 0), 0, Resource.SEED));
+        list.add(new PlantCard("t1_s3", "Cây Đậu Hà Lan", 1, cost(1, 0, 1, 1, 1), 0, Resource.SEED));
+        list.add(new PlantCard("t1_s4", "Cây Ngô", 1, cost(0, 0, 0, 3, 0), 0, Resource.SEED));
+        list.add(new PlantCard("t1_s5", "Cây Đậu Phộng", 1, cost(0, 0, 0, 2, 2), 0, Resource.SEED));
+        list.add(new PlantCard("t1_s6", "Cây Lúa Mạch", 1, cost(1, 0, 1, 1, 2), 0, Resource.SEED));
+        list.add(new PlantCard("t1_s7", "Hoa Sen Hồng", 1, cost(1, 3, 0, 1, 0), 0, Resource.SEED));
+        list.add(new PlantCard("t1_s8", "Cây Đậu Tằm", 1, cost(0, 0, 0, 0, 4), 1, Resource.SEED));
 
         // ==================================================
         // TIER 1 — RED (SUNLIGHT Bonus) — 8 thẻ
         // ==================================================
         list.add(new PlantCard("t1_su1", "Cây Ngò Gai", 1, cost(0, 3, 0, 0, 0), 0, Resource.SUNLIGHT));
-        list.add(new PlantCard("t1_su2", "Cây Hoa Giấy", 1, cost(3, 1, 1, 0, 0), 0, Resource.SUNLIGHT));
+        list.add(new PlantCard("t1_su2", "Hoa Giấy", 1, cost(3, 1, 1, 0, 0), 0, Resource.SUNLIGHT));
         list.add(new PlantCard("t1_su3", "Hoa Mười Giờ", 1, cost(0, 0, 0, 2, 1), 0, Resource.SUNLIGHT));
         list.add(new PlantCard("t1_su4", "Cà Chua Bi", 1, cost(2, 2, 0, 0, 1), 0, Resource.SUNLIGHT));
         list.add(new PlantCard("t1_su5", "Cây Ớt Chỉ Thiên", 1, cost(1, 2, 0, 1, 1), 0, Resource.SUNLIGHT));
-        list.add(new PlantCard("t1_su6", "Hoa Hướng Dương Con", 1, cost(1, 1, 0, 1, 1), 0, Resource.SUNLIGHT));
+        list.add(new PlantCard("t1_su6", "Mầm Hướng Dương", 1, cost(1, 1, 0, 1, 1), 0, Resource.SUNLIGHT));
         list.add(new PlantCard("t1_su7", "Cây Xương Rồng", 1, cost(0, 2, 2, 0, 0), 0, Resource.SUNLIGHT));
         list.add(new PlantCard("t1_su8", "Cây Húng Quế", 1, cost(0, 4, 0, 0, 0), 1, Resource.SUNLIGHT));
 
@@ -71,20 +71,20 @@ public class CardCatalog {
         list.add(new PlantCard("t1_w2", "Rau Muống", 1, cost(1, 1, 2, 0, 1), 0, Resource.WATER));
         list.add(new PlantCard("t1_w3", "Cây Dương Xỉ", 1, cost(1, 1, 1, 0, 1), 0, Resource.WATER));
         list.add(new PlantCard("t1_w4", "Cây Trầu Bà", 1, cost(0, 0, 1, 1, 3), 0, Resource.WATER));
-        list.add(new PlantCard("t1_w5", "Rau Cải Xanh", 1, cost(3, 0, 0, 0, 0), 0, Resource.WATER));
-        list.add(new PlantCard("t1_w6", "Dưa Leo", 1, cost(0, 1, 2, 0, 2), 0, Resource.WATER));
+        list.add(new PlantCard("t1_w5", "Cải Bẹ Xanh", 1, cost(3, 0, 0, 0, 0), 0, Resource.WATER));
+        list.add(new PlantCard("t1_w6", "Cây Dưa Leo", 1, cost(0, 1, 2, 0, 2), 0, Resource.WATER));
         list.add(new PlantCard("t1_w7", "Bèo Hoa Dâu", 1, cost(2, 0, 0, 0, 2), 0, Resource.WATER));
         list.add(new PlantCard("t1_w8", "Cây Thủy Trúc", 1, cost(0, 0, 4, 0, 0), 1, Resource.WATER));
 
         // ==================================================
         // TIER 1 — GREEN (NUTRIENTS Bonus) — 8 thẻ
         // ==================================================
-        list.add(new PlantCard("t1_n1", "Cây Xà Lách", 1, cost(0, 2, 0, 1, 0), 0, Resource.NUTRIENTS));
+        list.add(new PlantCard("t1_n1", "Rau Xà Lách", 1, cost(0, 2, 0, 1, 0), 0, Resource.NUTRIENTS));
         list.add(new PlantCard("t1_n2", "Cải Thìa", 1, cost(0, 0, 2, 2, 0), 0, Resource.NUTRIENTS));
-        list.add(new PlantCard("t1_n3", "Bí Đao Mầm", 1, cost(0, 1, 0, 3, 1), 0, Resource.NUTRIENTS));
+        list.add(new PlantCard("t1_n3", "Cây Bí Đao", 1, cost(0, 1, 0, 3, 1), 0, Resource.NUTRIENTS));
         list.add(new PlantCard("t1_n4", "Cây Tía Tô", 1, cost(1, 1, 1, 1, 0), 0, Resource.NUTRIENTS));
         list.add(new PlantCard("t1_n5", "Nấm Rơm", 1, cost(2, 1, 1, 1, 0), 0, Resource.NUTRIENTS));
-        list.add(new PlantCard("t1_n6", "Dâu Tây Mầm", 1, cost(2, 0, 2, 1, 0), 0, Resource.NUTRIENTS));
+        list.add(new PlantCard("t1_n6", "Cây Dâu Tây", 1, cost(2, 0, 2, 1, 0), 0, Resource.NUTRIENTS));
         list.add(new PlantCard("t1_n7", "Cây Bạc Hà", 1, cost(0, 0, 3, 0, 0), 0, Resource.NUTRIENTS));
         list.add(new PlantCard("t1_n8", "Cây Nha Đam", 1, cost(4, 0, 0, 0, 0), 1, Resource.NUTRIENTS));
 
@@ -98,18 +98,18 @@ public class CardCatalog {
         // TIER 2 — BLACK (DIRT Bonus) — 6 thẻ
         // ==================================================
         list.add(new PlantCard("t2_e1", "Cây Bàng Vuông", 2, cost(0, 3, 0, 2, 2), 1, Resource.DIRT));
-        list.add(new PlantCard("t2_e2", "Cây Me Cổ", 2, cost(2, 3, 0, 0, 3), 1, Resource.DIRT));
+        list.add(new PlantCard("t2_e2", "Cây Me", 2, cost(2, 3, 0, 0, 3), 1, Resource.DIRT));
         list.add(new PlantCard("t2_e3", "Cây Cọ Dầu", 2, cost(0, 0, 2, 1, 4), 2, Resource.DIRT));
         list.add(new PlantCard("t2_e4", "Tre Xanh", 2, cost(0, 5, 0, 0, 0), 2, Resource.DIRT));
-        list.add(new PlantCard("t2_e5", "Cây Trắc Bách Diệp", 2, cost(0, 0, 3, 0, 5), 2, Resource.DIRT));
+        list.add(new PlantCard("t2_e5", "Trắc Bách Diệp", 2, cost(0, 0, 3, 0, 5), 2, Resource.DIRT));
         list.add(new PlantCard("t2_e6", "Cây Cau Vua", 2, cost(6, 0, 0, 0, 0), 3, Resource.DIRT));
 
         // ==================================================
         // TIER 2 — WHITE (SEED Bonus) — 6 thẻ
         // ==================================================
         list.add(new PlantCard("t2_s1", "Cây Cam Sành", 2, cost(2, 0, 2, 0, 3), 1, Resource.SEED));
-        list.add(new PlantCard("t2_s2", "Cây Ổi Bo", 2, cost(0, 2, 3, 3, 0), 1, Resource.SEED));
-        list.add(new PlantCard("t2_s3", "Cây Bưởi Da Xanh", 2, cost(2, 0, 4, 0, 1), 2, Resource.SEED));
+        list.add(new PlantCard("t2_s2", "Cây Ổi", 2, cost(0, 2, 3, 3, 0), 1, Resource.SEED));
+        list.add(new PlantCard("t2_s3", "Bưởi Da Xanh", 2, cost(2, 0, 4, 0, 1), 2, Resource.SEED));
         list.add(new PlantCard("t2_s4", "Cây Xoài Cát", 2, cost(0, 0, 5, 0, 0), 2, Resource.SEED));
         list.add(new PlantCard("t2_s5", "Cây Chanh Đào", 2, cost(3, 0, 5, 0, 0), 2, Resource.SEED));
         list.add(new PlantCard("t2_s6", "Cây Nhãn Lồng", 2, cost(0, 6, 0, 0, 0), 3, Resource.SEED));
@@ -118,20 +118,20 @@ public class CardCatalog {
         // TIER 2 — RED (SUNLIGHT Bonus) — 6 thẻ
         // ==================================================
         list.add(new PlantCard("t2_su1", "Hoa Cúc Họa Mi", 2, cost(3, 0, 2, 3, 0), 1, Resource.SUNLIGHT));
-        list.add(new PlantCard("t2_su2", "Cây Mai Vàng", 2, cost(3, 2, 2, 0, 0), 1, Resource.SUNLIGHT));
-        list.add(new PlantCard("t2_su3", "Cây Hoa Đào", 2, cost(0, 1, 0, 4, 2), 2, Resource.SUNLIGHT));
-        list.add(new PlantCard("t2_su4", "Cây Phượng Vĩ", 2, cost(5, 3, 0, 0, 0), 2, Resource.SUNLIGHT));
-        list.add(new PlantCard("t2_su5", "Hoa Hướng Dương Lớn", 2, cost(5, 0, 0, 0, 0), 2, Resource.SUNLIGHT));
-        list.add(new PlantCard("t2_su6", "Cây Muồng Hoàng Yến", 2, cost(0, 0, 6, 0, 0), 3, Resource.SUNLIGHT));
+        list.add(new PlantCard("t2_su2", "Hoa Mai Vàng", 2, cost(3, 2, 2, 0, 0), 1, Resource.SUNLIGHT));
+        list.add(new PlantCard("t2_su3", "Hoa Đào", 2, cost(0, 1, 0, 4, 2), 2, Resource.SUNLIGHT));
+        list.add(new PlantCard("t2_su4", "Hoa Phượng Vĩ", 2, cost(5, 3, 0, 0, 0), 2, Resource.SUNLIGHT));
+        list.add(new PlantCard("t2_su5", "Hoa Hướng Dương", 2, cost(5, 0, 0, 0, 0), 2, Resource.SUNLIGHT));
+        list.add(new PlantCard("t2_su6", "Muồng Hoàng Yến", 2, cost(0, 0, 6, 0, 0), 3, Resource.SUNLIGHT));
 
         // ==================================================
         // TIER 2 — BLUE (WATER Bonus) — 6 thẻ
         // ==================================================
-        list.add(new PlantCard("t2_w1", "Hoa Tulip Nước", 2, cost(0, 0, 3, 2, 2), 1, Resource.WATER));
-        list.add(new PlantCard("t2_w2", "Hoa Súng Thái", 2, cost(3, 0, 0, 2, 3), 1, Resource.WATER));
+        list.add(new PlantCard("t2_w1", "Hoa Tulip", 2, cost(0, 0, 3, 2, 2), 1, Resource.WATER));
+        list.add(new PlantCard("t2_w2", "Hoa Súng", 2, cost(3, 0, 0, 2, 3), 1, Resource.WATER));
         list.add(new PlantCard("t2_w3", "Hoa Sen Trắng", 2, cost(0, 5, 0, 3, 0), 2, Resource.WATER));
         list.add(new PlantCard("t2_w4", "Cây Bần Chua", 2, cost(0, 0, 0, 5, 0), 2, Resource.WATER));
-        list.add(new PlantCard("t2_w5", "Dừa Nước", 2, cost(4, 2, 1, 0, 0), 2, Resource.WATER));
+        list.add(new PlantCard("t2_w5", "Cây Dừa Nước", 2, cost(4, 2, 1, 0, 0), 2, Resource.WATER));
         list.add(new PlantCard("t2_w6", "Cây Liễu Rủ", 2, cost(0, 0, 0, 6, 0), 3, Resource.WATER));
 
         // ==================================================
@@ -142,7 +142,7 @@ public class CardCatalog {
         list.add(new PlantCard("t2_n3", "Hoa Phong Lan", 2, cost(1, 4, 0, 2, 0), 2, Resource.NUTRIENTS));
         list.add(new PlantCard("t2_n4", "Cây Trầm Hương", 2, cost(0, 0, 0, 0, 5), 2, Resource.NUTRIENTS));
         list.add(new PlantCard("t2_n5", "Hoa Cẩm Tú Cầu", 2, cost(0, 0, 0, 5, 3), 2, Resource.NUTRIENTS));
-        list.add(new PlantCard("t2_n6", "Cây Ngọc Lan", 2, cost(0, 0, 0, 0, 6), 3, Resource.NUTRIENTS));
+        list.add(new PlantCard("t2_n6", "Hoa Ngọc Lan", 2, cost(0, 0, 0, 0, 6), 3, Resource.NUTRIENTS));
 
         return list;
     }
@@ -153,42 +153,42 @@ public class CardCatalog {
         // ==================================================
         // TIER 3 — BLACK (DIRT Bonus) — 4 thẻ
         // ==================================================
-        list.add(new PlantCard("t3_e1", "Đại Thụ Baobab", 3, cost(0, 3, 3, 3, 5), 3, Resource.DIRT));
-        list.add(new PlantCard("t3_e2", "Cổ Thụ Gõ Đỏ", 3, cost(0, 0, 7, 0, 0), 4, Resource.DIRT));
-        list.add(new PlantCard("t3_e3", "Cây Đa Nghìn Năm", 3, cost(3, 0, 6, 0, 3), 4, Resource.DIRT));
-        list.add(new PlantCard("t3_e4", "Bách Tùng Ngàn Năm", 3, cost(3, 0, 7, 0, 0), 5, Resource.DIRT));
+        list.add(new PlantCard("t3_e1", "Cây Baobab", 3, cost(0, 3, 3, 3, 5), 3, Resource.DIRT));
+        list.add(new PlantCard("t3_e2", "Cây Gõ Đỏ", 3, cost(0, 0, 7, 0, 0), 4, Resource.DIRT));
+        list.add(new PlantCard("t3_e3", "Cây Đa Cổ Thụ", 3, cost(3, 0, 6, 0, 3), 4, Resource.DIRT));
+        list.add(new PlantCard("t3_e4", "Thông Longaeva", 3, cost(3, 0, 7, 0, 0), 5, Resource.DIRT));
 
         // ==================================================
         // TIER 3 — WHITE (SEED Bonus) — 4 thẻ
         // ==================================================
-        list.add(new PlantCard("t3_s1", "Mộc Miên Linh Ứng", 3, cost(3, 0, 5, 3, 3), 3, Resource.SEED));
-        list.add(new PlantCard("t3_s2", "Ngọc Am Hoàng Tộc", 3, cost(7, 0, 0, 0, 0), 4, Resource.SEED));
-        list.add(new PlantCard("t3_s3", "Hoàng Đàn Cổ Mộc", 3, cost(6, 3, 3, 0, 0), 4, Resource.SEED));
-        list.add(new PlantCard("t3_s4", "Cây Dã Hương Nghìn Năm", 3, cost(7, 3, 0, 0, 0), 5, Resource.SEED));
+        list.add(new PlantCard("t3_s1", "Cây Hoa Gạo", 3, cost(3, 0, 5, 3, 3), 3, Resource.SEED));
+        list.add(new PlantCard("t3_s2", "Cây Ngọc Am", 3, cost(7, 0, 0, 0, 0), 4, Resource.SEED));
+        list.add(new PlantCard("t3_s3", "Cây Hoàng Đàn", 3, cost(6, 3, 3, 0, 0), 4, Resource.SEED));
+        list.add(new PlantCard("t3_s4", "Cây Dã Hương", 3, cost(7, 3, 0, 0, 0), 5, Resource.SEED));
 
         // ==================================================
         // TIER 3 — RED (SUNLIGHT Bonus) — 4 thẻ
         // ==================================================
-        list.add(new PlantCard("t3_su1", "Cổ Thụ Sequoia", 3, cost(3, 3, 0, 5, 3), 3, Resource.SUNLIGHT));
-        list.add(new PlantCard("t3_su2", "Dương Quang Đại Thụ", 3, cost(0, 0, 0, 0, 7), 4, Resource.SUNLIGHT));
-        list.add(new PlantCard("t3_su3", "Kim Ngân Cổ Thụ", 3, cost(0, 0, 3, 3, 6), 4, Resource.SUNLIGHT));
-        list.add(new PlantCard("t3_su4", "Cây Lộc Vừng Cổ Tích", 3, cost(0, 0, 3, 0, 7), 5, Resource.SUNLIGHT));
+        list.add(new PlantCard("t3_su1", "Cự Sam Sequoia", 3, cost(3, 3, 0, 5, 3), 3, Resource.SUNLIGHT));
+        list.add(new PlantCard("t3_su2", "Cây Bạch Quả", 3, cost(0, 0, 0, 0, 7), 4, Resource.SUNLIGHT));
+        list.add(new PlantCard("t3_su3", "Cây Kim Ngân", 3, cost(0, 0, 3, 3, 6), 4, Resource.SUNLIGHT));
+        list.add(new PlantCard("t3_su4", "Cây Lộc Vừng", 3, cost(0, 0, 3, 0, 7), 5, Resource.SUNLIGHT));
 
         // ==================================================
         // TIER 3 — BLUE (WATER Bonus) — 4 thẻ
         // ==================================================
-        list.add(new PlantCard("t3_w1", "Rừng Đước Cổ Sinh", 3, cost(5, 3, 3, 0, 3), 3, Resource.WATER));
-        list.add(new PlantCard("t3_w2", "Thủy Mộc Thần Bí", 3, cost(0, 7, 0, 0, 0), 4, Resource.WATER));
-        list.add(new PlantCard("t3_w3", "Sen Vua Khổng Lồ", 3, cost(3, 6, 0, 3, 0), 4, Resource.WATER));
-        list.add(new PlantCard("t3_w4", "Cây Thủy Tùng Cổ", 3, cost(0, 7, 0, 3, 0), 5, Resource.WATER));
+        list.add(new PlantCard("t3_w1", "Cây Đước Đỏ", 3, cost(5, 3, 3, 0, 3), 3, Resource.WATER));
+        list.add(new PlantCard("t3_w2", "Cây Bụt Mọc", 3, cost(0, 7, 0, 0, 0), 4, Resource.WATER));
+        list.add(new PlantCard("t3_w3", "Sen Vua", 3, cost(3, 6, 0, 3, 0), 4, Resource.WATER));
+        list.add(new PlantCard("t3_w4", "Cây Thủy Tùng", 3, cost(0, 7, 0, 3, 0), 5, Resource.WATER));
 
         // ==================================================
         // TIER 3 — GREEN (NUTRIENTS Bonus) — 4 thẻ
         // ==================================================
-        list.add(new PlantCard("t3_n1", "Cây Sưa Đỏ Đại Thụ", 3, cost(3, 5, 3, 3, 0), 3, Resource.NUTRIENTS));
-        list.add(new PlantCard("t3_n2", "Linh Chi Cổ Thụ", 3, cost(0, 3, 0, 6, 3), 4, Resource.NUTRIENTS));
-        list.add(new PlantCard("t3_n3", "Cây Pơ Mu Linh Thiêng", 3, cost(0, 0, 0, 7, 0), 4, Resource.NUTRIENTS));
-        list.add(new PlantCard("t3_n4", "Vạn Niên Tùng Chúa", 3, cost(0, 0, 0, 7, 3), 5, Resource.NUTRIENTS));
+        list.add(new PlantCard("t3_n1", "Cây Sưa Đỏ", 3, cost(3, 5, 3, 3, 0), 3, Resource.NUTRIENTS));
+        list.add(new PlantCard("t3_n2", "Nấm Linh Chi", 3, cost(0, 3, 0, 6, 3), 4, Resource.NUTRIENTS));
+        list.add(new PlantCard("t3_n3", "Cây Pơ Mu", 3, cost(0, 0, 0, 7, 0), 4, Resource.NUTRIENTS));
+        list.add(new PlantCard("t3_n4", "Tùng La Hán", 3, cost(0, 0, 0, 7, 3), 5, Resource.NUTRIENTS));
 
         return list;
     }
