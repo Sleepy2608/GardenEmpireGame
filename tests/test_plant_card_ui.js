@@ -289,12 +289,12 @@ runTest('4.3. renderCard() hiển thị ảnh thực tế riêng cho thẻ t3_e1
 
 runTest('4.4. renderCard() gắn listener click thành công', () => {
   let clickedCard = null;
-  const card = { id: 't3_su1', name: 'Cự Sam Sequoia', tier: 3 };
+  const card = { id: 't3_su1', name: 'Cây Cự Sam Sequoia', tier: 3 };
   const el = PlantCardUI.renderCard(card, null, (c) => { clickedCard = c; });
 
   assert.ok(typeof el._listeners['click'] === 'function', 'Phải có event listener click');
   el._listeners['click']();
-  assert.strictEqual(clickedCard?.name, 'Cự Sam Sequoia', 'Callback click phải nhận đúng thẻ');
+  assert.strictEqual(clickedCard?.name, 'Cây Cự Sam Sequoia', 'Callback click phải nhận đúng thẻ');
 });
 
 // =============================================================================
