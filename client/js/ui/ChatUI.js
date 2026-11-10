@@ -55,6 +55,13 @@ export class ChatUI {
     // Cập nhật trạng thái hiển thị ban đầu từ localStorage
     this.updateCollapseUI();
 
+    // Sự kiện thu gọn / mở rộng khi bấm vào thanh Header
+    if (this.headerEl) {
+      this.headerEl.addEventListener('click', () => {
+        this.toggleCollapse();
+      });
+    }
+
     // Sự kiện thu gọn / mở rộng khi bấm nút mũi tên
     if (this.toggleBtnEl) {
       this.toggleBtnEl.addEventListener('click', (e) => {
@@ -209,13 +216,19 @@ export class ChatUI {
       if (this.bodyEl) this.bodyEl.classList.add('hidden');
       if (this.tickerEl) this.tickerEl.classList.remove('hidden');
       if (this.toggleArrowEl) this.toggleArrowEl.textContent = '▲';
-      if (this.toggleBtnEl) this.toggleBtnEl.title = 'Mở rộng khung trò chuyện';
+      if (this.toggleBtnEl) {
+        this.toggleBtnEl.title = 'Mở rộng khung trò chuyện';
+        this.toggleBtnEl.setAttribute('aria-expanded', 'false');
+      }
     } else {
       this.widgetEl.classList.remove('is-collapsed');
       if (this.bodyEl) this.bodyEl.classList.remove('hidden');
       if (this.tickerEl) this.tickerEl.classList.add('hidden');
       if (this.toggleArrowEl) this.toggleArrowEl.textContent = '▼';
-      if (this.toggleBtnEl) this.toggleBtnEl.title = 'Thu gọn khung trò chuyện';
+      if (this.toggleBtnEl) {
+        this.toggleBtnEl.title = 'Thu gọn khung trò chuyện';
+        this.toggleBtnEl.setAttribute('aria-expanded', 'true');
+      }
     }
   }
 

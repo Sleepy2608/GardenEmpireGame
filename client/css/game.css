@@ -3116,6 +3116,15 @@ html, body {
   border-color: rgba(245, 158, 11, 0.35);
 }
 
+/* Ensure state-driven collapse & expand behavior */
+.chat-widget.is-collapsed .chat-body {
+  display: none !important;
+}
+
+.chat-widget:not(.is-collapsed) .chat-mini-ticker {
+  display: none !important;
+}
+
 /* Chat Header */
 .chat-header {
   display: flex;
@@ -3125,6 +3134,12 @@ html, body {
   background: rgba(0, 0, 0, 0.35);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   user-select: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.chat-header:hover {
+  background: rgba(74, 222, 128, 0.08);
 }
 
 .chat-title {
@@ -3152,6 +3167,10 @@ html, body {
   border-radius: 10px;
   box-shadow: 0 0 8px rgba(239, 68, 68, 0.7);
   animation: chat-unread-pulse 1.4s infinite;
+}
+
+.chat-unread-badge.hidden {
+  display: none !important;
 }
 
 @keyframes chat-unread-pulse {
