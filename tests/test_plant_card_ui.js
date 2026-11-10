@@ -1,11 +1,11 @@
 /**
- * GARDEN EMPIRE — PLANT CARD UI & BOTANICAL ART TEST SUITE
- * Kiểm thử tự động tính năng Hình ảnh minh hoạ Thẻ Cây (Tier 1, Tier 2, Tier 3):
- * 1. Kiểm tra sự tồn tại và tính hợp lệ của các file ảnh assets (.webp và .png)
+ * GARDEN EMPIRE — PLANT CARD UI & BOTANICAL REAL PHOTOS TEST SUITE
+ * Kiểm thử tự động tính năng Hình ảnh minh hoạ Thẻ Cây Thực Tế (Full 40 Thẻ Tier 1):
+ * 1. Kiểm tra sự tồn tại và tính hợp lệ của toàn bộ 40 ảnh thực tế Tier 1 (.webp và .png)
  * 2. Kiểm tra quy tắc CSS Deep Forest Glassmorphism (background-blend-mode, card-art-thumb)
  * 3. Kiểm tra logic phương thức getTierImage() và getCardImage() của PlantCardUI
- * 4. Kiểm tra render DOM thẻ bài: Khung ảnh thumbnail, tên cây, điểm prestige, bonus gem, cost chips
- * 5. Kiểm tra tính toàn vẹn luật mua cây và chợ bài (renderMarket)
+ * 4. Kiểm tra render DOM thẻ bài: Tự động gắn ảnh thực tế riêng theo từng ID thẻ
+ * 5. Kiểm tra cơ chế Fallback an toàn (onerror, card không có ID)
  *
  * Chuẩn: Arrange - Act - Assert (AAA) theo .agents/AGENTS.md
  */
@@ -33,13 +33,13 @@ function runTest(name, fn) {
 }
 
 console.log('\n🌿 ========================================================');
-console.log('🧪 TEST SUITE: PLANT CARD UI & BOTANICAL ART ASSETS');
+console.log('🧪 TEST SUITE: FULL 40 TIER 1 REAL PLANT PHOTOS (AGENT-REACH)');
 console.log('🌿 ========================================================\n');
 
 // =============================================================================
-// PHẦN 1: KIỂM TRA TÀI NGUYÊN ẢNH TRÊN ĐĨA (ASSETS INTEGRITY)
+// PHẦN 1: KIỂM TRA TÀI NGUYÊN ẢNH THỰC TẾ TRÊN ĐĨA (40 THẺ TIER 1)
 // =============================================================================
-console.log('▶ [PHẦN 1] Kiểm tra file ảnh minh hoạ trên đĩa (client/assets/images/plants/)');
+console.log('▶ [PHẦN 1] Kiểm tra file ảnh chụp thực tế trên đĩa (client/assets/images/plants/)');
 
 const plantsDir = path.resolve('client/assets/images/plants');
 
@@ -47,31 +47,36 @@ runTest('1.1. Thư mục client/assets/images/plants/ tồn tại', () => {
   assert.strictEqual(fs.existsSync(plantsDir), true, 'Thư mục plants phải tồn tại');
 });
 
-runTest('1.2. File tier1_sprout.webp (Mầm non) tồn tại và hợp lệ', () => {
-  const filePath = path.join(plantsDir, 'tier1_sprout.webp');
-  assert.strictEqual(fs.existsSync(filePath), true, 'Phải có tier1_sprout.webp');
-  const stat = fs.statSync(filePath);
-  assert.ok(stat.size > 10000, `Kích thước ảnh phải > 10KB (thực tế: ${stat.size} bytes)`);
+runTest('1.2. Các ảnh mẫu đại diện 3 Tier (Mầm non, Cây hoa, Cổ thụ) tồn tại và hợp lệ', () => {
+  ['tier1_sprout.webp', 'tier2_flower.webp', 'tier3_tree.webp'].forEach(file => {
+    const p = path.join(plantsDir, file);
+    assert.strictEqual(fs.existsSync(p), true, `Phải có ${file}`);
+    assert.ok(fs.statSync(p).size > 10000, `${file} kích thước phải > 10KB`);
+  });
 });
 
-runTest('1.3. File tier2_flower.webp (Cây hoa) tồn tại và hợp lệ', () => {
-  const filePath = path.join(plantsDir, 'tier2_flower.webp');
-  assert.strictEqual(fs.existsSync(filePath), true, 'Phải có tier2_flower.webp');
-  const stat = fs.statSync(filePath);
-  assert.ok(stat.size > 10000, `Kích thước ảnh phải > 10KB (thực tế: ${stat.size} bytes)`);
+const TIER_1_IDS = [
+  't1_e1', 't1_e2', 't1_e3', 't1_e4', 't1_e5', 't1_e6', 't1_e7', 't1_e8',
+  't1_s1', 't1_s2', 't1_s3', 't1_s4', 't1_s5', 't1_s6', 't1_s7', 't1_s8',
+  't1_su1', 't1_su2', 't1_su3', 't1_su4', 't1_su5', 't1_su6', 't1_su7', 't1_su8',
+  't1_w1', 't1_w2', 't1_w3', 't1_w4', 't1_w5', 't1_w6', 't1_w7', 't1_w8',
+  't1_n1', 't1_n2', 't1_n3', 't1_n4', 't1_n5', 't1_n6', 't1_n7', 't1_n8'
+];
+
+runTest('1.3. Đầy đủ toàn bộ 40 file WebP ảnh thực tế cho tất cả thẻ Tier 1', () => {
+  assert.strictEqual(TIER_1_IDS.length, 40, 'Tier 1 phải có đúng 40 thẻ bài');
+  TIER_1_IDS.forEach(id => {
+    const webpPath = path.join(plantsDir, `${id}.webp`);
+    assert.strictEqual(fs.existsSync(webpPath), true, `Thiếu file ảnh thực tế: ${id}.webp`);
+    assert.ok(fs.statSync(webpPath).size > 1000, `${id}.webp dung lượng phải hợp lệ`);
+  });
 });
 
-runTest('1.4. File tier3_tree.webp (Cổ thụ) tồn tại và hợp lệ', () => {
-  const filePath = path.join(plantsDir, 'tier3_tree.webp');
-  assert.strictEqual(fs.existsSync(filePath), true, 'Phải có tier3_tree.webp');
-  const stat = fs.statSync(filePath);
-  assert.ok(stat.size > 10000, `Kích thước ảnh phải > 10KB (thực tế: ${stat.size} bytes)`);
-});
-
-runTest('1.5. Cung cấp đầy đủ phiên bản PNG dự phòng cho cả 3 Tier', () => {
-  assert.strictEqual(fs.existsSync(path.join(plantsDir, 'tier1_sprout.png')), true, 'Phải có tier1_sprout.png');
-  assert.strictEqual(fs.existsSync(path.join(plantsDir, 'tier2_flower.png')), true, 'Phải có tier2_flower.png');
-  assert.strictEqual(fs.existsSync(path.join(plantsDir, 'tier3_tree.png')), true, 'Phải có tier3_tree.png');
+runTest('1.4. Đầy đủ toàn bộ 40 file PNG dự phòng cho tất cả thẻ Tier 1', () => {
+  TIER_1_IDS.forEach(id => {
+    const pngPath = path.join(plantsDir, `${id}.png`);
+    assert.strictEqual(fs.existsSync(pngPath), true, `Thiếu file PNG dự phòng: ${id}.png`);
+  });
 });
 
 // =============================================================================
@@ -126,17 +131,27 @@ runTest('3.2. getTierImage() fallback an toàn về Tier 1 khi giá trị null/l
   assert.strictEqual(PlantCardUI.getTierImage(99), 'assets/images/plants/tier1_sprout.webp');
 });
 
-runTest('3.3. getCardImage() ưu tiên card.image nếu thẻ có ảnh riêng', () => {
-  const cardWithCustomImg = { id: 't1_custom', tier: 1, image: 'assets/images/plants/custom.png' };
+runTest('3.3. getCardImage() trả về đúng ảnh thực tế riêng cho từng thẻ Tier 1 (t1_e1 -> t1_n8)', () => {
+  TIER_1_IDS.forEach(id => {
+    const card = { id, tier: 1 };
+    assert.strictEqual(PlantCardUI.getCardImage(card), `assets/images/plants/${id}.webp`, `Thẻ ${id} phải trả về ảnh thực tế ${id}.webp`);
+  });
+});
+
+runTest('3.4. getCardImage() ưu tiên card.image nếu thẻ có ảnh chỉ định riêng', () => {
+  const cardWithCustomImg = { id: 't1_e1', tier: 1, image: 'assets/images/plants/custom.png' };
   assert.strictEqual(PlantCardUI.getCardImage(cardWithCustomImg), 'assets/images/plants/custom.png');
 });
 
-runTest('3.4. getCardImage() tự động lấy ảnh theo Tier khi không có ảnh riêng', () => {
+runTest('3.5. getCardImage() tự động fallback về ảnh Tier khi không có ID trong danh mục', () => {
   const cardTier2 = { id: 't2_e1', name: 'Cây Bàng Vuông', tier: 2 };
   assert.strictEqual(PlantCardUI.getCardImage(cardTier2), 'assets/images/plants/tier2_flower.webp');
 
   const cardTier3 = { id: 't3_e1', name: 'Đại Thụ Baobab', tier: 3 };
   assert.strictEqual(PlantCardUI.getCardImage(cardTier3), 'assets/images/plants/tier3_tree.webp');
+
+  const cardUnknown = { tier: 1 };
+  assert.strictEqual(PlantCardUI.getCardImage(cardUnknown), 'assets/images/plants/tier1_sprout.webp');
 });
 
 // =============================================================================
@@ -171,7 +186,7 @@ global.document = {
   createElement: (tag) => new MockElement(tag)
 };
 
-runTest('4.1. renderCard() tạo cấu trúc thẻ có ảnh minh hoạ card-art-thumb', () => {
+runTest('4.1. renderCard() hiển thị ảnh thực tế riêng cho thẻ t1_e1 (Cỏ May Mắn)', () => {
   // Arrange
   const card = {
     id: 't1_e1',
@@ -188,7 +203,7 @@ runTest('4.1. renderCard() tạo cấu trúc thẻ có ảnh minh hoạ card-art
   // Assert
   assert.ok(el.className.includes('tier-1'), 'Element phải có class tier-1');
   assert.ok(el.innerHTML.includes('<img class="card-art-thumb"'), 'Phải chứa thẻ img card-art-thumb');
-  assert.ok(el.innerHTML.includes('assets/images/plants/tier1_sprout.webp'), 'Phải có src trỏ tới tier1_sprout.webp');
+  assert.ok(el.innerHTML.includes('assets/images/plants/t1_e1.webp'), 'Phải có src trỏ tới t1_e1.webp thực tế');
   assert.ok(el.innerHTML.includes('Cỏ May Mắn'), 'Phải hiển thị tên cây');
   assert.ok(el.innerHTML.includes('badge-dirt'), 'Phải hiển thị gem bonus DIRT');
 });
@@ -214,12 +229,12 @@ runTest('4.2. renderCard() hiển thị điểm Prestige ★ khi thẻ có đi�
 
 runTest('4.3. renderCard() gắn listener click thành công', () => {
   let clickedCard = null;
-  const card = { id: 't2_s1', name: 'Cây Cam Sành', tier: 2 };
+  const card = { id: 't1_e3', name: 'Cây Sen Đá', tier: 1 };
   const el = PlantCardUI.renderCard(card, null, (c) => { clickedCard = c; });
 
   assert.ok(typeof el._listeners['click'] === 'function', 'Phải có event listener click');
   el._listeners['click']();
-  assert.strictEqual(clickedCard?.name, 'Cây Cam Sành', 'Callback click phải nhận đúng thẻ');
+  assert.strictEqual(clickedCard?.name, 'Cây Sen Đá', 'Callback click phải nhận đúng thẻ');
 });
 
 // =============================================================================
@@ -234,7 +249,6 @@ if (failedTests > 0) {
   failures.forEach(f => console.error(` - ${f.name}: ${f.error}`));
   process.exit(1);
 } else {
-  console.log('🎉 TẤT CẢ BÀI TEST MINH HOẠ THẺ CÂY ĐỀU ĐẠT CHUẨN PASS 100%!');
+  console.log('🎉 TẤT CẢ BÀI TEST ẢNH THỰC TẾ FULL 40 THẺ TIER 1 ĐỀU ĐẠT CHUẨN PASS 100%!');
   process.exit(0);
 }
-
