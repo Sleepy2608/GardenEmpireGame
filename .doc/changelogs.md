@@ -3,6 +3,27 @@
 Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game** được ghi chép và lưu trữ đầy đủ tại tài liệu này từ giai đoạn khởi tạo ban đầu (v0.0.0).  
 Định dạng dựa trên [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), và dự án tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 🚀 [v1.3.6] — 2026-11-10
+### 💬 Tối Ưu Nút Thu Gọn Khung Chat & Loại Bỏ Icon Trùng Lặp (In-Game Chat Toggle & Collapse Streamlining — Issue #25)
+- **Sửa Lỗi Nút Thu Gọn Khung Chat (`#btn-toggle-chat-collapse`):**
+  - **Khắc phục lỗi không phản hồi:** Tối ưu hóa xử lý sự kiện trong `client/js/ui/ChatUI.js`, đảm bảo việc nhấp vào nút mũi tên thu gọn `#btn-toggle-chat-collapse` hoạt động ổn định và tức thì trên mọi trình duyệt.
+  - **Đồng bộ hóa 3 điểm chạm:** Cho phép người chơi thu gọn / mở rộng khung trò chuyện linh hoạt thông qua 3 thao tác tương đương:
+    1. Bấm nút mũi tên `#btn-toggle-chat-collapse` trên góc phải Chat Header.
+    2. Bấm vào toàn bộ thanh tiêu đề `#chat-header`.
+    3. Bấm vào Mini Ticker Bar thu gọn ở góc màn hình hoặc nút Trò Chuyện `#btn-toggle-chat` trên Top Bar.
+- **Loại Bỏ Icon Mũi Tên Trùng Lặp (De-duplicate Collapse Arrow):**
+  - **Dọn dẹp HTML (`client/game.html`):** Loại bỏ phần tử `.chat-ticker-expand-icon` bị thừa lặp bên trong thanh mini ticker `#chat-mini-ticker`, giữ giao diện hiển thị tinh gọn, sạch sẽ theo chuẩn Wireframe.
+  - **Bổ sung chuẩn trợ năng WCAG:** Thêm đầy đủ thuộc tính `aria-label="Thu gọn khung trò chuyện"` và `aria-expanded` đồng bộ trạng thái đóng/mở.
+- **Quy Tắc CSS Ẩn/Hiện Chặt Chẽ (`.hidden` & `.is-collapsed`):**
+  - **Bổ sung lớp tiện ích chung (`client/css/common.css`):** Khai báo quy tắc chuẩn `.hidden { display: none !important; }` để triệt tiêu tình trạng hiển thị chập chờn khi chuyển đổi trạng thái DOM.
+  - **Animation mượt mà (`client/css/game.css`):** Hiệu ứng trượt và mờ dần khi ẩn `.chat-body` và chuyển sang thanh `.chat-mini-ticker`, bảo vệ không gian quan sát bàn cờ cho người chơi.
+
+### 🧪 Kiểm Thử Tự Động & Hồi Quy (Testing & Regression)
+- **Bộ Kiểm Thử Đơn Vị Mới (`tests/test_chat_toggle_ui.js`):** Xây dựng bộ test chuyên trách gồm 10 test cases chuẩn AAA phủ 3 nhóm kiểm thử: Quy tắc CSS `.hidden`/`.is-collapsed`, loại bỏ nút trùng lặp, và mô phỏng tương tác sự kiện click đóng/mở $\rightarrow$ Đạt **10/10 PASS 100%**.
+- **Bảo toàn kiểm thử hồi quy:** Giữ vững 35/35 Maven backend tests và toàn bộ test suites frontend cũ.
+
+---
+
 ## 🚀 [v1.3.5] — 2026-11-06
 ### ⚡ Tối Ưu Tốc Độ Khởi Động Server In-Memory, Caching Sảnh Chờ & Keep-Alive 24/7 (Fast Boot & Keep-Alive Server)
 - **Tăng Tốc Khởi Động Spring Boot Gấp 3 Lần (Fast In-Memory Startup):**
