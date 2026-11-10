@@ -1,9 +1,9 @@
 /**
  * GARDEN EMPIRE — PLANT CARD UI & BOTANICAL REAL PHOTOS TEST SUITE
- * Kiểm thử tự động tính năng Hình ảnh minh hoạ Thẻ Cây Thực Tế (Full 40 Thẻ Tier 1 + 30 Thẻ Tier 2):
- * 1. Kiểm tra sự tồn tại và tính hợp lệ của toàn bộ 40 ảnh thực tế Tier 1 và 30 ảnh thực tế Tier 2 (.webp và .png)
+ * Kiểm thử tự động tính năng Hình ảnh minh hoạ Thẻ Cây Thực Tế (Full 90 Thẻ: 40 Tier 1 + 30 Tier 2 + 20 Tier 3):
+ * 1. Kiểm tra sự tồn tại và tính hợp lệ của toàn bộ 90 ảnh thực tế (.webp và .png) trên đĩa
  * 2. Kiểm tra quy tắc CSS Deep Forest Glassmorphism (background-blend-mode, card-art-thumb)
- * 3. Kiểm tra logic phương thức getTierImage() và getCardImage() của PlantCardUI cho cả 2 Tier
+ * 3. Kiểm tra logic phương thức getTierImage() và getCardImage() của PlantCardUI cho cả 3 Tier
  * 4. Kiểm tra render DOM thẻ bài: Tự động gắn ảnh thực tế riêng theo từng ID thẻ
  * 5. Kiểm tra cơ chế Fallback an toàn (onerror, card không có ID)
  *
@@ -33,11 +33,11 @@ function runTest(name, fn) {
 }
 
 console.log('\n🌿 ========================================================');
-console.log('🧪 TEST SUITE: FULL TIER 1 & TIER 2 REAL PLANT PHOTOS');
+console.log('🧪 TEST SUITE: FULL TIER 1, 2 & 3 REAL PLANT PHOTOS (90 CARDS)');
 console.log('🌿 ========================================================\n');
 
 // =============================================================================
-// PHẦN 1: KIỂM TRA TÀI NGUYÊN ẢNH THỰC TẾ TRÊN ĐĨA (TIER 1 & TIER 2)
+// PHẦN 1: KIỂM TRA TÀI NGUYÊN ẢNH THỰC TẾ TRÊN ĐĨA (TIER 1, TIER 2 & TIER 3)
 // =============================================================================
 console.log('▶ [PHẦN 1] Kiểm tra file ảnh chụp thực tế trên đĩa (client/assets/images/plants/)');
 
@@ -71,6 +71,14 @@ const TIER_2_IDS = [
   't2_n1', 't2_n2', 't2_n3', 't2_n4', 't2_n5', 't2_n6'
 ];
 
+const TIER_3_IDS = [
+  't3_e1', 't3_e2', 't3_e3', 't3_e4',
+  't3_s1', 't3_s2', 't3_s3', 't3_s4',
+  't3_su1', 't3_su2', 't3_su3', 't3_su4',
+  't3_w1', 't3_w2', 't3_w3', 't3_w4',
+  't3_n1', 't3_n2', 't3_n3', 't3_n4'
+];
+
 runTest('1.3. Đầy đủ toàn bộ 40 file WebP & 40 file PNG ảnh thực tế cho thẻ Tier 1', () => {
   assert.strictEqual(TIER_1_IDS.length, 40, 'Tier 1 phải có đúng 40 thẻ bài');
   TIER_1_IDS.forEach(id => {
@@ -89,6 +97,22 @@ runTest('1.4. Đầy đủ toàn bộ 30 file WebP & 30 file PNG ảnh thực t�
     assert.strictEqual(fs.existsSync(webpPath), true, `Thiếu file: ${id}.webp`);
     assert.strictEqual(fs.existsSync(pngPath), true, `Thiếu file: ${id}.png`);
   });
+});
+
+runTest('1.5. Đầy đủ toàn bộ 20 file WebP & 20 file PNG ảnh thực tế cho thẻ Tier 3', () => {
+  assert.strictEqual(TIER_3_IDS.length, 20, 'Tier 3 phải có đúng 20 thẻ bài');
+  TIER_3_IDS.forEach(id => {
+    const webpPath = path.join(plantsDir, `${id}.webp`);
+    const pngPath = path.join(plantsDir, `${id}.png`);
+    assert.strictEqual(fs.existsSync(webpPath), true, `Thiếu file: ${id}.webp`);
+    assert.strictEqual(fs.existsSync(pngPath), true, `Thiếu file: ${id}.png`);
+  });
+});
+
+runTest('1.6. Tổng cộng 90 thẻ bài trong toàn bộ Game Catalog đều đã có ảnh thực tế (100% coverage)', () => {
+  const totalCards = TIER_1_IDS.length + TIER_2_IDS.length + TIER_3_IDS.length;
+  assert.strictEqual(totalCards, 90, 'Toàn bộ Catalog phải gồm chính xác 90 thẻ (40 T1 + 30 T2 + 20 T3)');
+  assert.strictEqual(PlantCardUI.REAL_PHOTO_CARD_IDS.size, 90, 'PlantCardUI.REAL_PHOTO_CARD_IDS phải chứa đúng 90 IDs');
 });
 
 // =============================================================================
@@ -157,20 +181,27 @@ runTest('3.4. getCardImage() trả về đúng ảnh thực tế riêng cho 30 t
   });
 });
 
-runTest('3.5. getCardImage() ưu tiên card.image nếu thẻ có ảnh chỉ định riêng', () => {
-  const cardWithCustomImg = { id: 't2_n1', tier: 2, image: 'assets/images/plants/custom.png' };
+runTest('3.5. getCardImage() trả về đúng ảnh thực tế riêng cho 20 thẻ Tier 3 (t3_e1 -> t3_n4)', () => {
+  TIER_3_IDS.forEach(id => {
+    const card = { id, tier: 3 };
+    assert.strictEqual(PlantCardUI.getCardImage(card), `assets/images/plants/${id}.webp`, `Thẻ ${id} phải trả về ảnh thực tế ${id}.webp`);
+  });
+});
+
+runTest('3.6. getCardImage() ưu tiên card.image nếu thẻ có ảnh chỉ định riêng', () => {
+  const cardWithCustomImg = { id: 't3_e1', tier: 3, image: 'assets/images/plants/custom.png' };
   assert.strictEqual(PlantCardUI.getCardImage(cardWithCustomImg), 'assets/images/plants/custom.png');
 });
 
-runTest('3.6. getCardImage() tự động fallback về ảnh Tier khi không có ID trong danh mục', () => {
+runTest('3.7. getCardImage() tự động fallback về ảnh Tier khi không có ID trong danh mục', () => {
+  const cardUnknownT1 = { tier: 1 };
+  assert.strictEqual(PlantCardUI.getCardImage(cardUnknownT1), 'assets/images/plants/tier1_sprout.webp');
+
   const cardUnknownT2 = { tier: 2 };
   assert.strictEqual(PlantCardUI.getCardImage(cardUnknownT2), 'assets/images/plants/tier2_flower.webp');
 
-  const cardTier3 = { id: 't3_e1', name: 'Đại Thụ Baobab', tier: 3 };
-  assert.strictEqual(PlantCardUI.getCardImage(cardTier3), 'assets/images/plants/tier3_tree.webp');
-
-  const cardUnknown = { tier: 1 };
-  assert.strictEqual(PlantCardUI.getCardImage(cardUnknown), 'assets/images/plants/tier1_sprout.webp');
+  const cardUnknownT3 = { tier: 3 };
+  assert.strictEqual(PlantCardUI.getCardImage(cardUnknownT3), 'assets/images/plants/tier3_tree.webp');
 });
 
 // =============================================================================
@@ -239,14 +270,31 @@ runTest('4.2. renderCard() hiển thị ảnh thực tế riêng cho thẻ t2_n1
   assert.ok(el.innerHTML.includes('★ 1'), 'Phải hiển thị prestige point ★ 1');
 });
 
-runTest('4.3. renderCard() gắn listener click thành công', () => {
+runTest('4.3. renderCard() hiển thị ảnh thực tế riêng cho thẻ t3_e1 (Đại Thụ Baobab)', () => {
+  const card = {
+    id: 't3_e1',
+    name: 'Đại Thụ Baobab',
+    tier: 3,
+    cost: { SEED: 3, SUNLIGHT: 3, WATER: 3, NUTRIENTS: 5 },
+    prestigePoints: 3,
+    bonusResource: 'DIRT'
+  };
+
+  const el = PlantCardUI.renderCard(card);
+  assert.ok(el.className.includes('tier-3'), 'Element phải có class tier-3');
+  assert.ok(el.innerHTML.includes('assets/images/plants/t3_e1.webp'), 'Phải có src trỏ tới t3_e1.webp');
+  assert.ok(el.innerHTML.includes('Đại Thụ Baobab'), 'Phải hiển thị tên Đại Thụ Baobab');
+  assert.ok(el.innerHTML.includes('★ 3'), 'Phải hiển thị prestige point ★ 3');
+});
+
+runTest('4.4. renderCard() gắn listener click thành công', () => {
   let clickedCard = null;
-  const card = { id: 't2_s1', name: 'Cây Cam Sành', tier: 2 };
+  const card = { id: 't3_su1', name: 'Cổ Thụ Sequoia', tier: 3 };
   const el = PlantCardUI.renderCard(card, null, (c) => { clickedCard = c; });
 
   assert.ok(typeof el._listeners['click'] === 'function', 'Phải có event listener click');
   el._listeners['click']();
-  assert.strictEqual(clickedCard?.name, 'Cây Cam Sành', 'Callback click phải nhận đúng thẻ');
+  assert.strictEqual(clickedCard?.name, 'Cổ Thụ Sequoia', 'Callback click phải nhận đúng thẻ');
 });
 
 // =============================================================================
@@ -261,6 +309,6 @@ if (failedTests > 0) {
   failures.forEach(f => console.error(` - ${f.name}: ${f.error}`));
   process.exit(1);
 } else {
-  console.log('🎉 TẤT CẢ BÀI TEST ẢNH THỰC TẾ FULL TIER 1 & TIER 2 ĐỀU ĐẠT CHUẨN PASS 100%!');
+  console.log('🎉 TẤT CẢ BÀI TEST ẢNH THỰC TẾ FULL 90 THẺ (TIER 1, 2, 3) ĐỀU ĐẠT CHUẨN PASS 100%!');
   process.exit(0);
 }
