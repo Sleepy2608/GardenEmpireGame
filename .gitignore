@@ -32,6 +32,7 @@ Thumbs.db
 # own plan implemetation/docs files
 .plan/
 .agents/
+.graphify/
 
 # Temporary scratch, test scripts and test subjects
 .scratch/
