@@ -53,13 +53,28 @@ export class PlantCardUI {
     return icons[resourceKey] || '🌿';
   }
 
-  // Danh mục 40 thẻ Tier 1 đã có ảnh chụp thực tế theo mã thẻ chuẩn CardCatalog.java
-  static TIER_1_CARD_IDS = new Set([
+  // Danh mục các thẻ đã có ảnh chụp thực tế theo mã thẻ chuẩn CardCatalog.java (40 thẻ Tier 1 + 30 thẻ Tier 2)
+  static REAL_PHOTO_CARD_IDS = new Set([
+    // Tier 1 (40 thẻ)
     't1_e1', 't1_e2', 't1_e3', 't1_e4', 't1_e5', 't1_e6', 't1_e7', 't1_e8',
     't1_s1', 't1_s2', 't1_s3', 't1_s4', 't1_s5', 't1_s6', 't1_s7', 't1_s8',
     't1_su1', 't1_su2', 't1_su3', 't1_su4', 't1_su5', 't1_su6', 't1_su7', 't1_su8',
     't1_w1', 't1_w2', 't1_w3', 't1_w4', 't1_w5', 't1_w6', 't1_w7', 't1_w8',
-    't1_n1', 't1_n2', 't1_n3', 't1_n4', 't1_n5', 't1_n6', 't1_n7', 't1_n8'
+    't1_n1', 't1_n2', 't1_n3', 't1_n4', 't1_n5', 't1_n6', 't1_n7', 't1_n8',
+    // Tier 2 (30 thẻ)
+    't2_e1', 't2_e2', 't2_e3', 't2_e4', 't2_e5', 't2_e6',
+    't2_s1', 't2_s2', 't2_s3', 't2_s4', 't2_s5', 't2_s6',
+    't2_su1', 't2_su2', 't2_su3', 't2_su4', 't2_su5', 't2_su6',
+    't2_w1', 't2_w2', 't2_w3', 't2_w4', 't2_w5', 't2_w6',
+    't2_n1', 't2_n2', 't2_n3', 't2_n4', 't2_n5', 't2_n6'
+  ]);
+  static TIER_1_CARD_IDS = PlantCardUI.REAL_PHOTO_CARD_IDS;
+  static TIER_2_CARD_IDS = new Set([
+    't2_e1', 't2_e2', 't2_e3', 't2_e4', 't2_e5', 't2_e6',
+    't2_s1', 't2_s2', 't2_s3', 't2_s4', 't2_s5', 't2_s6',
+    't2_su1', 't2_su2', 't2_su3', 't2_su4', 't2_su5', 't2_su6',
+    't2_w1', 't2_w2', 't2_w3', 't2_w4', 't2_w5', 't2_w6',
+    't2_n1', 't2_n2', 't2_n3', 't2_n4', 't2_n5', 't2_n6'
   ]);
 
   /**
@@ -74,12 +89,12 @@ export class PlantCardUI {
   /**
    * Lấy hình ảnh của thẻ:
    * 1. Ưu tiên thuộc tính card.image nếu có
-   * 2. Nếu thẻ có ảnh chụp thực tế theo ID (ví dụ t1_e1.webp), trả về ảnh thực tế của cây đó
+   * 2. Nếu thẻ có ảnh chụp thực tế theo ID (ví dụ t1_e1.webp, t2_s1.webp), trả về ảnh thực tế của cây đó
    * 3. Fallback về ảnh đại diện theo Tier
    */
   static getCardImage(card) {
     if (card?.image) return card.image;
-    if (card?.id && PlantCardUI.TIER_1_CARD_IDS.has(card.id)) {
+    if (card?.id && PlantCardUI.REAL_PHOTO_CARD_IDS.has(card.id)) {
       return `assets/images/plants/${card.id}.webp`;
     }
     const tier = card?.tier || 1;
