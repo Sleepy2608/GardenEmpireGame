@@ -24,6 +24,9 @@ public class Player {
     private boolean isHost;
     
     @Builder.Default
+    private boolean hasLeft = false;
+    
+    @Builder.Default
     private int prestigePoints = 0;
     
     @Builder.Default

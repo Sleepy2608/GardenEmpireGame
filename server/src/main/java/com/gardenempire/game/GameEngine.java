@@ -458,7 +458,7 @@ public class GameEngine {
             addLog(game, player.getId(), "FINAL_ROUND_TRIGGERED", msg, Map.of("points", player.getPrestigePoints()));
         }
 
-        // 3. Chuyển lượt sang người kế tiếp
+        // 3. Chuyển lượt sang người kế tiếp còn active
         List<Player> players = game.getState().getPlayers();
         int currentIndex = -1;
         for (int i = 0; i < players.size(); i++) {
@@ -468,23 +468,116 @@ public class GameEngine {
             }
         }
 
-        int nextIndex = (currentIndex + 1) % players.size();
-        String nextPlayerId = players.get(nextIndex).getId();
+        // Tìm người tiếp theo chưa rời ván
+        String nextPlayerId = null;
+        for (int i = 1; i <= players.size(); i++) {
+            int nextIndex = (currentIndex + i) % players.size();
+            Player candidate = players.get(nextIndex);
 
-        // 4. Nếu đang ở Final Round và đã hoàn thành vòng quay về người đầu tiên -> Kết thúc game
-        if (game.getState().isFinalRound() && nextPlayerId.equals(game.getState().getFirstPlayerId())) {
+            // 4. Nếu đang ở Final Round và đã hoàn thành vòng quay về người đầu tiên -> Kết thúc game
+            if (game.getState().isFinalRound() && candidate.getId().equals(game.getState().getFirstPlayerId())) {
+                game.getState().setGameOver(true);
+                game.getState().setCurrentTurnPlayerId(null);
+                determineWinner(game);
+                return;
+            }
+
+            if (!candidate.isHasLeft()) {
+                nextPlayerId = candidate.getId();
+                break;
+            }
+        }
+
+        if (nextPlayerId != null) {
+            game.getState().setCurrentTurnPlayerId(nextPlayerId);
+        } else {
             game.getState().setGameOver(true);
             game.getState().setCurrentTurnPlayerId(null);
             determineWinner(game);
+        }
+    }
+
+    /**
+     * Xử lý người chơi rời ván hoặc mất kết nối trong lúc trận đấu đang diễn ra.
+     * 1. Đánh dấu hasLeft = true và ghi GameActionLog
+     * 2. Nếu người rời đang nắm giữ lượt đi -> tự động chuyển lượt cho người kế tiếp
+     * 3. Nếu chỉ còn duy nhất 1 người chơi active -> kết thúc ván, người còn lại thắng mặc định (Walkover)
+     */
+    public void handlePlayerLeave(Game game, String playerId) {
+        if (game == null || game.getState() == null || playerId == null) {
             return;
         }
 
-        game.getState().setCurrentTurnPlayerId(nextPlayerId);
+        Player player = null;
+        try {
+            player = getPlayer(game, playerId);
+        } catch (GameException ignored) {
+            return;
+        }
+
+        if (player.isHasLeft()) {
+            return; // Đã rời từ trước
+        }
+
+        player.setHasLeft(true);
+        String leaveMsg = String.format("🍂 Nghệ nhân %s đã rời khỏi bàn đấu.", player.getName());
+        addLog(game, player.getId(), "PLAYER_LEFT", leaveMsg, Map.of("playerId", player.getId(), "playerName", player.getName()));
+
+        List<Player> players = game.getState().getPlayers();
+        List<Player> activePlayers = players.stream().filter(p -> !p.isHasLeft()).toList();
+
+        // 1. Nếu chỉ còn <= 1 người chơi active -> Chiến thắng mặc định (Walkover)
+        if (activePlayers.size() <= 1) {
+            game.getState().setGameOver(true);
+            game.getState().setCurrentTurnPlayerId(null);
+            if (activePlayers.size() == 1) {
+                Player winner = activePlayers.get(0);
+                game.getState().setWinnerPlayerId(winner.getId());
+                String winMsg = String.format("👑 Tất cả đối thủ đã rời bàn. Nghệ nhân %s giành chiến thắng mặc định!", winner.getName());
+                addLog(game, winner.getId(), "GAME_OVER", winMsg, 
+                        Map.of("winnerId", winner.getId(), "reason", "FORFEIT", "points", winner.getPrestigePoints()));
+            }
+            return;
+        }
+
+        // 2. Nếu người rời đang giữ lượt đi -> Tự động chuyển quyền cho người kế tiếp
+        if (playerId.equals(game.getState().getCurrentTurnPlayerId())) {
+            int currentIndex = -1;
+            for (int i = 0; i < players.size(); i++) {
+                if (players.get(i).getId().equals(playerId)) {
+                    currentIndex = i;
+                    break;
+                }
+            }
+
+            String nextPlayerId = null;
+            for (int i = 1; i <= players.size(); i++) {
+                int nextIndex = (currentIndex + i) % players.size();
+                Player candidate = players.get(nextIndex);
+
+                if (game.getState().isFinalRound() && candidate.getId().equals(game.getState().getFirstPlayerId())) {
+                    game.getState().setGameOver(true);
+                    game.getState().setCurrentTurnPlayerId(null);
+                    determineWinner(game);
+                    return;
+                }
+
+                if (!candidate.isHasLeft()) {
+                    nextPlayerId = candidate.getId();
+                    break;
+                }
+            }
+
+            if (nextPlayerId != null) {
+                game.getState().setCurrentTurnPlayerId(nextPlayerId);
+            }
+        }
     }
 
     private void determineWinner(Game game) {
         List<Player> players = game.getState().getPlayers();
         Player winner = players.stream()
+                .filter(p -> !p.isHasLeft())
                 .max((p1, p2) -> {
                     if (p1.getPrestigePoints() != p2.getPrestigePoints()) {
                         return Integer.compare(p1.getPrestigePoints(), p2.getPrestigePoints());
@@ -509,6 +602,10 @@ public class GameEngine {
     private void validateTurnAndActive(Game game, String playerId) {
         if (game.getState().isGameOver()) {
             throw new GameException("Trò chơi đã kết thúc.");
+        }
+        Player player = getPlayer(game, playerId);
+        if (player.isHasLeft()) {
+            throw new GameException("Bạn đã rời khỏi ván đấu.");
         }
         if (!playerId.equals(game.getState().getCurrentTurnPlayerId())) {
             throw new GameException("Chưa đến lượt của bạn.");

@@ -146,10 +146,50 @@ public class GameMessageHandler {
      * Frontend lắng nghe type = "ROOM_UPDATE"
      */
     public void broadcastRoomUpdate(String roomId, com.gardenempire.room.Room room) {
+        broadcastRoomUpdate(roomId, room, null, null);
+    }
+
+    /**
+     * Broadcast cập nhật phòng kèm thông tin người vừa rời và chủ phòng mới (nếu có)
+     */
+    public void broadcastRoomUpdate(String roomId, com.gardenempire.room.Room room, com.gardenempire.game.Player leftPlayer, String newHostId) {
         Map<String, Object> message = new java.util.LinkedHashMap<>();
         message.put("type", "ROOM_UPDATE");
         message.put("room", room);
+        if (leftPlayer != null) {
+            Map<String, Object> leftInfo = new java.util.LinkedHashMap<>();
+            leftInfo.put("id", leftPlayer.getId());
+            leftInfo.put("name", leftPlayer.getName());
+            leftInfo.put("avatar", leftPlayer.getAvatar());
+            message.put("leftPlayer", leftInfo);
+        }
+        if (newHostId != null) {
+            message.put("newHostId", newHostId);
+        }
         broadcastToRoom(roomId, message);
+    }
+
+    /**
+     * Broadcast sự kiện người chơi rời ván cờ tới tất cả người chơi trong phòng đấu
+     * Frontend lắng nghe type = "PLAYER_LEFT_GAME"
+     */
+    public void broadcastPlayerLeftGame(String gameId, com.gardenempire.game.Player leftPlayer, GameState state) {
+        Map<String, Object> message = new java.util.LinkedHashMap<>();
+        message.put("type", "PLAYER_LEFT_GAME");
+        message.put("gameId", gameId);
+        if (leftPlayer != null) {
+            Map<String, Object> leftInfo = new java.util.LinkedHashMap<>();
+            leftInfo.put("id", leftPlayer.getId());
+            leftInfo.put("name", leftPlayer.getName());
+            leftInfo.put("avatar", leftPlayer.getAvatar());
+            message.put("leftPlayer", leftInfo);
+        }
+        message.put("gameState", state);
+        broadcastToRoom(gameId, message);
+
+        if (state != null) {
+            broadcastGameState(gameId, state);
+        }
     }
 
     /**
