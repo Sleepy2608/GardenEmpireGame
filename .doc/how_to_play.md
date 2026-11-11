@@ -264,6 +264,17 @@ Nếu bạn có thêm 2 viên Phân Bón Vàng (WILD ⭐), bạn chỉ cần dù
   * Nút `Quay Về Sảnh Ngay` cho phép rời phòng lập tức.
   * Nút `🔍 Xem Lại Bàn Cờ`: Thu nhỏ modal thành thanh nổi **Endgame Floating Bar** ở đáy màn hình để bạn thong thả ngắm lại bàn cờ, khu vườn đối thủ, khung chat hoặc nhật ký ván đấu. Khi đếm ngược về 0s, phòng sẽ được tự động giải phóng sạch sẽ và chuyển người chơi về trang sảnh (`lobby.html`).
 
+### Quy Định Xử Lý Khi Có Người Chơi Rời Ván & Luật Chiến Thắng Mặc Định (Player Leave & Walkover Victory):
+- **Tại Phòng Chờ (Waiting Room):**
+  * Khi có thành viên rời phòng: Toàn bộ người còn lại nhận Toast màu hổ phách: `🍂 [Avatar] [Tên] đã rời phòng chờ.` kèm âm thanh pop thông báo.
+  * Chuyển giao Chủ phòng tự động: Nếu Chủ phòng rời đi, quyền Host được trao cho thành viên kế tiếp và hiển thị Toast mạ vàng: `👑 Bạn đã trở thành Chủ Phòng mới! Hãy bắt đầu khi sẵn sàng.`
+  * Tự động vô hiệu hóa nút "Bắt Đầu" nếu số lượng người chơi trong phòng chờ giảm xuống dưới 2 người.
+- **Tại Bàn Đấu (In-Game Match):**
+  * Khi có người chơi rời ván: Hệ thống broadcast sự kiện `PLAYER_LEFT_GAME`, phát Toast cảnh báo toàn bàn, ghi nhận vào `Game Action Logs` và đẩy 1 thông báo hệ thống vào khung Chat trực tuyến.
+  * Ghế ngồi của người đã thoát trên bàn cờ Tabletop 3D tự động làm mờ nhẹ (opacity 0.55, grayscale) và hiển thị huy hiệu `[🍂 Đã Rời Ván]`.
+  * **Cơ chế chống đóng băng lượt chơi (Anti-Freeze Turn):** Nếu người chơi rời đi trong lúc đang nắm giữ lượt đi, Game Engine tự động chuyển quyền đi tiếp cho nghệ nhân kế tiếp còn hoạt động mà không làm gián đoạn nhịp chơi.
+  * **Luật Chiến Thắng Mặc Định (Walkover Victory):** Nếu số người chơi tích cực trong bàn đấu giảm xuống chỉ còn duy nhất 1 người, trận đấu lập tức khép lại, tôn vinh người kiên trì ở lại là Quán Quân với thông điệp: `🏆 TẤT CẢ ĐỐI THỦ ĐÃ RỜI BÀN — BẠN LÀ QUÁN QUÂN DUY NHẤT!` và mở Pop-up vinh danh kèm đồng hồ 20s.
+
 ---
 
 ## 🧠 7. Bí Quyết & Chiến Thuật Đỉnh Cao

@@ -444,6 +444,18 @@ body {
   transform: translateX(-50%) translateY(20px);
 }
 .toast.error { background: hsl(0 50% 20%); border-color: hsla(0 70% 50% / 0.3); color: hsl(0 80% 90%); }
+.toast.toast-warning, .toast.warning {
+  background: hsla(38 92% 16% / 0.95);
+  border-color: hsla(38 92% 50% / 0.5);
+  color: hsl(38 100% 88%);
+  box-shadow: 0 8px 32px hsla(38 92% 30% / 0.25);
+}
+.toast.toast-success, .toast.success {
+  background: hsla(145 60% 18% / 0.95);
+  border-color: hsla(145 70% 50% / 0.5);
+  color: hsl(145 100% 90%);
+  box-shadow: 0 8px 32px hsla(145 70% 30% / 0.25);
+}
 
 /* ---------- Responsive ---------- */
 @media (max-width: 500px) {
