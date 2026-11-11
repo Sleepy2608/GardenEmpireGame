@@ -1,9 +1,10 @@
 /*
-   GARDEN EMPIRE — LOBBY UI COMPONENT
+   GARDEN EMPIRE - LOBBY UI COMPONENT
 */
 import { roomApi } from '../api/roomApi.js';
 import { sessionGuard } from '../utils/sessionGuard.js';
 import { navigateTo } from '../utils/navigation.js';
+import { RulesUI } from './RulesUI.js';
 
 export class LobbyUI {
   constructor() {
@@ -44,6 +45,12 @@ export class LobbyUI {
         navigateTo('index');
       });
     }
+
+    // Cẩm Nang Luật Chơi Modal
+    RulesUI.setupModal({
+      modalId: 'rules-modal',
+      openTriggerSelector: '#btn-open-rules, #btn-sidebar-rules'
+    });
 
     // Refresh Room List
     const btnRefresh = document.getElementById('btn-refresh-rooms');

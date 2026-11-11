@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sảnh Chờ — Garden Empire</title>
+  <title>Sảnh Chờ - Garden Empire</title>
   
   <meta name="description" content="Sảnh chờ các phòng chơi game Garden Empire. Tạo phòng mới, mời bạn bè hoặc tham gia phòng bằng mã code.">
   <meta name="robots" content="index, follow">
@@ -17,6 +17,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/rules.css">
   <link rel="stylesheet" href="css/lobby.css">
   
   <!-- Vercel Speed Insights -->
@@ -43,15 +44,21 @@
         </button>
         <div class="lobby-brand">
           <span class="logo-leaf">🌿</span>
-          <h2>GARDEN EMPIRE — SẢNH CHỜ</h2>
+          <h2>GARDEN EMPIRE: SẢNH CHỜ</h2>
         </div>
       </div>
 
-      <div class="lobby-user-profile">
-        <div class="user-avatar-badge" id="display-user-avatar">🌱</div>
-        <div class="user-meta">
-          <span class="user-label">Tên người chơi:</span>
-          <strong id="display-user-name">Khách</strong>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <button type="button" id="btn-open-rules" class="btn-nature-gold btn-sm" title="Xem cẩm nang luật chơi chi tiết">
+          <span>📖</span> <span>Cẩm Nang Luật Chơi</span>
+        </button>
+
+        <div class="lobby-user-profile">
+          <div class="user-avatar-badge" id="display-user-avatar">🌱</div>
+          <div class="user-meta">
+            <span class="user-label">Tên người chơi:</span>
+            <strong id="display-user-name">Khách</strong>
+          </div>
         </div>
       </div>
     </header>
@@ -118,6 +125,21 @@
               <span>Vào Phòng Nhanh</span>
             </button>
           </form>
+        </div>
+
+        <!-- 3. Quick Rules Card -->
+        <div class="action-card glass-panel" style="margin-top: 1rem;">
+          <div class="action-card-header">
+            <h3>📖 Cẩm Nang & Luật Chơi</h3>
+          </div>
+          <div style="font-size: 0.825rem; color: var(--text-secondary); line-height: 1.55; padding: 0.25rem 0 0.5rem;">
+            <p style="margin: 0 0 0.45rem;">🌿 <strong>Mục tiêu:</strong> Thu thập tài nguyên, đạt 15 điểm uy tín (★) để vào chung kết.</p>
+            <p style="margin: 0 0 0.45rem;">⚡ <strong>Mỗi lượt:</strong> Lấy 3 token khác màu, 2 cùng màu, mua cây hoặc giữ thẻ nhận 1 Vàng WILD.</p>
+            <p style="margin: 0 0 0.75rem;">⚖️ <strong>Chiến thắng:</strong> Người nhiều điểm nhất thắng; hòa điểm thì người trồng ít cây hơn thắng.</p>
+            <button type="button" id="btn-sidebar-rules" class="btn-nature-secondary btn-block btn-sm">
+              <span>📖 Xem Đầy Đủ 5 Phần Luật Chơi</span>
+            </button>
+          </div>
         </div>
       </aside>
     </div>

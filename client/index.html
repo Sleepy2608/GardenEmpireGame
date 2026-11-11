@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Garden Empire — Game Trồng Cây Sinh Thái Trực Tuyến</title>
+  <title>Garden Empire - Game Trồng Cây Sinh Thái Trực Tuyến</title>
   
   <!-- SEO & Meta Tags -->
   <meta name="description" content="Garden Empire là phiên bản trực tuyến miễn phí lấy cảm hứng từ Splendor, với chủ đề vườn cây sinh thái. Thu thập tài nguyên, trồng cây, tranh điểm uy tín và so tài với bạn bè trên trình duyệt.">
@@ -18,19 +18,19 @@
   <meta property="og:url" content="https://garden-empire-game.vercel.app/">
   <meta property="og:site_name" content="Garden Empire">
   <meta property="og:locale" content="vi_VN">
-  <meta property="og:title" content="Garden Empire — Splendor Alternative | Free Online">
+  <meta property="og:title" content="Garden Empire - Splendor Alternative | Free Online">
   <meta property="og:description" content="Garden Empire là phiên bản trực tuyến miễn phí lấy cảm hứng từ Splendor, với chủ đề vườn cây sinh thái. Thu thập tài nguyên, trồng cây, tranh điểm uy tín và so tài với bạn bè trên trình duyệt.">
   <meta property="og:image" content="https://garden-empire-game.vercel.app/assets/images/garden_empire.jpg">
   <meta property="og:image:secure_url" content="https://garden-empire-game.vercel.app/assets/images/garden_empire.jpg">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="675">
-  <meta property="og:image:alt" content="Garden Empire — Splendor Alternative | Free Online">
+  <meta property="og:image:alt" content="Garden Empire - Splendor Alternative | Free Online">
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://garden-empire-game.vercel.app/">
-  <meta name="twitter:title" content="Garden Empire — Game Trồng Cây Sinh Thái Trực Tuyến">
+  <meta name="twitter:title" content="Garden Empire - Game Trồng Cây Sinh Thái Trực Tuyến">
   <meta name="twitter:description" content="Trồng cây, thu thập tài nguyên và so tài chiến thuật sinh thái cùng bạn bè trực tiếp trên trình duyệt.">
   <meta name="twitter:image" content="https://garden-empire-game.vercel.app/assets/images/garden_empire.jpg">
 
@@ -60,6 +60,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/rules.css">
   <link rel="stylesheet" href="css/index.css">
   
   <!-- Vercel Speed Insights -->
@@ -76,47 +77,78 @@
 </head>
 <body>
   <div class="index-container">
-    <div class="guest-card glass-panel">
-      <div class="brand-hero">
-        <div class="brand-emblem anim-float">🌿</div>
-        <h1 class="brand-title">GARDEN EMPIRE</h1>
-        <p class="brand-subtitle">Thu thập tài nguyên • Trồng cây • Gây dựng uy tín</p>
+    
+    <!-- Dashboard Top Bar -->
+    <header class="dashboard-topbar">
+      <div class="dashboard-brand-left">
+        <span class="dashboard-brand-emblem anim-float">🌿</span>
+        <div>
+          <h1 class="dashboard-brand-title">GARDEN EMPIRE</h1>
+          <p class="dashboard-brand-sub">Chiến thuật xây dựng vườn sinh thái thượng uyển</p>
+        </div>
       </div>
-      
-      <form id="guest-form">
-        <!-- Avatar Selection -->
-        <div class="form-group avatar-picker-group">
-          <label class="form-label"><b>Chọn Linh Vật Vườn:</b></label>
-          <div class="avatar-selection-row" id="avatar-selection-row">
-            <button type="button" class="avatar-option selected" data-avatar="🌱">🌱</button>
-            <button type="button" class="avatar-option" data-avatar="🌺">🌺</button>
-            <button type="button" class="avatar-option" data-avatar="🍄">🍄</button>
-            <button type="button" class="avatar-option" data-avatar="🌰">🌰</button>
-            <button type="button" class="avatar-option" data-avatar="🍀">🍀</button>
-          </div>
-          <input type="hidden" id="selected-avatar" value="🌱" />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="guest-name"><b>Tên người chơi:</b></label>
-          <div class="input-glow-wrapper">
-            <input 
-              type="text" 
-              id="guest-name" 
-              class="form-input" 
-              placeholder="Nhập biệt danh của bạn..." 
-              maxlength="20"
-              required 
-              autocomplete="off"
-            />
-          </div>
-        </div>
-
-        <button type="submit" id="btn-enter-lobby" class="btn-nature-primary btn-block">
-          <span>✨</span> <span>Vào Sảnh Chờ</span>
+      <div class="dashboard-actions-right">
+        <button type="button" id="btn-open-rules" class="btn-nature-secondary btn-sm" title="Mở cẩm nang luật chơi toàn màn hình">
+          <span>📖</span> <span>Cẩm Nang Toàn Màn Hình</span>
         </button>
-      </form>
-    </div>
+      </div>
+    </header>
+
+    <!-- Main Dashboard Grid -->
+    <main class="dashboard-main-grid">
+      
+      <!-- Left Column: Guest Login Card -->
+      <section class="dashboard-login-col" aria-label="Đăng ký nghệ nhân vào sảnh">
+        <div class="guest-card glass-panel">
+          <div class="brand-hero">
+            <div class="brand-emblem anim-float">🌱</div>
+            <h2 class="brand-title">VÀO VƯỜN ĐẤU</h2>
+            <p class="brand-subtitle">Chọn linh vật vườn và đặt biệt danh nghệ nhân</p>
+          </div>
+          
+          <form id="guest-form">
+            <!-- Avatar Selection -->
+            <div class="form-group avatar-picker-group">
+              <label class="form-label"><b>Chọn Linh Vật Vườn:</b></label>
+              <div class="avatar-selection-row" id="avatar-selection-row">
+                <button type="button" class="avatar-option selected" data-avatar="🌱">🌱</button>
+                <button type="button" class="avatar-option" data-avatar="🌺">🌺</button>
+                <button type="button" class="avatar-option" data-avatar="🍄">🍄</button>
+                <button type="button" class="avatar-option" data-avatar="🌰">🌰</button>
+                <button type="button" class="avatar-option" data-avatar="🍀">🍀</button>
+              </div>
+              <input type="hidden" id="selected-avatar" value="🌱" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="guest-name"><b>Tên người chơi:</b></label>
+              <div class="input-glow-wrapper">
+                <input 
+                  type="text" 
+                  id="guest-name" 
+                  class="form-input" 
+                  placeholder="Nhập biệt danh của bạn..." 
+                  maxlength="20"
+                  required 
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+
+            <button type="submit" id="btn-enter-lobby" class="btn-nature-primary btn-block">
+              <span>✨</span> <span>Vào Sảnh Chờ</span>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Right Column: Interactive Game Rules & Codex -->
+      <section class="dashboard-codex-col" id="inline-rules-container" aria-label="Cẩm nang luật chơi Garden Empire">
+        <!-- Rendered by RulesUI.js on DOMContentLoaded -->
+      </section>
+
+    </main>
+
   </div>
 
   <!-- App Version Badge -->

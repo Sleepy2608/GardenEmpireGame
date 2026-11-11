@@ -1,5 +1,6 @@
 import { sessionGuard } from './utils/sessionGuard.js';
 import { navigateTo } from './utils/navigation.js';
+import { RulesUI } from './ui/RulesUI.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // 🚀 Pre-warm backend & Prefetch rooms: Đánh thức Render và nạp sẵn danh sách phòng vào bộ nhớ đệm (0ms tại Sảnh)
@@ -18,6 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(() => {});
     }
   } catch (_) {}
+
+  // 📖 Gắn Cẩm Nang Luật Chơi trực tiếp trên Dashboard
+  const inlineRulesContainer = document.getElementById('inline-rules-container');
+  if (inlineRulesContainer) {
+    inlineRulesContainer.innerHTML = RulesUI.getRulesTemplate({ isModal: false, prefixId: 'dashboard-codex' });
+    RulesUI.initTabs(inlineRulesContainer);
+  }
+
+  // 📖 Khởi tạo Modal Cẩm Nang Toàn Màn Hình cho nút bấm Top Bar
+  RulesUI.setupModal({ modalId: 'rules-modal', openTriggerSelector: '#btn-open-rules' });
 
   const guestForm = document.getElementById('guest-form');
   const guestNameInput = document.getElementById('guest-name');
