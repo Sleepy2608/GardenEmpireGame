@@ -1,24 +1,97 @@
 /*
-   GARDEN EMPIRE — GUEST ENTRY & HERO SCREEN STYLES
+   GARDEN EMPIRE - GUEST ENTRY & DASHBOARD SCREEN STYLES
+   Design System: Deep Forest Botanical Glassmorphism
 */
 
 .index-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
   padding: 1.5rem;
   background: var(--bg-deep-forest);
   background-image: var(--bg-forest-gradient);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
 
+/* Dashboard Top Bar */
+.dashboard-topbar {
+  width: 100%;
+  max-width: 1320px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  margin-bottom: 1.75rem;
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface-glass);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--border-nature);
+  box-shadow: var(--shadow-md);
+  gap: 1rem;
+}
+
+.dashboard-brand-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dashboard-brand-emblem {
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.dashboard-brand-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-pure);
+  letter-spacing: 0.02em;
+  margin: 0;
+  text-shadow: 0 0 12px rgba(251, 191, 36, 0.3);
+}
+
+.dashboard-brand-sub {
+  font-size: 0.775rem;
+  color: var(--text-secondary);
+  margin: 0.15rem 0 0;
+}
+
+.dashboard-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Dashboard Main Grid: 2 Columns on Desktop */
+.dashboard-main-grid {
+  width: 100%;
+  max-width: 1320px;
+  display: grid;
+  grid-template-columns: 390px 1fr;
+  gap: 1.75rem;
+  align-items: start;
+}
+
+.dashboard-login-col {
+  position: sticky;
+  top: 1.5rem;
+}
+
+.dashboard-codex-col {
+  min-width: 0;
+}
+
+/* Guest Card Form */
 .guest-card {
   background: var(--bg-surface-glass-heavy);
   backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
   border: 1px solid var(--border-nature);
-  padding: 2.75rem 2.25rem;
+  padding: 2.25rem 2rem;
   border-radius: var(--radius-xl);
-  max-width: 440px;
   width: 100%;
   text-align: center;
   box-shadow: var(--shadow-lg), 0 0 24px rgba(74, 222, 128, 0.15);
@@ -38,40 +111,40 @@
 }
 
 .brand-hero {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .brand-emblem {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
+  font-size: 2.5rem;
+  margin-bottom: 0.35rem;
   display: inline-block;
   text-shadow: 0 0 16px rgba(74, 222, 128, 0.5);
 }
 
 .brand-title {
   font-family: var(--font-display);
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 900;
   color: var(--text-pure);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   text-shadow: 0 0 16px rgba(251, 191, 36, 0.4);
 }
 
 .brand-subtitle {
   color: var(--text-secondary);
-  font-size: 0.85rem;
-  margin-top: 0.4rem;
+  font-size: 0.825rem;
+  margin-top: 0.35rem;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.35rem;
   text-align: left;
 }
 
 .form-label {
   display: block;
-  font-size: 0.85rem;
-  margin-bottom: 0.5rem;
+  font-size: 0.825rem;
+  margin-bottom: 0.45rem;
   color: var(--text-primary);
 }
 
@@ -83,12 +156,12 @@
 }
 
 .avatar-option {
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   border-radius: var(--radius-md);
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid var(--border-subtle);
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -136,4 +209,36 @@
   padding: 0.9rem;
   font-size: 1.05rem;
   margin-top: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .dashboard-main-grid {
+    grid-template-columns: 1fr;
+    max-width: 720px;
+  }
+  
+  .dashboard-login-col {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .index-container {
+    padding: 1rem;
+  }
+
+  .dashboard-topbar {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .dashboard-brand-left {
+    justify-content: center;
+  }
+
+  .dashboard-actions-right {
+    justify-content: center;
+  }
 }
