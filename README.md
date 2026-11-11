@@ -30,11 +30,11 @@
 
 **Garden Empire** đưa người chơi vào vai các nghệ nhân thực vật học tài hoa, cạnh tranh kiến tạo khu vườn thượng uyển tráng lệ nhất vương quốc:
 - **Thu thập năng lượng thiên nhiên** (Đất, Nước, Ánh Sáng, Hạt Giống, Dinh Dưỡng, Phân Bón Vàng).
-- **Nuôi trồng thẻ cây** thuộc 3 cấp độ (Tier 1, Tier 2, Tier 3) để tích lũy điểm uy tín vĩnh viễn và tạo hiệu ứng giảm giá mua cây tiếp theo.
+- **Bộ sưu tập 90 thẻ bài sinh thái học thực tế (Real Botanical Photos — 100% Coverage):** Toàn bộ 90 thẻ cây trong hệ thống (40 Tier 1: mầm non & dây leo, 30 Tier 2: cây bụi & hoa quả, 20 Tier 3: cổ thụ đại ngàn) đều sở hữu ảnh chụp thực tế sinh động, tối ưu hóa định dạng kép WebP & PNG, chuẩn hóa danh pháp phân loại học Linnaeus và hiệu ứng thị giác Deep Forest Glassmorphism độc bản.
 - **Bàn cờ Tabletop 3D (Around-the-Table Arena):** Chiếu cờ 3D sinh động ở trung tâm, các đối thủ ngồi bao quanh bàn và thanh điều khiển của bạn cố định ở đáy, tự động co giãn (`TabletopFit`) vừa vặn mọi màn hình.
 - **Hộp thông tin người chơi & Bóc tách tài nguyên cầm tay (Players' Box & Opponent Tokens Visibility):** Tái thiết kế toàn diện khung đối thủ chuẩn Wireframe 5 phân khu phân tách bởi đường viền ánh kim hoàng gia; bóc tách chi tiết từng viên trong **6 loại token đối thủ đang cầm trên tay** (Đất, Nước, Ánh Sáng, Hạt Giống, Dinh Dưỡng, Phân Bón Vàng), tích hợp dải giảm giá vĩnh viễn, cảnh báo chạm trần bài giữ (3/3) và chống tràn/gãy dòng tuyệt đối.
 - **Nhật ký hành động thời gian thực (Game Action Logs):** Ghi lại chi tiết từng lượt bốc token, giữ thẻ, trồng cây, đón khách quý, chạm mốc 15 điểm chung kết; tích hợp widget cuộn mượt và nút mũi tên `▼`/`▲` thu gọn thành 1 dòng mini ticker mỏng nhẹ.
-- **Khung trò chuyện trực tuyến (In-Game Chat Box):** Tương tác thời gian thực tại góc dưới bên trái bàn đấu, đối xứng với Game Logs; hỗ trợ phím tắt `Enter` mở nhanh/gửi tin, thu gọn/mở rộng với huy hiệu tin chưa đọc (Unread badge), âm thanh pop nhẹ nhàng, lưu trữ in-memory RAM (khôi phục sau F5) và cơ chế chống spam/khử độc XSS an toàn.
+- **Khung trò chuyện trực tuyến (In-Game Chat Box):** Tương tác thời gian thực tại góc dưới bên trái bàn đấu, đối xứng với Game Logs; nút thu gọn/mở rộng chuyên dụng `#btn-toggle-chat-collapse` đồng bộ cùng thanh Top Bar, hỗ trợ phím tắt `Enter` mở nhanh/gửi tin, huy hiệu tin chưa đọc (Unread badge), âm thanh pop nhẹ nhàng, lưu trữ in-memory RAM (khôi phục sau F5) và cơ chế chống spam/khử độc XSS an toàn.
 - **Pop-up vinh danh kết thúc ván đấu & Đếm ngược đóng phòng (Endgame Announcement & Auto-Exit):** Tự động phát sóng pop-up ăn mừng chiến thắng đồng bộ tới tất cả người chơi khi ván đấu khép lại; cá nhân hóa thông điệp vinh danh, hiển thị bảng xếp hạng Podium 4 vị trí (kèm luật Tiebreaker ít thẻ hơn thắng), đồng hồ đếm ngược 20s tự động đóng phòng/về sảnh và thanh nổi *Endgame Floating Bar* khi thu nhỏ để xem lại bàn cờ.
 - **Tối ưu khởi động In-Memory & Keep-Alive Server (Fast Boot & Zero-Latency Lobby):** Loại bỏ tiến trình khởi tạo JPA/Database dư thừa giúp tăng tốc độ khởi động máy chủ gấp 3 lần (~6s), tích hợp endpoint siêu nhẹ `/api/rooms/ping` giữ ấm máy chủ 24/7 và cơ chế Prefetch danh sách phòng 0ms ngay từ trang chủ.
 - **Phòng chờ & Quản lý chủ phòng (Waiting Room):** Quản lý chủ phòng (Room Host), chỉ chủ phòng có quyền bắt đầu trận đấu khi đủ 2–4 người chơi, tính năng kick người chơi kèm lệnh cấm 2 phút (cooldown ban) và chọn ngẫu nhiên lượt đi đầu tiên.
@@ -111,11 +111,18 @@ graph TD
 
 ```text
 GardenEmpireGame/
+├── .agents/                         # Hệ thống quy chuẩn toàn dự án (Master Hub & Specialized Protocols)
+│   ├── AGENTS.md                    # Hiến pháp chung & điều phối toàn dự án
+│   ├── coding/coding_agents.md      # Quy chuẩn Lập trình Fullstack & Kiến trúc Game Engine
+│   ├── frontend/frontend_designer.md # Quy chuẩn Thiết kế UI/UX & Deep Forest Glassmorphism
+│   ├── test/test_agents.md          # Quy chuẩn Kiểm thử tự động, AAA, E2E & Visual/OCR
+│   └── commit/commit_agents.md      # Quy chuẩn Conventional Commits & Semantic Versioning
 ├── .doc/                            # Tài liệu dự án & hướng dẫn chi tiết
 │   ├── changelogs.md                # Nhật ký thay đổi & lịch sử phát hành phiên bản
 │   ├── how_to_play.md               # Cẩm nang luật chơi Splendor & cơ chế Garden Empire
 │   └── revelant_links.md            # Tổng hợp liên kết tham khảo & tài nguyên
 ├── .env.example                     # File mẫu biến môi trường (Database, Port)
+├── .gitattributes                   # Chuẩn hóa line-endings (LF/CRLF) và tệp nhị phân
 ├── .gitignore                       # Loại trừ build artifacts, IDE, .env
 ├── docker-compose.yml               # Cấu hình khởi chạy trọn gói Backend + Frontend Nginx
 ├── vercel.json                      # Cấu hình định tuyến triển khai Vercel CDN
@@ -135,7 +142,8 @@ GardenEmpireGame/
 │   ├── assets/
 │   │   └── images/
 │   │       ├── garden_empire.jpg    # Banner xem trước chuẩn 1200x675 (~250KB) cho Zalo, Facebook
-│   │       └── garden_empire.png    # Ảnh poster sinh thái chất lượng cao
+│   │       ├── garden_empire.png    # Ảnh poster sinh thái chất lượng cao
+│   │       └── plants/              # Bộ sưu tập 90 ảnh thực tế cho thẻ cây Tier 1, 2, 3 (.webp & .png)
 │   ├── css/
 │   │   ├── common.css               # Hệ màu thiên nhiên, tokens, version badge, layout glassmorphism
 │   │   ├── index.css                # Style thẻ đăng nhập & avatar picker
@@ -148,6 +156,7 @@ GardenEmpireGame/
 │       ├── api/roomApi.js           # Giao tiếp REST API tạo phòng, vào phòng, kick, rời phòng
 │       └── ui/
 │           ├── BoardUI.js           # Điều phối toàn bộ sự kiện và hoạt ảnh bàn cờ
+│           ├── PlantCardUI.js       # Render chợ cây 3 Tier, gán ảnh thực tế 90 thẻ & dialog mua/giữ
 │           ├── ChatUI.js            # Khung chat trực tuyến, phím tắt Enter, unread badge, auto-scroll
 │           ├── GameLogUI.js         # Nhật ký hành động ván đấu, collapsible ticker, token badge highlight
 │           ├── LobbyUI.js           # Render danh sách phòng và cập nhật sảnh chờ
@@ -156,7 +165,9 @@ GardenEmpireGame/
 │           └── ResourceUI.js        # Render ngân hàng ngọc & trạng thái chip năng lượng
 │
 ├── tests/                           # Kịch bản kiểm thử đơn vị (Unit) & tích hợp (E2E)
+│   ├── test_plant_card_ui.js        # Kiểm thử 90 thẻ ảnh thực tế, getTierImage, getCardImage, DOM (22 tests)
 │   ├── test_player_box_ui.js        # Kiểm thử UI 5 phân khu Players' Box & 6 loại token (46 tests)
+│   ├── test_chat_toggle_ui.js       # Kiểm thử nút thu gọn/mở rộng chat, ticker bar, icon duplicate (10 tests)
 │   ├── test_endgame_announcement_ui.js # Kiểm thử Pop-up vinh danh, Tiebreaker & đếm ngược (15 tests)
 │   ├── test_game_log_toggle_3_recent.js # Kiểm thử hiển thị 3 log gần nhất & Full Logs Modal (4 tests)
 │   ├── test_multi_tab.js            # Kịch bản kiểm thử E2E giả lập đa người chơi
@@ -252,11 +263,13 @@ mvn test
 
 ### 2. Frontend UI & Logic Unit Tests:
 ```bash
+node tests/test_plant_card_ui.js
 node tests/test_player_box_ui.js
-node tests/test_endgame_announcement_ui.js
+node tests/test_chat_toggle_ui.js
 node tests/test_game_log_toggle_3_recent.js
+node tests/test_endgame_announcement_ui.js
 ```
-*Kết quả:* **65/65 Frontend Unit Tests PASS 100%**.
+*Kết quả:* **97/97 Frontend Unit Tests PASS 100%**.
 
 ### 3. Multi-Tab E2E Simulation Tests:
 - **Kiểm thử đa tab tổng thể (Phòng, bốc token, giữ bài, F5 reconnect):**
@@ -272,6 +285,10 @@ node tests/test_game_action_logs_e2e.js
 node tests/test_in_game_chat_e2e.js
 ```
 *Kết quả:* **100% kịch bản E2E PASS thành công**.
+
+---
+
+> 📊 **Tổng kết độ phủ kiểm thử:** Toàn bộ hệ thống đạt **132/132 Automated Unit & Integration Tests PASS 100%** cùng bộ 3 kịch bản kiểm thử E2E WebSocket đa tab đồng bộ hoàn hảo.
 
 ---
 
