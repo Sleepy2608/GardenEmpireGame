@@ -3,6 +3,49 @@
 Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game** được ghi chép và lưu trữ đầy đủ tại tài liệu này từ giai đoạn khởi tạo ban đầu (v0.0.0).  
 Định dạng dựa trên [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), và dự án tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 🚀 [v1.4.0] — 2026-11-11
+### 🌿 Nâng Cấp Trọn Bộ 90 Ảnh Cây Chụp Thực Tế & Chuẩn Hóa Sinh Thái Học (100% Real Botanical Plant Photos & Nomenclature)
+- **Độ Phủ Tuyệt Đối 100% Ảnh Chụp Thực Tế (90/90 Thẻ Bài — 0% Ảnh AI):**
+  - **Ứng dụng Skill `agent-reach` truy xuất kho dữ liệu mở:** Tải về và biên tập toàn bộ 90 ảnh chụp thực tế sinh thái ngoài tự nhiên từ Wikimedia Commons / Wikipedia cho trọn vẹn 3 cấp thẻ bài:
+    * **Tier 1 (40 thẻ mầm non & rau củ):** Cỏ Ba Lá, Cây Trầu Không, Mầm Hướng Dương, Cây Đậu Phộng, Rau Xà Lách, Nấm Rơm, Cà Chua Bi, Cây Kim Tiền, Cây Nha Đam...
+    * **Tier 2 (30 thẻ cây hoa & cây ăn trái):** Hoa Hồng Nhung, Hoa Mai Vàng, Hoa Đào, Hoa Phượng Vĩ, Cây Cam Sành, Cây Bưởi Da Xanh, Cây Xoài Cát, Cây Trầm Hương...
+    * **Tier 3 (20 thẻ danh mộc & đại thụ cổ kính):** Cây Baobab, Cây Đa Cổ Thụ, Cây Thông Longaeva, Cây Cự Sam Sequoia, Cây Bạch Quả, Cây Bụt Mọc, Sen Vua, Cây Sưa Đỏ...
+  - **Tối ưu hóa tài nguyên siêu nhẹ (Ultra-Fast Asset Loading):** Cắt cúp tỉ lệ vuông 1:1 (256x256), nén kép định dạng `.webp` chất lượng 85 (dung lượng chỉ ~15–25KB mỗi ảnh) kèm file fallback `.png`, bảo đảm ván đấu đa người chơi tải mượt mà dưới 100ms.
+- **Chuẩn Hóa Danh Pháp Thực Vật Học & Tên Gọi Tiếng Việt (`CardCatalog.java`):**
+  - **Loại bỏ hoàn toàn danh xưng kiếm hiệp / hư cấu:** Thay thế các tên cũ phi logic (*Thủy Mộc Thần Bí $\rightarrow$ Cây Bụt Mọc, Dương Quang Đại Thụ $\rightarrow$ Cây Bạch Quả, Bách Tùng Ngàn Năm $\rightarrow$ Cây Thông Longaeva, Mộc Miên Linh Ứng $\rightarrow$ Cây Hoa Gạo, Linh Chi Cổ Thụ $\rightarrow$ Nấm Linh Chi, Hoa Tulip Nước $\rightarrow$ Hoa Tulip*).
+  - **Đồng bộ tiền tố thực vật học (Cây / Hoa / Rau):** Gia tăng tính thẩm mỹ, nhất quán và giá trị giáo dục sinh thái Á Đông xuyên suốt toàn bộ ván đấu.
+- **Nâng Cấp Giao Diện Thẻ Cây Deep Forest Glassmorphism (`PlantCardUI.js`, `game.css`):**
+  - Bổ sung danh mục định danh `TIER_1_CARD_IDS`, `TIER_2_CARD_IDS`, `TIER_3_CARD_IDS` và `REAL_PHOTO_CARD_IDS` (90 thẻ).
+  - Tích hợp khung ảnh nhỏ `.card-art-thumb` bo góc mềm mại, nổi khối bóng đổ và hiệu ứng phóng to mượt mà (`transform: scale(1.08)`) khi di chuột vào thẻ.
+  - Tích hợp ảnh mẫu đại diện 3 cấp thẻ bài (`tier1_sprout`, `tier2_flower`, `tier3_tree`) cho 3 chồng bài rút giữa bàn đấu với hiệu ứng `background-blend-mode: overlay`.
+
+### 🧪 Kiểm Thử Tự Động & Hồi Quy (Testing & Verification)
+- **Bộ Kiểm Thử Đơn Vị Thẻ Cây Thực Tế (`tests/test_plant_card_ui.js`):** Xây dựng 22 test cases phủ 100% 90 file ảnh trên đĩa, kiểm tra quy tắc CSS, phương thức logic `getTierImage()` / `getCardImage()` và mô phỏng render DOM $\rightarrow$ Đạt **22/22 PASS 100%**.
+- **Bảo toàn toàn diện (Full Regression):** 35/35 Maven backend tests (`mvn test`), 46/46 Player Box UI tests, 10/10 Chat Toggle tests, 15/15 Endgame Announcement tests đều vượt qua tuyệt đối (**0 fail**).
+
+---
+
+## 🚀 [v1.3.6] — 2026-11-10
+### 💬 Tối Ưu Nút Thu Gọn Khung Chat & Loại Bỏ Icon Trùng Lặp (In-Game Chat Toggle & Collapse Streamlining — Issue #25)
+- **Sửa Lỗi Nút Thu Gọn Khung Chat (`#btn-toggle-chat-collapse`):**
+  - **Khắc phục lỗi không phản hồi:** Tối ưu hóa xử lý sự kiện trong `client/js/ui/ChatUI.js`, đảm bảo việc nhấp vào nút mũi tên thu gọn `#btn-toggle-chat-collapse` hoạt động ổn định và tức thì trên mọi trình duyệt.
+  - **Đồng bộ hóa 3 điểm chạm:** Cho phép người chơi thu gọn / mở rộng khung trò chuyện linh hoạt thông qua 3 thao tác tương đương:
+    1. Bấm nút mũi tên `#btn-toggle-chat-collapse` trên góc phải Chat Header.
+    2. Bấm vào toàn bộ thanh tiêu đề `#chat-header`.
+    3. Bấm vào Mini Ticker Bar thu gọn ở góc màn hình hoặc nút Trò Chuyện `#btn-toggle-chat` trên Top Bar.
+- **Loại Bỏ Icon Mũi Tên Trùng Lặp (De-duplicate Collapse Arrow):**
+  - **Dọn dẹp HTML (`client/game.html`):** Loại bỏ phần tử `.chat-ticker-expand-icon` bị thừa lặp bên trong thanh mini ticker `#chat-mini-ticker`, giữ giao diện hiển thị tinh gọn, sạch sẽ theo chuẩn Wireframe.
+  - **Bổ sung chuẩn trợ năng WCAG:** Thêm đầy đủ thuộc tính `aria-label="Thu gọn khung trò chuyện"` và `aria-expanded` đồng bộ trạng thái đóng/mở.
+- **Quy Tắc CSS Ẩn/Hiện Chặt Chẽ (`.hidden` & `.is-collapsed`):**
+  - **Bổ sung lớp tiện ích chung (`client/css/common.css`):** Khai báo quy tắc chuẩn `.hidden { display: none !important; }` để triệt tiêu tình trạng hiển thị chập chờn khi chuyển đổi trạng thái DOM.
+  - **Animation mượt mà (`client/css/game.css`):** Hiệu ứng trượt và mờ dần khi ẩn `.chat-body` và chuyển sang thanh `.chat-mini-ticker`, bảo vệ không gian quan sát bàn cờ cho người chơi.
+
+### 🧪 Kiểm Thử Tự Động & Hồi Quy (Testing & Regression)
+- **Bộ Kiểm Thử Đơn Vị Mới (`tests/test_chat_toggle_ui.js`):** Xây dựng bộ test chuyên trách gồm 10 test cases chuẩn AAA phủ 3 nhóm kiểm thử: Quy tắc CSS `.hidden`/`.is-collapsed`, loại bỏ nút trùng lặp, và mô phỏng tương tác sự kiện click đóng/mở $\rightarrow$ Đạt **10/10 PASS 100%**.
+- **Bảo toàn kiểm thử hồi quy:** Giữ vững 35/35 Maven backend tests và toàn bộ test suites frontend cũ.
+
+---
+
 ## 🚀 [v1.3.5] — 2026-11-06
 ### ⚡ Tối Ưu Tốc Độ Khởi Động Server In-Memory, Caching Sảnh Chờ & Keep-Alive 24/7 (Fast Boot & Keep-Alive Server)
 - **Tăng Tốc Khởi Động Spring Boot Gấp 3 Lần (Fast In-Memory Startup):**

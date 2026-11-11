@@ -1269,7 +1269,10 @@ html, body {
 /* Tier 3 Deck (Cổ Thụ) */
 .tier-deck-card.tier-3 {
   border: 1.5px solid #f59e0b;
-  background: linear-gradient(145deg, rgba(245, 158, 11, 0.28) 0%, rgba(20, 14, 5, 0.95) 100%);
+  background: 
+    linear-gradient(145deg, rgba(245, 158, 11, 0.32) 0%, rgba(20, 14, 5, 0.94) 100%),
+    url('../assets/images/plants/tier3_tree.webp') center/cover no-repeat;
+  background-blend-mode: overlay;
   box-shadow: 
     0 1px 0 #d97706,
     0 3px 0 #b45309,
@@ -1294,7 +1297,10 @@ html, body {
 /* Tier 2 Deck (Cây Hoa) */
 .tier-deck-card.tier-2 {
   border: 1.5px solid #ec4899;
-  background: linear-gradient(145deg, rgba(236, 72, 153, 0.25) 0%, rgba(24, 7, 16, 0.95) 100%);
+  background: 
+    linear-gradient(145deg, rgba(236, 72, 153, 0.3) 0%, rgba(24, 7, 16, 0.94) 100%),
+    url('../assets/images/plants/tier2_flower.webp') center/cover no-repeat;
+  background-blend-mode: overlay;
   box-shadow: 
     0 1px 0 #db2777,
     0 3px 0 #be185d,
@@ -1319,7 +1325,10 @@ html, body {
 /* Tier 1 Deck (Mầm Non) */
 .tier-deck-card.tier-1 {
   border: 1.5px solid #22c55e;
-  background: linear-gradient(145deg, rgba(34, 197, 94, 0.25) 0%, rgba(5, 20, 11, 0.95) 100%);
+  background: 
+    linear-gradient(145deg, rgba(34, 197, 94, 0.3) 0%, rgba(5, 20, 11, 0.94) 100%),
+    url('../assets/images/plants/tier1_sprout.webp') center/cover no-repeat;
+  background-blend-mode: overlay;
   box-shadow: 
     0 1px 0 #16a34a,
     0 3px 0 #15803d,
@@ -1399,20 +1408,29 @@ html, body {
   z-index: 25;
 }
 
-/* Tier Specific Themes */
+/* Tier Specific Themes with Botanical Fantasy Art */
 .plant-card.tier-1 {
   border-color: var(--tier-1-border);
-  background: var(--tier-1-bg);
+  background: 
+    linear-gradient(180deg, rgba(6, 26, 16, 0.82) 0%, rgba(2, 14, 8, 0.94) 100%),
+    url('../assets/images/plants/tier1_sprout.webp') center/cover no-repeat;
+  background-blend-mode: overlay;
 }
 
 .plant-card.tier-2 {
   border-color: var(--tier-2-border);
-  background: var(--tier-2-bg);
+  background: 
+    linear-gradient(180deg, rgba(28, 10, 22, 0.82) 0%, rgba(14, 4, 11, 0.94) 100%),
+    url('../assets/images/plants/tier2_flower.webp') center/cover no-repeat;
+  background-blend-mode: overlay;
 }
 
 .plant-card.tier-3 {
   border-color: var(--tier-3-border);
-  background: var(--tier-3-bg);
+  background: 
+    linear-gradient(180deg, rgba(28, 18, 5, 0.82) 0%, rgba(14, 8, 2, 0.94) 100%),
+    url('../assets/images/plants/tier3_tree.webp') center/cover no-repeat;
+  background-blend-mode: overlay;
 }
 
 /* Card Affordability States (Breathing Emerald Glow) */
@@ -1480,17 +1498,40 @@ html, body {
 
 /* Card Body */
 .card-body-meta {
-  text-align: center;
+  text-align: left;
   margin: 0.1rem 0;
   flex: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.32rem;
   min-height: 0;
+  padding: 0.12rem 0.32rem;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(4px);
+  overflow: hidden;
+}
+
+.card-art-thumb {
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.plant-card:hover .card-art-thumb {
+  transform: scale(1.1);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 .card-plant-name {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
   color: var(--text-pure);
   white-space: nowrap;
@@ -1498,6 +1539,7 @@ html, body {
   text-overflow: ellipsis;
   max-width: 100%;
   line-height: 1.25;
+  flex: 1;
 }
 
 /* Card Footer Costs */
