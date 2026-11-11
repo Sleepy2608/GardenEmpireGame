@@ -502,6 +502,37 @@ html, body {
   animation: turn-aura-pulse 2.2s infinite ease-in-out;
 }
 
+.opponent-card.player-abandoned,
+.opponent-card.player-left {
+  opacity: 0.55 !important;
+  filter: grayscale(0.65) !important;
+  border: 1.5px dashed rgba(239, 68, 68, 0.5) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+  pointer-events: none;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.badge-player-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(220, 38, 38, 0.25);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.podium-rank-card.player-abandoned {
+  opacity: 0.65;
+  filter: grayscale(0.5);
+  border-style: dashed;
+}
+
 /* 5 Structured Sections as per Wireframe (Image 2) */
 .player-box-section {
   padding: 0.32rem 0;
@@ -2397,6 +2428,20 @@ html, body {
   align-items: center;
   gap: 0.5rem;
   animation: float-subtle 3s ease-in-out infinite;
+}
+
+.toast-msg.toast-warning {
+  background: rgba(45, 26, 8, 0.95);
+  border-color: rgba(245, 158, 11, 0.6);
+  color: #fef3c7;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25);
+}
+
+.toast-msg.toast-error {
+  background: rgba(45, 12, 12, 0.95);
+  border-color: rgba(239, 68, 68, 0.6);
+  color: #fee2e2;
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.25);
 }
 
 /*

@@ -8,7 +8,7 @@ import { CONFIG } from '../config.js';
 import { sessionGuard } from '../utils/sessionGuard.js';
 import { navigateTo } from '../utils/navigation.js';
 
-class WaitingRoomUI {
+export class WaitingRoomUI {
   constructor() {
     // Player identity from localStorage
     this.myId     = localStorage.getItem('garden_empire_guest_id');
@@ -174,6 +174,16 @@ class WaitingRoomUI {
     switch (msg.type) {
       case 'ROOM_UPDATE':
         // Cập nhật danh sách người chơi real-time
+        if (msg.leftPlayer) {
+          const leftAvatar = msg.leftPlayer.avatar || '🌱';
+          const leftName = msg.leftPlayer.name || 'Người chơi';
+          this._showToast(`🍂 ${leftAvatar} ${leftName} đã rời phòng chờ.`, 'warning');
+          this._playNotificationSound();
+        }
+        if (msg.newHostId && msg.newHostId === this.myId && this.room && this.room.hostId !== this.myId) {
+          this._showToast('👑 Bạn đã trở thành Chủ Phòng mới! Hãy bắt đầu khi sẵn sàng.', 'success');
+          this._playNotificationSound();
+        }
         this.room = msg.room;
         this._renderRoom();
         break;
@@ -248,15 +258,35 @@ class WaitingRoomUI {
     return d.innerHTML;
   }
 
+  _playNotificationSound() {
+    try {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+      const ctx = new AudioContextClass();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.3);
+    } catch (_) {}
+  }
+
   _showToast(message, type = 'info') {
     const toast = document.getElementById('toast');
     if (!toast) return;
     toast.textContent = message;
-    toast.className   = `toast${type === 'error' ? ' error' : ''}`;
+    toast.className   = `toast toast-${type}${type === 'error' ? ' error' : (type === 'warning' ? ' warning' : (type === 'success' ? ' success' : ''))}`;
+    toast.classList.remove('hidden');
     clearTimeout(this._toastTimer);
     this._toastTimer = setTimeout(() => {
       toast.classList.add('hidden');
-    }, 3000);
+    }, 3200);
   }
 }
 

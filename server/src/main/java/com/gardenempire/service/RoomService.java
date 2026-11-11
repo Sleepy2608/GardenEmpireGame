@@ -183,6 +183,11 @@ public class RoomService {
 
     public Room leaveRoom(String roomId, String playerId) {
         Room room = getRoomById(roomId);
+        Player leftPlayer = room.getPlayers().stream()
+                .filter(p -> p.getId().equals(playerId))
+                .findFirst()
+                .orElse(null);
+
         room.getPlayers().removeIf(p -> p.getId().equals(playerId));
 
         if (room.getPlayers().isEmpty()) {
@@ -190,6 +195,7 @@ public class RoomService {
             return null;
         }
 
+        String newHostId = null;
         // Nếu chủ phòng rời, chuyển giao quyền cho người tiếp theo
         if (playerId.equals(room.getHostId())) {
             Player newHost = room.getPlayers().get(0);
@@ -197,10 +203,20 @@ public class RoomService {
             room.setHostId(newHost.getId());
             room.setHostName(newHost.getName());
             room.setHostAvatar(newHost.getAvatar());
+            newHostId = newHost.getId();
         }
 
         cleanupService.recordActivity(roomId);
-        messageHandler.broadcastRoomUpdate(roomId, room);
+
+        // Nếu phòng đang trong trạng thái PLAYING, cập nhật ván cờ tương ứng
+        if (room.getStatus() == RoomStatus.PLAYING) {
+            try {
+                com.gardenempire.game.GameState updatedState = gameService.handlePlayerLeave(roomId, playerId);
+                messageHandler.broadcastPlayerLeftGame(roomId, leftPlayer, updatedState);
+            } catch (Exception ignored) {}
+        }
+
+        messageHandler.broadcastRoomUpdate(roomId, room, leftPlayer, newHostId);
         return room;
     }
 

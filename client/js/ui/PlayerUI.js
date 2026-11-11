@@ -127,8 +127,9 @@ export class PlayerUI {
   }
 
   static renderOpponent(opponent, isCurrentTurn = false) {
+    const hasLeft = Boolean(opponent?.hasLeft);
     const el = document.createElement('div');
-    el.className = `opponent-card ${isCurrentTurn ? 'active-turn' : ''}`;
+    el.className = `opponent-card ${!hasLeft && isCurrentTurn ? 'active-turn' : ''} ${hasLeft ? 'player-abandoned player-left' : ''}`;
 
     const bonuses = opponent.bonuses || {};
     const totalPlants = opponent.purchasedCards?.length || 0;
@@ -175,7 +176,10 @@ export class PlayerUI {
       <!-- Section 1: Header (Tên & Điểm) -->
       <div class="player-box-section player-box-header opponent-card-header">
         <span class="player-box-name opponent-name" title="${opponent.name || 'Đối thủ'}">${opponent.name || 'Đối thủ'} ${opponent.isHost ? '👑' : ''}</span>
-        <span class="player-box-score-badge opponent-score-badge">★ ${opponent.prestigePoints || 0}</span>
+        ${hasLeft 
+          ? '<span class="badge-player-left">🍂 Đã Rời Ván</span>' 
+          : `<span class="player-box-score-badge opponent-score-badge">★ ${opponent.prestigePoints || 0}</span>`
+        }
       </div>
 
       <!-- Section 2: Cây đã trồng & Tài nguyên vĩnh viễn -->

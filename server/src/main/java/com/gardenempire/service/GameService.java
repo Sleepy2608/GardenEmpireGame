@@ -90,6 +90,13 @@ public class GameService {
                 return null;
             }
 
+            if (playerId != null && !"GET_STATE".equals(actionType)) {
+                var pOpt = game.getState().getPlayers().stream().filter(p -> p.getId().equals(playerId)).findFirst();
+                if (pOpt.isPresent() && pOpt.get().isHasLeft()) {
+                    throw new GameException("Bạn đã rời khỏi ván đấu.");
+                }
+            }
+
             boolean isTurnExempt = "GET_STATE".equals(actionType) || "SEND_CHAT".equals(actionType) || "CHAT".equals(actionType);
             if (!isTurnExempt) {
                 if (game.getState().isGameOver()) {
@@ -143,6 +150,25 @@ public class GameService {
     public void removeGame(String gameId) {
         activeGames.remove(gameId);
         roomLocks.remove(gameId);
+    }
+
+    public GameState handlePlayerLeave(String gameId, String playerId) {
+        java.util.concurrent.locks.ReentrantLock lock = roomLocks.computeIfAbsent(gameId, k -> new java.util.concurrent.locks.ReentrantLock(true));
+        lock.lock();
+        try {
+            Game game = activeGames.get(gameId);
+            if (game == null) {
+                return null;
+            }
+            gameEngine.handlePlayerLeave(game, playerId);
+            if (game.getState().isGameOver()) {
+                var roomOpt = roomManager.getRoom(gameId);
+                roomOpt.ifPresent(r -> r.setStatus(com.gardenempire.room.RoomStatus.FINISHED));
+            }
+            return game.getState();
+        } finally {
+            lock.unlock();
+        }
     }
 
     public com.gardenempire.game.ChatMessage sendChatMessage(String gameId, String playerId, String message) {

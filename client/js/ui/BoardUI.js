@@ -359,6 +359,30 @@ export class BoardUI {
       this.checkSpecialGameStates();
     } else if (message.type === 'CHAT_MESSAGE_RECEIVED') {
       chatUI.onMessageReceived(message.message, this.guestId);
+    } else if (message.type === 'PLAYER_LEFT_GAME') {
+      const leftPlayer = message.leftPlayer;
+      const leftName = leftPlayer?.name || 'Nghệ nhân';
+      const leftAvatar = leftPlayer?.avatar || '🌱';
+
+      this.showToast(`🍂 ${leftAvatar} ${leftName} đã rời khỏi bàn đấu.`, 'warning');
+      try {
+        SoundFX.playErrorSound?.();
+      } catch (_) {}
+
+      chatUI.onMessageReceived({
+        id: 'sys_' + Date.now(),
+        senderId: 'SYSTEM',
+        senderName: 'Hệ thống',
+        senderAvatar: '🍂',
+        content: `Nghệ nhân ${leftName} đã rời khỏi bàn cờ.`,
+        timestamp: Date.now()
+      }, this.guestId);
+
+      if (message.gameState) {
+        this.gameState.updateFromDto(message.gameState);
+        this.render();
+        this.checkSpecialGameStates();
+      }
     } else if (message.type === 'ROOM_CLOSED') {
       if (this.endgameTimerInterval) {
         clearInterval(this.endgameTimerInterval);
@@ -458,7 +482,12 @@ export class BoardUI {
     banner.classList.remove('my-turn', 'final-round');
 
     if (this.gameState.isGameOver) {
-      messageEl.textContent = '🏆 VÁN ĐẤU ĐÃ KẾT THÚC!';
+      const activePlayers = (this.gameState.players || []).filter(p => !p.hasLeft);
+      if (activePlayers.length === 1 && activePlayers[0].id === this.guestId) {
+        messageEl.textContent = '🏆 ĐỐI THỦ ĐÃ RỜI BÀN — BẠN ĐẠT CHIẾN THẮNG MẶC ĐỊNH!';
+      } else {
+        messageEl.textContent = '🏆 VÁN ĐẤU ĐÃ KẾT THÚC!';
+      }
       return;
     }
 
@@ -784,7 +813,9 @@ export class BoardUI {
   }
 
   getWinnerPlayer() {
-    const sorted = [...this.gameState.players].sort((a, b) => {
+    const activePlayers = (this.gameState.players || []).filter(p => !p.hasLeft);
+    const candidateList = activePlayers.length > 0 ? activePlayers : (this.gameState.players || []);
+    const sorted = [...candidateList].sort((a, b) => {
       if ((b.prestigePoints || 0) !== (a.prestigePoints || 0)) {
         return (b.prestigePoints || 0) - (a.prestigePoints || 0);
       }
@@ -845,17 +876,26 @@ export class BoardUI {
     if (!list) return;
 
     list.innerHTML = '';
-    const sorted = [...this.gameState.players].sort((a, b) => {
+    const activePlayers = (this.gameState.players || []).filter(p => !p.hasLeft);
+    const leftPlayers = (this.gameState.players || []).filter(p => p.hasLeft);
+
+    const sortFn = (a, b) => {
       if ((b.prestigePoints || 0) !== (a.prestigePoints || 0)) {
         return (b.prestigePoints || 0) - (a.prestigePoints || 0);
       }
       return (a.purchasedCards?.length || 0) - (b.purchasedCards?.length || 0);
-    });
+    };
+
+    activePlayers.sort(sortFn);
+    leftPlayers.sort(sortFn);
+    const sorted = [...activePlayers, ...leftPlayers];
     const winner = this.getWinnerPlayer() || sorted[0];
 
     // Announcement banner
     if (announcement && winner) {
-      if (winner.id === this.guestId) {
+      if (activePlayers.length === 1 && winner.id === this.guestId) {
+        announcement.textContent = `🏆 TẤT CẢ ĐỐI THỦ ĐÃ RỜI BÀN — BẠN LÀ QUÁN QUÂN DUY NHẤT!`;
+      } else if (winner.id === this.guestId) {
         announcement.textContent = `🎉 XUẤT SẮC! BẠN ĐÃ ĐOẠT DANH HIỆU TÂN VƯƠNG ĐẾ CHẾ!`;
       } else {
         announcement.textContent = `★ Chúc mừng ${winner.name} đã đăng quang với ${winner.prestigePoints} Điểm Uy Tín! ★`;
@@ -883,23 +923,25 @@ export class BoardUI {
     const rankIcons = ['🥇', '🥈', '🥉', '4️⃣'];
 
     sorted.forEach((p, idx) => {
-      const rankIcon = rankIcons[idx] || `#${idx + 1}`;
-      const isWinner = (winner && p.id === winner.id) || idx === 0;
+      const hasLeft = Boolean(p.hasLeft);
+      const rankIcon = hasLeft ? '🍂' : (rankIcons[idx] || `#${idx + 1}`);
+      const isWinner = (winner && p.id === winner.id) || (idx === 0 && !hasLeft);
       const isMe = p.id === this.guestId;
       const card = document.createElement('div');
-      card.className = `podium-rank-card ${isWinner ? 'rank-1' : ''} ${isMe ? 'is-me' : ''}`;
+      card.className = `podium-rank-card ${isWinner ? 'rank-1' : ''} ${isMe ? 'is-me' : ''} ${hasLeft ? 'player-abandoned' : ''}`;
 
       const avatar = p.avatar || '🌿';
       const cardCount = p.purchasedCards?.length || 0;
       const visitorCount = p.visitors?.length || p.claimedVisitors?.length || 0;
       const tokenCount = Object.values(p.tokens || {}).reduce((a, b) => a + b, 0);
+      const statusTag = hasLeft ? '<span class="badge-player-left" style="margin-left: 0.35rem;">🍂 Đã rời ván</span>' : '';
 
       card.innerHTML = `
         <div class="podium-left">
           <span class="podium-badge">${rankIcon}</span>
           <span style="font-size: 1.4rem;">${avatar}</span>
           <div class="podium-name-group">
-            <span class="podium-name">${p.name} ${isWinner ? '👑' : ''}</span>
+            <span class="podium-name">${p.name} ${isWinner ? '👑' : ''} ${statusTag}</span>
             ${isMe ? '<span class="podium-me-tag">Bạn</span>' : ''}
           </div>
         </div>
@@ -989,19 +1031,19 @@ export class BoardUI {
     if (modal) modal.classList.add('hidden');
   }
 
-  showToast(message) {
+  showToast(message, type = 'info') {
     const container = document.getElementById('toast-container');
     if (!container) return;
 
     const toast = document.createElement('div');
-    toast.className = 'toast-msg';
+    toast.className = `toast-msg toast-${type}${type === 'warning' ? ' toast-warning' : (type === 'error' ? ' toast-error' : '')}`;
     toast.textContent = message;
     container.appendChild(toast);
 
     setTimeout(() => {
       toast.style.opacity = '0';
       setTimeout(() => toast.remove(), 300);
-    }, 3000);
+    }, 3200);
   }
 }
 

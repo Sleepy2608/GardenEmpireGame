@@ -3,6 +3,28 @@
 Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game** được ghi chép và lưu trữ đầy đủ tại tài liệu này từ giai đoạn khởi tạo ban đầu (v0.0.0).  
 Định dạng dựa trên [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), và dự án tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 🚀 [v1.4.1] — 2026-11-12
+### 🍂 Thông Báo Người Chơi Rời Phòng, Chống Đóng Băng Lượt Đi & Chiến Thắng Mặc Định (Player Leave System & Walkover Victory)
+- **Xử Lý Rời Phòng Tại Phòng Chờ (Waiting Room):**
+  - **Broadcast Sự Kiện `ROOM_UPDATE` Mở Rộng:** Server gửi kèm thông tin người vừa rời (`leftPlayer = { id, name, avatar }`) và ID chủ phòng mới (`newHostId`).
+  - **Toast Thông Báo Sinh Thái & Âm Thanh Pop:** Hiển thị Toast màu hổ phách `🍂 [Avatar] [Tên] đã rời phòng chờ.` kèm âm thanh chuông pop nhẹ nhàng qua Web Audio API.
+  - **Tự Động Chuyển Giao Quyền Chủ Phòng:** Khi Host rời đi, người kế tiếp tự động trở thành Chủ phòng mới, nhận Toast chúc mừng mạ vàng `👑 Bạn đã trở thành Chủ Phòng mới! Hãy bắt đầu khi sẵn sàng.` và mở ngay bộ điều khiển Host.
+  - **Tự Động Khóa Nút Bắt Đầu:** Vô hiệu hóa nút "Bắt Đầu" và cập nhật dòng nhắc nhở nếu số thành viên trong phòng giảm xuống dưới 2 người.
+- **Xử Lý Rời Ván Đấu & Chống Đóng Băng (In-Game Match & Anti-Freeze Turn Engine):**
+  - **Broadcast `PLAYER_LEFT_GAME`:** Bắn sự kiện thời gian thực tới toàn bàn cờ, hiển thị Toast cảnh báo và đẩy 1 tin nhắn hệ thống vào khung Chat trực tuyến (`ChatUI`).
+  - **Đánh Dấu Ghế Tabletop 3D:** Ghế ngồi của đối thủ đã thoát tự động áp dụng class `.player-abandoned`, giảm opacity (0.55), chuyển tông màu xám và gắn huy hiệu `<span class="badge-player-left">🍂 Đã Rời Ván</span>`.
+  - **Chống Đóng Băng Lượt Đi (Anti-Freeze Turn):** Nếu người chơi rời đi khi đang nắm giữ lượt đi (`currentTurnPlayerId`), `GameEngine` tự động chuyển giao lượt đi cho nghệ nhân kế tiếp còn active mà không làm gián đoạn ván cờ.
+  - **Bỏ Qua Lượt (Turn-Skipping):** Chu trình xoay vòng lượt chơi tự động bỏ qua toàn bộ người chơi đã rời ván.
+  - **Chặn Hành Động:** Chặn mọi hành động (lấy token, mua thẻ, đặt chỗ) từ những người chơi đã rời bàn cờ.
+- **Luật Chiến Thắng Mặc Định (Walkover Victory):**
+  - Khi tất cả đối thủ đều đã rời đi và chỉ còn duy nhất 1 người chơi ở lại, ván đấu lập tức chuyển sang trạng thái `FINISHED`.
+  - Người chơi duy nhất còn lại lập tức được tôn vinh là Quán Quân với banner: `🏆 TẤT CẢ ĐỐI THỦ ĐÃ RỜI BÀN — BẠN LÀ QUÁN QUÂN DUY NHẤT!`, mở Pop-up vinh danh và đếm ngược 20s quay về sảnh.
+  - Người đã rời ván bị loại khỏi danh sách xét giải Quán quân kể cả khi trước đó sở hữu điểm số cao.
+- **Bộ Kiểm Thử Tự Động Toàn Diện (AAA Testing Suites):**
+  - `server/src/test/java/com/gardenempire/game/GameEnginePlayerLeaveTest.java`: 5 test cases JUnit 5 kiểm tra logic chuyển lượt, walkover 2 người, skip lượt, và chặn hành động.
+  - `tests/test_player_leave_notification_ui.js`: 22 test cases Node.js kiểm tra hiển thị ghế mờ, badge đã rời ván, Toast phòng chờ, Toast phong host, System chat, và Walkover modal.
+  - `tests/test_multi_tab_player_leave_e2e.js`: 8 test cases kiểm tra kịch bản đồng bộ 3 Tab WebSocket.
+
 ## 🚀 [v1.4.0] — 2026-11-11
 ### 🌿 Nâng Cấp Trọn Bộ 90 Ảnh Cây Chụp Thực Tế & Chuẩn Hóa Sinh Thái Học (100% Real Botanical Plant Photos & Nomenclature)
 - **Độ Phủ Tuyệt Đối 100% Ảnh Chụp Thực Tế (90/90 Thẻ Bài — 0% Ảnh AI):**
