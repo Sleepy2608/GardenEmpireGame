@@ -65,6 +65,13 @@
   gap: 0.75rem;
 }
 
+.dashboard-actions-right a.btn-nature-secondary {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 /* Dashboard Main Grid: 2 Columns on Desktop */
 .dashboard-main-grid {
   width: 100%;
