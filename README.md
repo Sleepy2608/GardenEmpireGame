@@ -45,6 +45,9 @@
 
 ## 🎲 2. Cốt Truyện & Luật Chơi Cốt Lõi
 
+> 📜 **Biên Niên Sử Flora Valley (Lore):** Lấy bối cảnh thời kỳ *Phục Hưng Thực Vật Học (The Botanical Renaissance)* tại thung lũng màu mỡ **Flora Valley**, người chơi hóa thân thành một **Master Gardener (Bậc Thầy Làm Vườn)** xuất phát từ mảnh đất nhỏ đơn sơ và lượng tài nguyên hạn chế, từng bước ươm mầm các loài thảo mộc, xây dựng cỗ máy sinh thái và thu hút sự công nhận từ 10 Giám Tuyển Hoàng Gia để đoạt danh hiệu Tân Vương Đế Chế Vườn Sinh Thái.  
+> 📖 *Đọc toàn bộ kịch bản cốt truyện & truyền thuyết thế giới tại:* [.doc/storyline.md](.doc/storyline.md)
+
 ### 🔹 Hệ Thống Tài Nguyên (6 Loại Năng Lượng)
 | Tài Nguyên | Biểu Tượng | Mô Tả |
 |---|:---:|---|
