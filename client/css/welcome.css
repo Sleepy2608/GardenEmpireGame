@@ -61,6 +61,24 @@ html {
   color-scheme: dark;
 }
 
+@view-transition {
+  navigation: auto;
+}
+
+/* Tactile Active Physics & Focus Rings (charles-polish) */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #34d399;
+  outline-offset: 3px;
+}
+
+.btn-welcome-primary:active,
+.btn-welcome-secondary:active,
+.nav-cta-btn:active {
+  transform: scale(0.97) !important;
+  transition-duration: 80ms !important;
+}
+
 body.welcome-body {
   background-color: var(--welcome-bg-deep);
   background-image: var(--welcome-bg-gradient);
