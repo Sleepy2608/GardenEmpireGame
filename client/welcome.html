@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Garden Empire — Khởi Tạo Kỳ Quan Vườn Sinh Thái</title>
+
+  <!-- SEO & Social Meta Tags -->
+  <meta name="description" content="Chào mừng đến với Garden Empire: Trò chơi chiến thuật xây dựng động cơ tài nguyên thời gian thực lấy cảm hứng từ Splendor trong bối cảnh thánh địa thực vật học Flora Valley.">
+  <meta name="keywords" content="garden empire, splendor online, board game sinh thái, flora valley, game chien thuat, game trong cay">
+  <meta name="author" content="Garden Empire Team">
+  <meta name="theme-color" content="#05130b">
+  <link rel="canonical" href="https://garden-empire-game.vercel.app/welcome">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://garden-empire-game.vercel.app/welcome">
+  <meta property="og:title" content="Garden Empire — Khởi Tạo Kỳ Quan Vườn Sinh Thái">
+  <meta property="og:description" content="Thu thập 6 dòng tinh hoa năng lượng, ươm mầm 90 loài thực vật quý hiếm và chinh phục 10 Vị Khách Hoàng Gia để đăng quang Tân Vương.">
+  <meta property="og:image" content="https://garden-empire-game.vercel.app/assets/images/garden_empire.jpg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="alternate icon" type="image/png" href="favicon.png">
+
+  <!-- Google Fonts: Renaissance & Display Stacks -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/welcome.css">
+</head>
+<body class="welcome-body">
+
+  <!-- Canvas Ambient Spore Particles -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Ambient Light Blobs -->
+  <div class="ambient-glow ambient-glow-top"></div>
+  <div class="ambient-glow ambient-glow-amber"></div>
+
+  <!-- 1. Floating Glass Navigation -->
+  <header class="welcome-nav-wrapper">
+    <nav class="welcome-navbar" aria-label="Thanh điều hướng chính">
+      <a href="welcome.html" class="welcome-nav-brand">
+        <div class="brand-icon-wrapper">🌿</div>
+        <div class="brand-text-group">
+          <span class="brand-title-text">GARDEN EMPIRE</span>
+          <span class="brand-tagline-text">Flora Valley Codex</span>
+        </div>
+      </a>
+
+      <ul class="welcome-nav-links">
+        <li><a href="#lore" class="nav-link-item">Thung Lũng Flora</a></li>
+        <li><a href="#essences" class="nav-link-item">Lục Đại Tinh Hoa</a></li>
+        <li><a href="#plants" class="nav-link-item">Hệ Thực Vật</a></li>
+        <li><a href="#visitors" class="nav-link-item">Khách Hoàng Gia</a></li>
+        <li><a href="#strategy" class="nav-link-item">Quy Tắc Đấu Trí</a></li>
+      </ul>
+
+      <!-- CTA to Index -->
+      <a href="index.html" class="nav-cta-btn" id="nav-btn-play">
+        <span>Bắt Đầu Chơi</span>
+        <span>→</span>
+      </a>
+    </nav>
+  </header>
+
+  <main class="welcome-container">
+
+    <!-- 2. Hero Section (Attention) -->
+    <section class="welcome-hero-section" id="hero">
+      <div class="hero-pill-tag">
+        <span class="hero-pill-dot"></span>
+        <span>Kỷ Nguyên Phục Hưng Thực Vật Học · v1.4.1</span>
+      </div>
+
+      <!-- H1 Iron Rule: Wide container, strictly 2-3 lines -->
+      <h1 class="hero-headline-wide">
+        Khởi Tạo Kỳ Quan Sinh Thái <br>
+        <span class="hero-headline-accent">Trong Từng Lượt Đấu Trí</span>
+      </h1>
+
+      <p class="hero-subhead">
+        Hóa thân thành Bậc Thầy Làm Vườn tại thánh địa Flora Valley. Thu thập 6 dòng tinh hoa nguyên tố, 
+        nghiên cứu 90 loài kỳ hoa dị thảo và thu hút sự công nhận từ 10 Vị Khách Hoàng Gia để đoạt lấy vương miện đế chế.
+      </p>
+
+      <!-- Primary & Secondary CTAs -->
+      <div class="hero-cta-group">
+        <a href="index.html" class="btn-welcome-primary" id="hero-btn-start">
+          <span>🌿 Bắt Đầu Chơi Ngay</span>
+          <span>→</span>
+        </a>
+        <a href="#lore" class="btn-welcome-secondary">
+          <span>Khám Phá Biên Niên Sử</span>
+          <span>↓</span>
+        </a>
+      </div>
+
+      <!-- Physical 3D Card Showcase Tilt -->
+      <div class="hero-cards-preview" aria-label="Bộ thẻ bài thực vật mẫu">
+        <!-- Tier 1: Cỏ Ba Lá -->
+        <div class="preview-card preview-card-tilt-left" title="Tier 1: Cỏ Ba Lá">
+          <img src="assets/images/plants/t1_e1.webp" alt="Thẻ bài Cỏ Ba Lá" loading="lazy">
+          <div class="preview-card-overlay">
+            <div class="preview-card-tier">Tier 1 · Mầm Non</div>
+            <div class="preview-card-name">Cỏ Ba Lá</div>
+          </div>
+        </div>
+
+        <!-- Tier 3: Cự Sam Sequoia (Center Highlight) -->
+        <div class="preview-card preview-card-center" title="Tier 3: Cự Sam Sequoia">
+          <img src="assets/images/plants/t3_su1.webp" alt="Thẻ bài Cự Sam Sequoia" loading="eager">
+          <div class="preview-card-overlay">
+            <div class="preview-card-tier">Tier 3 · Đại Cổ Thụ (3★)</div>
+            <div class="preview-card-name">Cự Sam Sequoia</div>
+          </div>
+        </div>
+
+        <!-- Tier 2: Hoa Tulip -->
+        <div class="preview-card preview-card-tilt-right" title="Tier 2: Hoa Tulip">
+          <img src="assets/images/plants/t2_w1.webp" alt="Thẻ bài Hoa Tulip" loading="lazy">
+          <div class="preview-card-overlay">
+            <div class="preview-card-tier">Tier 2 · Hoa Cảnh (1★)</div>
+            <div class="preview-card-name">Hoa Tulip</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Real-Time Stats Ribbon -->
+    <section class="welcome-stats-strip" aria-label="Quy mô trò chơi">
+      <div class="stats-grid-row">
+        <div class="stat-item">
+          <span class="stat-value">90</span>
+          <span class="stat-label">Loài Thực Vật Thực Tế</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">6</span>
+          <span class="stat-label">Dòng Tinh Hoa Năng Lượng</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">10</span>
+          <span class="stat-label">Linh Thú Giám Tuyển</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">15★</span>
+          <span class="stat-label">Ngưỡng Danh Vọng Chung Cuộc</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Interactive Bento Grid (Interest) -->
+    <section class="welcome-bento-section" id="essences">
+      <div class="section-header-centered">
+        <span class="section-tag">Hệ Thống Trò Chơi</span>
+        <h2 class="section-title">Hệ Sinh Thái Chiến Thuật Hoàn Hảo</h2>
+        <p class="section-desc">Mọi nhánh rễ, giọt sương và tia nắng đều được liên kết chặt chẽ theo cơ chế xây dựng động cơ tài nguyên sâu sắc.</p>
+      </div>
+
+      <div class="bento-grid">
+        
+        <!-- Bento Card 1: 6 Elemental Essences (Span 8) -->
+        <div class="bento-card bento-col-8">
+          <h3 class="bento-card-title">Lục Đại Tinh Hoa Năng Lượng</h3>
+          <p class="bento-card-sub">Nguồn nguyên liệu cốt lõi để nuôi dưỡng và phát triển khu vườn từ thuở sơ khai.</p>
+          
+          <div class="tokens-flex-showcase">
+            <div class="token-chip-box" title="Đất phù sa nuôi dưỡng rễ cái">
+              <img src="assets/images/resources/dirt.png" alt="Đất" class="token-img-icon">
+              <div class="token-chip-name">Đất Nâu</div>
+              <div class="token-chip-role">Vững chãi</div>
+            </div>
+
+            <div class="token-chip-box" title="Nguồn tưới tiêu trong lành">
+              <img src="assets/images/resources/water.png" alt="Nước" class="token-img-icon">
+              <div class="token-chip-name">Nước Suối</div>
+              <div class="token-chip-role">Mát lành</div>
+            </div>
+
+            <div class="token-chip-box" title="Năng lượng quang hợp ấm áp">
+              <img src="assets/images/resources/sunlight.png" alt="Ánh Sáng" class="token-img-icon">
+              <div class="token-chip-name">Ánh Sáng</div>
+              <div class="token-chip-role">Rực rỡ</div>
+            </div>
+
+            <div class="token-chip-box" title="Mầm sống thuần khiết ban sơ">
+              <img src="assets/images/resources/seed.png" alt="Hạt Giống" class="token-img-icon">
+              <div class="token-chip-name">Hạt Giống</div>
+              <div class="token-chip-role">Sinh sôi</div>
+            </div>
+
+            <div class="token-chip-box" title="Khoáng chất vi lượng tăng trưởng">
+              <img src="assets/images/resources/nutrient.png" alt="Dinh Dưỡng" class="token-img-icon">
+              <div class="token-chip-name">Dinh Dưỡng</div>
+              <div class="token-chip-role">Dồi dào</div>
+            </div>
+
+            <div class="token-chip-box" title="Tinh chất luyện kim vạn năng">
+              <img src="assets/images/resources/fertilizer.png" alt="Phân Bón Vàng" class="token-img-icon">
+              <div class="token-chip-name">Phân Bón Vàng</div>
+              <div class="token-chip-role">Đa năng ⭐</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bento Card 2: Engine Building (Span 4) -->
+        <div class="bento-card bento-col-4">
+          <h3 class="bento-card-title">Cỗ Máy Sinh Thái</h3>
+          <p class="bento-card-sub">Cơ chế giảm giá vĩnh viễn (Engine Building).</p>
+          
+          <div class="engine-steps-list">
+            <div class="engine-step-item">
+              <div class="step-num-badge">1</div>
+              <div>
+                <div class="step-content-title">Tích Lũy Tinh Hoa</div>
+                <div class="step-content-desc">Bốc 3 token khác màu hoặc 2 viên cùng loại. Giới hạn tối đa 10 viên trên tay.</div>
+              </div>
+            </div>
+
+            <div class="engine-step-item">
+              <div class="step-num-badge">2</div>
+              <div>
+                <div class="step-content-title">Gieo Trồng Thảo Mộc</div>
+                <div class="step-content-desc">Mỗi cây đã trồng cung cấp vĩnh viễn 1 mức giảm giá tài nguyên trọn đời.</div>
+              </div>
+            </div>
+
+            <div class="engine-step-item">
+              <div class="step-num-badge">3</div>
+              <div>
+                <div class="step-content-title">Mua Cây 0 Token</div>
+                <div class="step-content-desc">Khi vườn trù phú, bạn có thể trồng những cây cấp cao hoàn toàn miễn phí.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bento Card 3: 3 Botanical Tiers (Span 6) -->
+        <div class="bento-card bento-col-6" id="plants">
+          <h3 class="bento-card-title">Tam Tầng Thảo Mộc (90 Loài)</h3>
+          <p class="bento-card-sub">Phân cấp sinh quyển theo phân loại học chuẩn Linnaeus.</p>
+
+          <div class="tiers-tri-row">
+            <div class="tier-pillar-box">
+              <span class="tier-badge-pill tier-badge-t1">Tầng 1 · Mầm Sống</span>
+              <div class="tier-pillar-title">Cỏ Mầm & Rau Củ</div>
+              <div class="tier-pillar-count">40 Thẻ Bài</div>
+              <p class="tier-pillar-desc">Chi phí rẻ, nền móng xây dựng chuỗi giảm giá ban đầu.</p>
+            </div>
+
+            <div class="tier-pillar-box">
+              <span class="tier-badge-pill tier-badge-t2">Tầng 2 · Thượng Uyển</span>
+              <div class="tier-pillar-title">Hoa Trái & Cây Bụi</div>
+              <div class="tier-pillar-count">30 Thẻ Bài</div>
+              <p class="tier-pillar-desc">Cung cấp 1-3 Điểm Uy Tín, bàn đạp thu hút linh thú.</p>
+            </div>
+
+            <div class="tier-pillar-box">
+              <span class="tier-badge-pill tier-badge-t3">Tầng 3 · Thần Thoại</span>
+              <div class="tier-pillar-title">Đại Cổ Thụ</div>
+              <div class="tier-pillar-count">20 Thẻ Bài</div>
+              <p class="tier-pillar-desc">Kỳ quan đại ngàn mang lại 3-5 Điểm Uy Tín bứt phá ngai vàng.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bento Card 4: 10 Royal Visitors (Span 6) -->
+        <div class="bento-card bento-col-6" id="visitors">
+          <h3 class="bento-card-title">10 Giám Tuyển Hoàng Gia (+3★)</h3>
+          <p class="bento-card-sub">Các linh thú thông tuệ tự động ngự thăm khi khu vườn hội đủ điều kiện hương sắc.</p>
+
+          <div class="visitors-strip-row">
+            <div class="visitor-mini-avatar" title="Ong Chúa Vườn Hoa">
+              <img src="assets/images/visitors/v_01_ong_chua.png" alt="Ong Chúa Vườn Hoa" loading="lazy">
+            </div>
+            <div class="visitor-mini-avatar" title="Bướm Nữ Hoàng Alexandra">
+              <img src="assets/images/visitors/v_02_buom_alexandra.png" alt="Bướm Nữ Hoàng Alexandra" loading="lazy">
+            </div>
+            <div class="visitor-mini-avatar" title="Bọ Rùa May Mắn">
+              <img src="assets/images/visitors/v_03_bo_rua.png" alt="Bọ Rùa May Mắn" loading="lazy">
+            </div>
+            <div class="visitor-mini-avatar" title="Chim Hoàng Yến Vàng">
+              <img src="assets/images/visitors/v_04_chim_hoang_yen.png" alt="Chim Hoàng Yến Vàng" loading="lazy">
+            </div>
+            <div class="visitor-mini-avatar" title="Sóc Nâu Tinh Nghịch">
+              <img src="assets/images/visitors/v_05_soc_nau.png" alt="Sóc Nâu Tinh Nghịch" loading="lazy">
+            </div>
+            <div class="visitor-mini-avatar" title="Ốc Sên Chậm Chạp">
+              <img src="assets/images/visitors/v_06_oc_sen.png" alt="Ốc Sên Chậm Chạp" loading="lazy">
+            </div>
+            <div class="visitor-mini-avatar" title="Chim Én Mùa Xuân">
+              <img src="assets/images/visitors/v_07_chim_en.png" alt="Chim Én Mùa Xuân" loading="lazy">
+            </div>
+            <div class="visitor-mini-avatar" title="Kiến Thợ Cần Mẫn">
+              <img src="assets/images/visitors/v_08_kien_tho.png" alt="Kiến Thợ Cần Mẫn" loading="lazy">
+            </div>
+            <div class="visitor-mini-avatar" title="Bọ Hung Cơ Bắp">
+              <img src="assets/images/visitors/v_09_bo_hung.png" alt="Bọ Hung Cơ Bắp" loading="lazy">
+            </div>
+            <div class="visitor-mini-avatar" title="Chuồn Chuồn Nắng Mưa">
+              <img src="assets/images/visitors/v_10_chuon_chuon.png" alt="Chuồn Chuồn Nắng Mưa" loading="lazy">
+            </div>
+          </div>
+          <div style="margin-top: 14px; font-size: 0.85rem; color: var(--welcome-gold-bright);">
+            ✨ Rước khách hoàn toàn tự động, cộng ngay 3 Điểm Uy Tín mà không tiêu tốn lượt đi!
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 5. Lore & Codex Section (Desire) -->
+    <section class="welcome-codex-section" id="lore">
+      <div class="codex-scroll-container">
+        <div>
+          <span class="section-tag">Biên Niên Sử Flora Valley</span>
+          <blockquote class="codex-quote">
+            "Từ một hạt giống ngủ vùi trong lòng đất lạnh, đến khi vươn mình thành đại thụ che mát cả bầu trời — đó không chỉ là sự sinh trưởng, mà là cả một cuộc viễn chinh của ý chí, tri thức và nghệ thuật."
+          </blockquote>
+          <p class="codex-text-body">
+            Tại trung tâm lục địa Aethelgard thời kỳ Phục Hưng, Viện Hàn Lâm Thảo Mộc Hoàng Gia mở hội tranh tài giữa 2 đến 4 Master Gardeners. 
+            Mỗi người bắt đầu với một mảnh đất nhỏ đơn sơ và 10 đơn vị tinh hoa tối đa. Ai chạm mốc 15 Điểm Uy Tín trước sẽ kích hoạt vòng chung kết để phân định ngôi vị Tân Vương.
+          </p>
+          <div class="codex-features-list">
+            <div class="codex-feature-badge">
+              <span class="feature-icon">👑</span>
+              <span>Ngưỡng Chung Kết 15★</span>
+            </div>
+            <div class="codex-feature-badge">
+              <span class="feature-icon">⚖️</span>
+              <span>Tie-breaker: Ít Cây Hơn Thắng</span>
+            </div>
+            <div class="codex-feature-badge">
+              <span class="feature-icon">⚡</span>
+              <span>Đồng Bộ WebSocket 0ms</span>
+            </div>
+            <div class="codex-feature-badge">
+              <span class="feature-icon">🛡️</span>
+              <span>Chiến Thắng Mặc Định Walkover</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="codex-artwork-col">
+          <img src="assets/images/garden_empire.jpg" alt="Thánh địa Flora Valley Garden Empire" loading="lazy">
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Grand Portal Callout (Action) -->
+    <section class="welcome-final-cta-section" id="strategy">
+      <h2 class="final-cta-title">Sẵn Sàng Trở Thành Tân Vương Vườn Sinh Thái?</h2>
+      <p class="final-cta-sub">
+        Mảnh đất của bạn tại Flora Valley đang chờ đợi hạt mầm đầu tiên. Hãy bước vào sảnh đấu, chọn linh vật và tranh tài cùng các nghệ nhân khắp bốn phương!
+      </p>
+
+      <!-- The Grand Portal Link straight into index.html -->
+      <a href="index.html" class="btn-grand-portal" id="footer-btn-enter">
+        <span>🌱 BẮT ĐẦU CHƠI NGAY</span>
+        <span>→</span>
+      </a>
+    </section>
+
+  </main>
+
+  <!-- 7. Footer -->
+  <footer class="welcome-footer">
+    <div class="welcome-container">
+      <div class="footer-nav-row">
+        <a href="index.html">Vào Vườn Đấu (Index)</a>
+        <a href="lobby.html">Sảnh Chờ Phòng Đấu</a>
+        <a href="../.doc/storyline.md" target="_blank">Biên Niên Sử (Storyline)</a>
+        <a href="../.doc/how_to_play.md" target="_blank">Cẩm Nang Luật Chơi</a>
+        <a href="https://github.com/Sleepy2608/GardenEmpireGame" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <p class="footer-credit">
+        © 2026 Garden Empire Project · Lấy cảm hứng từ kiệt tác board game Splendor · Phiên bản v1.4.1
+      </p>
+    </div>
+  </footer>
+
+  <!-- Welcome Scripts -->
+  <script src="js/welcome.js"></script>
+</body>
+</html>

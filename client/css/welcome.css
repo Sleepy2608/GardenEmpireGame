@@ -1,0 +1,1049 @@
+/* ==========================================================================
+   GARDEN EMPIRE — WELCOME DASHBOARD STYLESHEET (welcome.css)
+   Design System: Deep Forest Glassmorphism & Renaissance Botanical Aesthetics
+   Skills Applied: design-taste-frontend, gpt-taste, charles-unslop, charles-polish
+   ========================================================================== */
+
+:root {
+  /* Surface & Backgrounds */
+  --welcome-bg-deep: #05130b;
+  --welcome-bg-gradient: radial-gradient(circle at 50% 15%, #0e3020 0%, #06180e 45%, #040e07 100%);
+  --welcome-glass-surface: rgba(13, 38, 26, 0.72);
+  --welcome-glass-elevated: rgba(18, 52, 35, 0.85);
+  --welcome-glass-border: rgba(52, 211, 153, 0.22);
+  --welcome-glass-border-hover: rgba(52, 211, 153, 0.45);
+  --welcome-glass-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  /* Royal Gold & Nature Emerald */
+  --welcome-gold-primary: #f59e0b;
+  --welcome-gold-bright: #fbbf24;
+  --welcome-gold-border: rgba(245, 158, 11, 0.35);
+  --welcome-gold-glow: 0 0 24px rgba(245, 158, 11, 0.35);
+  --welcome-emerald-primary: #10b981;
+  --welcome-emerald-glow: 0 0 24px rgba(16, 185, 129, 0.35);
+
+  /* Typography Colors */
+  --welcome-text-hero: #ffffff;
+  --welcome-text-primary: #f0fdf4;
+  --welcome-text-secondary: #cbd5e1;
+  --welcome-text-muted: #94a3b8;
+
+  /* Typography Stacks */
+  --font-serif-renaissance: 'Cinzel', 'Playfair Display', Georgia, serif;
+  --font-sans-display: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  --font-sans-body: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+
+  /* Spacing Tokens */
+  --space-unit: 8px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 9999px;
+
+  /* Motion & Easing (charles-ux-animation) */
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 0.2s var(--ease-smooth);
+  --transition-medium: 0.35s var(--ease-spring);
+  --transition-slow: 0.6s var(--ease-spring);
+}
+
+/* Reset & Base Setup */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body.welcome-body {
+  background-color: var(--welcome-bg-deep);
+  background-image: var(--welcome-bg-gradient);
+  background-attachment: fixed;
+  color: var(--welcome-text-primary);
+  font-family: var(--font-sans-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tabular Numbers for all stats & figures */
+.stat-number, .badge-count, .token-val, .version-tag {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Subtle Canvas Particles Background */
+#particles-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.45;
+}
+
+/* Ambient Glow Blobs */
+.ambient-glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.28;
+}
+
+.ambient-glow-top {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.35) 0%, transparent 70%);
+  top: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.ambient-glow-amber {
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, transparent 70%);
+  bottom: 20%;
+  right: -100px;
+}
+
+/* Container Utility */
+.welcome-container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   1. FLOATING NAVIGATION BAR (gpt-taste / charles-polish)
+   ========================================================================== */
+.welcome-nav-wrapper {
+  position: fixed;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.welcome-navbar {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  background: rgba(8, 28, 18, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--welcome-glass-border);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  pointer-events: auto;
+  transition: transform var(--transition-medium), background var(--transition-fast);
+}
+
+.welcome-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand-icon-wrapper {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #059669, #10b981);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+.brand-text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title-text {
+  font-family: var(--font-serif-renaissance);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.brand-tagline-text {
+  font-size: 0.72rem;
+  color: var(--welcome-gold-bright);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Nav Menu Links */
+.welcome-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  list-style: none;
+}
+
+.nav-link-item {
+  color: var(--welcome-text-secondary);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+  position: relative;
+  padding: 6px 2px;
+}
+
+.nav-link-item:hover {
+  color: var(--welcome-gold-bright);
+}
+
+.nav-link-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--welcome-gold-bright);
+  transition: width var(--transition-medium), left var(--transition-medium);
+  border-radius: 2px;
+}
+
+.nav-link-item:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+/* Nav CTA */
+.nav-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 20px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #041208;
+  font-family: var(--font-sans-display);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.nav-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.55);
+}
+
+/* ==========================================================================
+   2. HERO SECTION (Attention — Charles Accent Hero & 2-Line Iron Rule)
+   ========================================================================== */
+.welcome-hero-section {
+  padding-top: 150px;
+  padding-bottom: 70px;
+  text-align: center;
+  position: relative;
+}
+
+.hero-pill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 18px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6ee7b7;
+  margin-bottom: 24px;
+  backdrop-filter: blur(8px);
+}
+
+.hero-pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+  animation: pulse-dot 2s infinite ease-in-out;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* H1 Iron Rule: max 2-3 lines, wide container */
+.hero-headline-wide {
+  max-width: 980px;
+  margin: 0 auto 20px auto;
+  font-family: var(--font-serif-renaissance);
+  font-size: clamp(2.4rem, 4.8vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--welcome-text-hero);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
+.hero-headline-accent {
+  background: linear-gradient(135deg, #fef08a 0%, #fbbf24 40%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.hero-subhead {
+  max-width: 740px;
+  margin: 0 auto 36px auto;
+  font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+  color: var(--welcome-text-secondary);
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+/* Hero CTA Group */
+.hero-cta-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 50px;
+}
+
+.btn-welcome-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 36px;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 60%, #d97706 100%);
+  color: #031307;
+  font-family: var(--font-sans-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 6px 24px rgba(245, 158, 11, 0.45);
+  transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-welcome-primary::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: rotate(45deg) translate(-100%, -100%);
+  transition: transform 0.75s ease-out;
+}
+
+.btn-welcome-primary:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 32px rgba(245, 158, 11, 0.65);
+}
+
+.btn-welcome-primary:hover::before {
+  transform: rotate(45deg) translate(100%, 100%);
+}
+
+.btn-welcome-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 32px;
+  background: rgba(14, 43, 29, 0.65);
+  border: 1px solid var(--welcome-glass-border);
+  color: var(--welcome-text-primary);
+  font-family: var(--font-sans-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(12px);
+  transition: all var(--transition-fast);
+}
+
+.btn-welcome-secondary:hover {
+  background: rgba(22, 66, 45, 0.8);
+  border-color: rgba(52, 211, 153, 0.4);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Hero Showcase Card Tilt Grid */
+.hero-cards-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  perspective: 1000px;
+  margin-top: 20px;
+}
+
+.preview-card {
+  width: 170px;
+  height: 235px;
+  border-radius: var(--radius-md);
+  background: rgba(10, 32, 21, 0.85);
+  border: 1px solid var(--welcome-glass-border);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  position: relative;
+  transition: transform var(--transition-slow), box-shadow var(--transition-slow);
+  backdrop-filter: blur(8px);
+}
+
+.preview-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.preview-card:hover img {
+  transform: scale(1.08);
+}
+
+.preview-card-tilt-left {
+  transform: rotate(-6deg) translateY(12px);
+}
+
+.preview-card-center {
+  width: 190px;
+  height: 260px;
+  transform: scale(1.06);
+  z-index: 2;
+  border-color: var(--welcome-gold-border);
+  box-shadow: 0 16px 48px rgba(245, 158, 11, 0.25);
+}
+
+.preview-card-tilt-right {
+  transform: rotate(6deg) translateY(12px);
+}
+
+.preview-card:hover {
+  transform: translateY(-10px) scale(1.08) rotate(0deg);
+  z-index: 10;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+}
+
+.preview-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px 10px 8px 10px;
+  background: linear-gradient(to top, rgba(3, 14, 8, 0.95) 0%, transparent 100%);
+  text-align: left;
+}
+
+.preview-card-tier {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--welcome-gold-bright);
+}
+
+.preview-card-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==========================================================================
+   3. STATS STRIP (Proof & Scale)
+   ========================================================================== */
+.welcome-stats-strip {
+  margin: 50px auto 90px auto;
+  padding: 24px 32px;
+  background: var(--welcome-glass-surface);
+  border: 1px solid var(--welcome-glass-border);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--welcome-glass-glow);
+}
+
+.stats-grid-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  text-align: center;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+
+.stat-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -12px;
+  top: 15%;
+  height: 70%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.stat-value {
+  font-family: var(--font-serif-renaissance);
+  font-size: clamp(2rem, 3.2vw, 2.7rem);
+  font-weight: 800;
+  color: var(--welcome-gold-bright);
+  line-height: 1.1;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--welcome-text-secondary);
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   4. BENTO GRID OF CORE SYSTEMS (Interest — Gapless Bento Grid)
+   ========================================================================== */
+.section-header-centered {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 48px auto;
+}
+
+.section-tag {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #34d399;
+  margin-bottom: 10px;
+}
+
+.section-title {
+  font-family: var(--font-serif-renaissance);
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.section-desc {
+  font-size: 1.05rem;
+  color: var(--welcome-text-secondary);
+}
+
+/* Gapless Bento Container */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-flow: dense;
+  gap: 20px;
+  margin-bottom: 90px;
+}
+
+.bento-card {
+  background: var(--welcome-glass-surface);
+  border: 1px solid var(--welcome-glass-border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  backdrop-filter: blur(14px);
+  box-shadow: var(--welcome-glass-glow);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-medium), border-color var(--transition-fast), box-shadow var(--transition-medium);
+}
+
+.bento-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--welcome-glass-border-hover);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* Bento Cells Allocation */
+.bento-col-8 {
+  grid-column: span 8;
+}
+
+.bento-col-4 {
+  grid-column: span 4;
+}
+
+.bento-col-6 {
+  grid-column: span 6;
+}
+
+.bento-col-12 {
+  grid-column: span 12;
+}
+
+/* Card 1: 6 Elemental Essences */
+.bento-card-title {
+  font-family: var(--font-serif-renaissance);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.bento-card-sub {
+  font-size: 0.92rem;
+  color: var(--welcome-text-secondary);
+  margin-bottom: 24px;
+}
+
+.tokens-flex-showcase {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+.token-chip-box {
+  background: rgba(7, 24, 15, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 14px 8px;
+  text-align: center;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  cursor: default;
+}
+
+.token-chip-box:hover {
+  transform: translateY(-3px);
+  border-color: var(--welcome-gold-border);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.token-img-icon {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  margin: 0 auto 8px auto;
+  display: block;
+}
+
+.token-chip-name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.token-chip-role {
+  font-size: 0.68rem;
+  color: var(--welcome-text-muted);
+}
+
+/* Card 2: Engine Building Mechanism */
+.engine-steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.engine-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px;
+  background: rgba(8, 25, 17, 0.6);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.step-num-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--welcome-gold-primary);
+  color: #041208;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-content-title {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.step-content-desc {
+  font-size: 0.82rem;
+  color: var(--welcome-text-secondary);
+  line-height: 1.4;
+}
+
+/* Card 3: 3 Botanical Tiers */
+.tiers-tri-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.tier-pillar-box {
+  background: rgba(8, 25, 17, 0.7);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 18px 14px;
+  text-align: center;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.tier-pillar-box:hover {
+  transform: translateY(-3px);
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+.tier-badge-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.tier-badge-t1 { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); }
+.tier-badge-t2 { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); }
+.tier-badge-t3 { background: rgba(168, 85, 247, 0.2); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.4); }
+
+.tier-pillar-title {
+  font-family: var(--font-serif-renaissance);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.tier-pillar-count {
+  font-size: 0.78rem;
+  color: var(--welcome-gold-bright);
+  margin-bottom: 8px;
+}
+
+.tier-pillar-desc {
+  font-size: 0.78rem;
+  color: var(--welcome-text-secondary);
+  line-height: 1.45;
+}
+
+/* Card 4: Royal Visitors (10 Khách Thăm Vườn) */
+.visitors-strip-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+}
+
+.visitor-mini-avatar {
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--welcome-gold-border);
+  background: rgba(12, 34, 22, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.visitor-mini-avatar:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4);
+}
+
+.visitor-mini-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ==========================================================================
+   5. LORE & STRATEGY SECTION (Desire — Renaissance Codex)
+   ========================================================================== */
+.welcome-codex-section {
+  margin-bottom: 90px;
+}
+
+.codex-scroll-container {
+  background: linear-gradient(135deg, rgba(16, 46, 32, 0.75) 0%, rgba(9, 29, 19, 0.85) 100%);
+  border: 1px solid var(--welcome-gold-border);
+  border-radius: var(--radius-xl);
+  padding: 48px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.codex-quote {
+  font-family: var(--font-serif-renaissance);
+  font-style: italic;
+  font-size: 1.2rem;
+  color: #fef08a;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  border-left: 3px solid var(--welcome-gold-bright);
+  padding-left: 18px;
+}
+
+.codex-text-body {
+  font-size: 0.98rem;
+  color: var(--welcome-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.codex-features-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.codex-feature-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.codex-feature-badge span.feature-icon {
+  font-size: 18px;
+}
+
+.codex-artwork-col {
+  text-align: center;
+  position: relative;
+}
+
+.codex-artwork-col img {
+  width: 100%;
+  max-width: 360px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  transform: perspective(1000px) rotateY(-4deg);
+  transition: transform var(--transition-slow);
+}
+
+.codex-artwork-col:hover img {
+  transform: perspective(1000px) rotateY(0deg) scale(1.02);
+}
+
+/* ==========================================================================
+   6. FINAL CTA CALLOUT (Action — The Grand Portal)
+   ========================================================================== */
+.welcome-final-cta-section {
+  text-align: center;
+  padding: 80px 24px;
+  background: radial-gradient(circle at 50% 50%, rgba(16, 68, 43, 0.6) 0%, rgba(5, 19, 11, 0.9) 100%);
+  border: 1px solid var(--welcome-gold-border);
+  border-radius: var(--radius-xl);
+  margin-bottom: 80px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.final-cta-title {
+  font-family: var(--font-serif-renaissance);
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 14px;
+}
+
+.final-cta-sub {
+  font-size: 1.15rem;
+  color: var(--welcome-text-secondary);
+  max-width: 620px;
+  margin: 0 auto 36px auto;
+}
+
+.btn-grand-portal {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 48px;
+  background: linear-gradient(135deg, #fef08a 0%, #f59e0b 60%, #b45309 100%);
+  color: #031206;
+  font-family: var(--font-sans-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 8px 30px rgba(245, 158, 11, 0.5);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.btn-grand-portal:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 14px 44px rgba(245, 158, 11, 0.7);
+}
+
+/* ==========================================================================
+   7. FOOTER
+   ========================================================================== */
+.welcome-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 40px 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--welcome-text-muted);
+}
+
+.footer-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-nav-row a {
+  color: var(--welcome-text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.footer-nav-row a:hover {
+  color: var(--welcome-gold-bright);
+}
+
+.footer-credit {
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   8. RESPONSIVE BREAKPOINTS (Mobile & Tablet Optimization)
+   ========================================================================== */
+@media (max-width: 992px) {
+  .welcome-nav-links {
+    display: none; /* Mobile clean nav */
+  }
+
+  .bento-col-8, .bento-col-4, .bento-col-6 {
+    grid-column: span 12;
+  }
+
+  .tokens-flex-showcase {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .tiers-tri-row {
+    grid-template-columns: 1fr;
+  }
+
+  .codex-scroll-container {
+    grid-template-columns: 1fr;
+    padding: 32px 24px;
+  }
+
+  .codex-artwork-col {
+    order: -1;
+  }
+
+  .stats-grid-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .stat-item:nth-child(2)::after {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .welcome-hero-section {
+    padding-top: 120px;
+  }
+
+  .hero-cta-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-welcome-primary, .btn-welcome-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-cards-preview {
+    transform: scale(0.85);
+  }
+
+  .tokens-flex-showcase {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stats-grid-row {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-item::after {
+    display: none;
+  }
+}
+
+/* Reduced Motion Support (charles-ux-animation) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
