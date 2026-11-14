@@ -553,6 +553,8 @@ html, body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0;
+  gap: 0.35rem;
+  min-width: 0;
 }
 
 .player-box-name,
@@ -564,6 +566,8 @@ html, body {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 135px;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .player-box-score-badge,
@@ -1742,6 +1746,10 @@ html, body {
 .player-meta h3 {
   font-size: 0.88rem;
   color: var(--text-pure);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
 }
 
 .player-role {
@@ -1840,6 +1848,23 @@ html, body {
   align-items: center;
   justify-content: space-between;
   font-size: 0.72rem;
+  min-width: 0;
+  gap: 0.2rem;
+}
+
+.inventory-token-slot span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.inventory-token-slot strong {
+  flex-shrink: 0;
 }
 
 .bonuses-inventory-grid {
@@ -2452,6 +2477,11 @@ html, body {
     grid-template-columns: 220px 1fr 300px;
     gap: 0.75rem;
   }
+  .player-master-dashboard {
+    grid-template-columns: 180px minmax(200px, 1.2fr) minmax(170px, 1fr) 190px;
+    gap: 0.45rem;
+    padding: 0.2rem 0.5rem;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -2460,6 +2490,18 @@ html, body {
   }
   .opponents-sidebar {
     display: none;
+  }
+  .player-master-dashboard {
+    grid-template-columns: 160px minmax(170px, 1.2fr) minmax(150px, 1fr) 160px;
+    gap: 0.35rem;
+    padding: 0.15rem 0.4rem;
+  }
+  .tokens-inventory-grid {
+    gap: 0.15rem;
+  }
+  .inventory-token-slot {
+    padding: 0.15rem 0.25rem;
+    font-size: 0.68rem;
   }
 }
 

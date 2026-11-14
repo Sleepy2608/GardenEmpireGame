@@ -1,5 +1,6 @@
 package com.gardenempire.game;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class Player {
     @Builder.Default
     private String avatar = "🌱";
     
+    @JsonProperty("isHost")
     private boolean isHost;
     
     @Builder.Default
@@ -46,5 +48,10 @@ public class Player {
 
     public int getTotalTokensCount() {
         return tokens.values().stream().mapToInt(Integer::intValue).sum();
+    }
+
+    @JsonProperty("host")
+    public boolean isHostCompat() {
+        return isHost;
     }
 }

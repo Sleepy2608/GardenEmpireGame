@@ -1,5 +1,6 @@
 package com.gardenempire.game;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +23,13 @@ public class GameState {
     
     private String firstPlayerId;
     private String currentTurnPlayerId;
+
+    @JsonProperty("isFinalRound")
     private boolean isFinalRound;
+
+    @JsonProperty("isGameOver")
     private boolean isGameOver;
+
     private String winnerPlayerId;
     
     @Builder.Default
@@ -51,4 +57,14 @@ public class GameState {
     
     @Builder.Default
     private List<ChatMessage> chatMessages = new ArrayList<>();
+
+    @JsonProperty("gameOver")
+    public boolean isGameOverCompat() {
+        return isGameOver;
+    }
+
+    @JsonProperty("finalRound")
+    public boolean isFinalRoundCompat() {
+        return isFinalRound;
+    }
 }

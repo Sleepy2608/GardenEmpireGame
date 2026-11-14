@@ -46,6 +46,15 @@ export class GameState {
 
   updateFromDto(dto) {
     Object.assign(this, dto);
+
+    // Normalize boolean flags from backend (Jackson serializes isGameOver -> gameOver and isFinalRound -> finalRound)
+    if (dto.gameOver !== undefined || dto.isGameOver !== undefined) {
+      this.isGameOver = Boolean(dto.isGameOver ?? dto.gameOver);
+    }
+    if (dto.finalRound !== undefined || dto.isFinalRound !== undefined) {
+      this.isFinalRound = Boolean(dto.isFinalRound ?? dto.finalRound);
+    }
+
     if (dto.actionLogs) {
       this.actionLogs = dto.actionLogs;
     }

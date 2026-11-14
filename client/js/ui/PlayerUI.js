@@ -12,7 +12,7 @@ export class PlayerUI {
 
     // Update Name & Role
     const nameEl = document.getElementById('my-player-name');
-    if (nameEl) nameEl.textContent = `${player.name || 'Người chơi'} ${player.isHost ? '👑' : ''}`;
+    if (nameEl) nameEl.textContent = `${player.name || 'Người chơi'} ${Boolean(player.isHost ?? player.host) ? '👑' : ''}`;
 
     // Update Prestige Points & 15-Point Goal Bar
     const scoreNumEl = document.getElementById('my-score-num');
@@ -175,7 +175,7 @@ export class PlayerUI {
     el.innerHTML = `
       <!-- Section 1: Header (Tên & Điểm) -->
       <div class="player-box-section player-box-header opponent-card-header">
-        <span class="player-box-name opponent-name" title="${opponent.name || 'Đối thủ'}">${opponent.name || 'Đối thủ'} ${opponent.isHost ? '👑' : ''}</span>
+        <span class="player-box-name opponent-name" title="${opponent.name || 'Đối thủ'}">${opponent.name || 'Đối thủ'} ${Boolean(opponent.isHost ?? opponent.host) ? '👑' : ''}</span>
         ${hasLeft 
           ? '<span class="badge-player-left">🍂 Đã Rời Ván</span>' 
           : `<span class="player-box-score-badge opponent-score-badge">★ ${opponent.prestigePoints || 0}</span>`

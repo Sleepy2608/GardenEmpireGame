@@ -143,12 +143,25 @@
     });
   }
 
+  // 5. Seamless Navigation for Start Playing CTA Buttons (Anti-loop fix)
+  function initPlayNavigation() {
+    const playLinks = document.querySelectorAll('a[href="index.html"], a[href="/index"], #nav-btn-play, #hero-btn-start, #footer-btn-enter');
+    playLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isLocalStatic = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '5500';
+        window.location.href = isLocalStatic ? 'index.html' : '/index';
+      });
+    });
+  }
+
   // Initialize all modules on DOM ready
   document.addEventListener('DOMContentLoaded', () => {
     initZeroLatencyPrefetch();
     initSporeParticles();
     init3DCardPhysics();
     initSmoothAnchors();
+    initPlayNavigation();
   });
 })();
 
