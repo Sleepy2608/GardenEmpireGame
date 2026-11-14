@@ -10,7 +10,7 @@
 
   // 1. Prefetch Target Interface (Zero-Latency Navigation)
   function initZeroLatencyPrefetch() {
-    const prefetchTargets = ['index.html', '/index', '/api/rooms'];
+    const prefetchTargets = ['play.html', '/play', 'index.html', '/index', '/api/rooms'];
     if ('requestIdleCallback' in window) {
       window.requestIdleCallback(() => {
         prefetchTargets.forEach(url => {
@@ -145,12 +145,17 @@
 
   // 5. Seamless Navigation for Start Playing CTA Buttons (Anti-loop fix)
   function initPlayNavigation() {
-    const playLinks = document.querySelectorAll('a[href="index.html"], a[href="/index"], #nav-btn-play, #hero-btn-start, #footer-btn-enter');
+    const playLinks = document.querySelectorAll(
+      '#nav-btn-play, #hero-btn-start, #footer-btn-enter, a[href="play.html"], a[href="index.html"], a[href="/play"], a[href="/index"]'
+    );
     playLinks.forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
-        const isLocalStatic = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '5500';
-        window.location.href = isLocalStatic ? 'index.html' : '/index';
+        const isFileProto = window.location.protocol === 'file:';
+        const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const isLocalStatic = isFileProto || (isLocalHost && window.location.port !== '');
+
+        window.location.href = isLocalStatic ? 'play.html' : '/play';
       });
     });
   }

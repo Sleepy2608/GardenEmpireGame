@@ -19,13 +19,15 @@ if (typeof window !== 'undefined' && window.location && window.location.pathname
  * @returns {string}
  */
 export function getRouteUrl(route, params = '') {
-  // Khi chạy trên local python http.server (port 5500) không có rewrite tự động
-  const isLocalStatic = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '5500';
+  // Khi chạy trên local file:// hoặc local static server không có rewrite tự động
+  const isFileProto = typeof window !== 'undefined' && window.location && window.location.protocol === 'file:';
+  const isLocalHost = typeof window !== 'undefined' && window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const isLocalStatic = isFileProto || (isLocalHost && window.location.port !== '');
 
   const routeMap = {
     'welcome': isLocalStatic ? 'welcome.html' : '/',
-    'index': isLocalStatic ? 'index.html' : '/index',
-    'play': isLocalStatic ? 'index.html' : '/index',
+    'index': isLocalStatic ? 'play.html' : '/play',
+    'play': isLocalStatic ? 'play.html' : '/play',
     'lobby': isLocalStatic ? 'lobby.html' : '/lobby',
     'room': isLocalStatic ? 'waiting-room.html' : '/room',
     'waiting-room': isLocalStatic ? 'waiting-room.html' : '/room',
