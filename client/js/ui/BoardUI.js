@@ -1011,7 +1011,7 @@ export class BoardUI {
 
     try {
       const myPlayer = this.gameState.players.find(p => p.id === this.guestId);
-      if (myPlayer?.host) {
+      if (myPlayer?.host || myPlayer?.isHost) {
         await roomApi.closeRoom(this.roomId, this.guestId).catch(() => {});
       } else {
         await roomApi.leaveRoom(this.roomId, this.guestId).catch(() => {});
