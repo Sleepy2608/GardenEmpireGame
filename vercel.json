@@ -3,6 +3,18 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/index.html",
+      "destination": "/client/index.html"
+    },
+    {
+      "source": "/index",
+      "destination": "/client/index.html"
+    },
+    {
+      "source": "/play",
+      "destination": "/client/index.html"
+    },
+    {
       "source": "/",
       "destination": "/client/welcome"
     },
@@ -13,10 +25,6 @@
     {
       "source": "/dashboard",
       "destination": "/client/welcome"
-    },
-    {
-      "source": "/index",
-      "destination": "/client"
     },
     {
       "source": "/lobby",

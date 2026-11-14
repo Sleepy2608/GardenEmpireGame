@@ -23,7 +23,9 @@ export function getRouteUrl(route, params = '') {
   const isLocalStatic = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '5500';
 
   const routeMap = {
-    'index': isLocalStatic ? 'index.html' : '/',
+    'welcome': isLocalStatic ? 'welcome.html' : '/',
+    'index': isLocalStatic ? 'index.html' : '/index',
+    'play': isLocalStatic ? 'index.html' : '/index',
     'lobby': isLocalStatic ? 'lobby.html' : '/lobby',
     'room': isLocalStatic ? 'waiting-room.html' : '/room',
     'waiting-room': isLocalStatic ? 'waiting-room.html' : '/room',
