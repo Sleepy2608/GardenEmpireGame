@@ -194,7 +194,7 @@ Người chơi nào sở hữu **ÍT THẺ CÂY HƠN** sẽ được trao vươn
 ### 3. Khế Ước Bỏ Cuộc & Sự Tôn Vinh Walkover (The Walkover Honor)
 Nghiên cứu thảo mộc là một chặng đường đòi hỏi sự kiên nhẫn sắt đá. Đôi khi, giữa những biến động của thời tiết và áp lực chiến thuật, có những nghệ nhân kiệt sức, mất kết nối tâm trí hoặc chủ động buông kéo rời bỏ đấu trường.
 
-Theo sắc lệnh mới nhất của Viện Hàn Lâm (Điều lệ v1.4.1):
+Theo sắc lệnh mới nhất của Viện Hàn Lâm (Điều lệ v1.5.0):
 - Nếu thung lũng chỉ còn lại một Bậc Thầy duy nhất trụ lại bảo vệ khu vườn, ván đấu sẽ lập tức khép lại.
 - Người ở lại kiên định sẽ được vinh danh bằng danh hiệu **Walkover Champion (Chiến Thắng Tuyệt Đối)**.  
 Hội đồng tuyên bố: *"Kẻ kiên trì đến cùng bên gốc cây ngọn cỏ chính là người xứng đáng nhất kế thừa linh hồn của Flora Valley."*
@@ -211,5 +211,5 @@ Vị Master Gardener bước lên bục vinh quang, nhận lấy Chiếc Kéo V�
 
 ---
 
-*Tài liệu lưu trữ chính thức tại Thư Viện Viện Hàn Lâm Thảo Mộc Hoàng Gia Flora Valley — Phục vụ cho hệ thống Board Game Garden Empire (v1.4.1).*
+*Tài liệu lưu trữ chính thức tại Thư Viện Viện Hàn Lâm Thảo Mộc Hoàng Gia Flora Valley — Phục vụ cho hệ thống Board Game Garden Empire (v1.5.0).*
 
