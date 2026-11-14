@@ -28,10 +28,10 @@
   --welcome-text-secondary: #cbd5e1;
   --welcome-text-muted: #94a3b8;
 
-  /* Typography Stacks */
-  --font-serif-renaissance: 'Cinzel', 'Playfair Display', Georgia, serif;
-  --font-sans-display: 'Outfit', 'Plus Jakarta Sans', sans-serif;
-  --font-sans-body: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+  /* Typography Stacks - Full Vietnamese Diacritics Support */
+  --font-serif-renaissance: 'Playfair Display', 'Be Vietnam Pro', Georgia, serif;
+  --font-sans-display: 'Outfit', 'Be Vietnam Pro', 'Plus Jakarta Sans', sans-serif;
+  --font-sans-body: 'Be Vietnam Pro', 'Plus Jakarta Sans', -apple-system, sans-serif;
 
   /* Spacing Tokens */
   --space-unit: 8px;
@@ -321,33 +321,38 @@ body.welcome-body {
   50% { opacity: 0.4; transform: scale(0.85); }
 }
 
-/* H1 Iron Rule: max 2-3 lines, wide container */
+/* H1 Iron Rule: strictly 2 balanced lines, wide container */
 .hero-headline-wide {
-  max-width: 980px;
-  margin: 0 auto 20px auto;
+  max-width: 1080px;
+  margin: 0 auto 24px auto;
   font-family: var(--font-serif-renaissance);
-  font-size: clamp(2.4rem, 4.8vw, 4.2rem);
+  font-size: clamp(2.1rem, 3.8vw, 3.6rem);
   font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
   color: var(--welcome-text-hero);
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  text-wrap: balance;
+}
+
+.headline-line {
+  display: block;
 }
 
 .hero-headline-accent {
   background: linear-gradient(135deg, #fef08a 0%, #fbbf24 40%, #f59e0b 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  display: inline-block;
 }
 
 .hero-subhead {
-  max-width: 740px;
+  max-width: 760px;
   margin: 0 auto 36px auto;
-  font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+  font-size: clamp(1rem, 1.6vw, 1.18rem);
   color: var(--welcome-text-secondary);
   line-height: 1.65;
   font-weight: 400;
+  text-wrap: pretty;
 }
 
 /* Hero CTA Group */
@@ -1027,6 +1032,21 @@ body.welcome-body {
 @media (max-width: 640px) {
   .welcome-hero-section {
     padding-top: 120px;
+  }
+
+  .hero-headline-wide {
+    font-size: clamp(1.75rem, 6.2vw, 2.25rem);
+    line-height: 1.25;
+  }
+
+  .headline-line {
+    display: inline;
+  }
+
+  .hero-subhead {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    padding: 0 8px;
   }
 
   .hero-cta-group {
