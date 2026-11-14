@@ -4,7 +4,7 @@
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/Version-v1.4.1-10B981?style=for-the-badge&logo=semver&logoColor=white)](https://garden-empire-game.vercel.app)
+[![Version](https://img.shields.io/badge/Version-v1.5.0-10B981?style=for-the-badge&logo=semver&logoColor=white)](https://garden-empire-game.vercel.app)
 
 [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://garden-empire-game.vercel.app) [![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://gardenempiregame.onrender.com) [![Clever Cloud](https://img.shields.io/badge/Clever%20Cloud-2C3E50?style=for-the-badge&logo=clevercloud&logoColor=white)](https://console.clever-cloud.com) [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://console.clever-cloud.com) [![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/) [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot) [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
@@ -29,6 +29,9 @@
 ## 🌿 1. Giới Thiệu Trò Chơi
 
 **Garden Empire** đưa người chơi vào vai các nghệ nhân thực vật học tài hoa, cạnh tranh kiến tạo khu vườn thượng uyển tráng lệ nhất vương quốc:
+- **Cổng chào đón & Bảng điều khiển khởi động tân binh (Welcome Dashboard & Grand Portal):** Giao diện chào đón tân binh lộng lẫy theo phong cách Deep Forest Glassmorphism & Renaissance Botanical Aesthetics (`design-taste-frontend`, `gpt-taste`); cấu trúc AIDA chuẩn mực, Gapless Bento Grid 6 tinh hoa năng lượng, showcase 3 cấp độ thực vật và 10 Vị Khách Hoàng Gia, canvas bào tử đom đóm sinh thái và cơ chế prefetch 0ms.
+- **Kịch bản & Cốt truyện sử thi Thánh địa Flora Valley (Botanical Lore & World-Building):** Bối cảnh Fantasy – Strategy – Nature – Renaissance hào hùng; hành trình từ Apprentice Gardener đến Grand Master of Flora Valley, gắn liền với các mốc điểm Uy Tín ★ trong board game.
+- **Hệ thống chuyển động & chuyển cảnh mượt mà toàn diện (`charles-*` Motion System):** Tích hợp trọn bộ View Transitions API, staggered entrance cascade, avatar spring pop, input glow lift, card hover physics, và nhịp thở hoàng gia cho toàn bộ các trang giao diện (ngoại trừ bàn cờ in-game); hỗ trợ toàn diện `@media (prefers-reduced-motion: reduce)`.
 - **Thu thập năng lượng thiên nhiên** (Đất, Nước, Ánh Sáng, Hạt Giống, Dinh Dưỡng, Phân Bón Vàng).
 - **Bộ sưu tập 90 thẻ bài sinh thái học thực tế (Real Botanical Photos — 100% Coverage):** Toàn bộ 90 thẻ cây trong hệ thống (40 Tier 1: mầm non & dây leo, 30 Tier 2: cây bụi & hoa quả, 20 Tier 3: cổ thụ đại ngàn) đều sở hữu ảnh chụp thực tế sinh động, tối ưu hóa định dạng kép WebP & PNG, chuẩn hóa danh pháp phân loại học Linnaeus và hiệu ứng thị giác Deep Forest Glassmorphism độc bản.
 - **Bàn cờ Tabletop 3D (Around-the-Table Arena):** Chiếu cờ 3D sinh động ở trung tâm, các đối thủ ngồi bao quanh bàn và thanh điều khiển của bạn cố định ở đáy, tự động co giãn (`TabletopFit`) vừa vặn mọi màn hình.
@@ -44,6 +47,9 @@
 ---
 
 ## 🎲 2. Cốt Truyện & Luật Chơi Cốt Lõi
+
+> 📜 **Biên Niên Sử Flora Valley (Lore):** Lấy bối cảnh thời kỳ *Phục Hưng Thực Vật Học (The Botanical Renaissance)* tại thung lũng màu mỡ **Flora Valley**, người chơi hóa thân thành một **Master Gardener (Bậc Thầy Làm Vườn)** xuất phát từ mảnh đất nhỏ đơn sơ và lượng tài nguyên hạn chế, từng bước ươm mầm các loài thảo mộc, xây dựng cỗ máy sinh thái và thu hút sự công nhận từ 10 Giám Tuyển Hoàng Gia để đoạt danh hiệu Tân Vương Đế Chế Vườn Sinh Thái.  
+> 📖 *Đọc toàn bộ kịch bản cốt truyện & truyền thuyết thế giới tại:* [.doc/storyline.md](.doc/storyline.md)
 
 ### 🔹 Hệ Thống Tài Nguyên (6 Loại Năng Lượng)
 | Tài Nguyên | Biểu Tượng | Mô Tả |

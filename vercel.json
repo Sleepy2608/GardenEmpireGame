@@ -4,7 +4,15 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/client"
+      "destination": "/client/welcome"
+    },
+    {
+      "source": "/welcome",
+      "destination": "/client/welcome"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/client/welcome"
     },
     {
       "source": "/index",

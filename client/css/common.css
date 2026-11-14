@@ -118,11 +118,19 @@
   --shadow-card-hover: 0 12px 28px rgba(0, 0, 0, 0.6), 0 0 20px rgba(74, 222, 128, 0.3);
 
   /*
-     Transitions
+     Transitions & Motion Tokens (charles-ux-animation & charles-polish)
   */
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.45, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-spring: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── View Transitions API Support (charles-ux-animation) ────────── */
+@view-transition {
+  navigation: auto;
 }
 
 /*
@@ -322,6 +330,26 @@ button.is-loading::after {
   padding: 0.35rem 0.75rem;
   font-size: 0.8rem;
   border-radius: var(--radius-sm);
+}
+
+/* ── Tactile Button Press Physics (charles-polish) ─────────── */
+button:active:not(:disabled),
+.btn:active:not(:disabled),
+.btn-nature-primary:active:not(:disabled),
+.btn-nature-gold:active:not(:disabled),
+.btn-nature-secondary:active:not(:disabled),
+.btn-nature-danger:active:not(:disabled) {
+  transform: scale(0.97) !important;
+  transition: transform 0.08s var(--ease-spring) !important;
+}
+
+/* ── Accessible Focus Rings (charles-polish) ────────────────── */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 2px solid #34d399 !important;
+  outline-offset: 2px !important;
 }
 
 .badge-count {
@@ -627,9 +655,57 @@ button.is-loading::after {
 }
 
 /* =============================================================================
-   UTILITY CLASSES (Global Visibility & Accessibility)
+   UTILITY CLASSES & GLOBAL MOTION (charles-ux-animation)
    ============================================================================= */
 .hidden {
   display: none !important;
+}
+
+/* ── Global Page Entrance & Modal Animations ────────────────── */
+@keyframes pageEntranceCascade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-cascade-in {
+  animation: pageEntranceCascade 0.38s var(--ease-spring) both;
+}
+
+@keyframes modalBackdropFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(14px);
+  }
+}
+
+@keyframes modalBoxPopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.93) translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ── Global Accessibility: Reduced Motion (charles-ux-animation) ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 

@@ -3,6 +3,8 @@
 > **Garden Empire** là tựa game chiến thuật xây dựng động cơ tài nguyên (Engine Building) thời gian thực dành cho **2 đến 4 người chơi**, được chuyển thể và lấy cảm hứng trọn vẹn từ kiệt tác board game đoạt giải quốc tế **[Splendor](https://en.wikipedia.org/wiki/Splendor_(game))** (thiết kế bởi Marc André).
 >
 > Thay vì vào vai các thương nhân đá quý thời kỳ Phục Hưng, người chơi trong **Garden Empire** sẽ hóa thân thành các **Nghệ nhân thực vật học hoàng gia**, thu thập tinh hoa năng lượng thiên nhiên để ươm mầm các giống cây quý hiếm, thu hút muông thú & linh vật ghé thăm khu vườn, và cạnh tranh để đạt danh hiệu **Bậc Thầy Kiến Tạo Đế Chế Vườn Sinh Thái**.
+>
+> 📜 *Khám phá toàn bộ cốt truyện và truyền thuyết thế giới tại:* [Biên Niên Sử Flora Valley (storyline.md)](storyline.md)
 
 ---
 

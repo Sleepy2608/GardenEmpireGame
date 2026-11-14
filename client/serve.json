@@ -2,6 +2,10 @@
   "public": ".",
   "cleanUrls": true,
   "rewrites": [
+    { "source": "/", "destination": "/welcome.html" },
+    { "source": "/welcome", "destination": "/welcome.html" },
+    { "source": "/dashboard", "destination": "/welcome.html" },
+    { "source": "/index", "destination": "/index.html" },
     { "source": "/lobby", "destination": "/lobby.html" },
     { "source": "/room", "destination": "/waiting-room.html" },
     { "source": "/waiting-room", "destination": "/waiting-room.html" },

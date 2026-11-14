@@ -3,6 +3,37 @@
 Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game** được ghi chép và lưu trữ đầy đủ tại tài liệu này từ giai đoạn khởi tạo ban đầu (v0.0.0).  
 Định dạng dựa trên [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), và dự án tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 🚀 [v1.5.0] — 2026-11-14
+### 🏛️ Cổng Chào Tân Binh, Cốt Truyện Đại Ngàn Flora Valley & Hệ Thống Chuyển Động Mượt Mà (Welcome Dashboard, Botanical Lore & Motion System)
+- **Cổng Chào & Bảng Điều Khiển Khởi Động Tân Binh (Welcome Dashboard UI & Grand Portal):**
+  - **Trang Đích Độc Bản (`client/welcome.html`, `client/css/welcome.css`, `client/js/welcome.js`):** Xây dựng trang chủ chào đón người chơi theo phong cách Deep Forest Glassmorphism & Renaissance Botanical Aesthetics, tuân thủ nguyên tắc chống rập khuôn từ các skill `design-taste-frontend`, `gpt-taste`, `charles-unslop`, `charles-polish`.
+  - **Cấu Trúc Tiếp Thị Chuẩn AIDA:**
+    * **Attention (Hero Section):** Tiêu đề rộng `hero-headline-wide` co giãn linh hoạt bằng `clamp()` chống gãy dòng, nút CTA chính `#hero-btn-start` mạ vàng hoàng gia đưa trực tiếp vào sảnh ván cờ.
+    * **Interest (Resource Bento Grid):** Hiển thị trực quan 6 dòng tinh hoa năng lượng (Đất, Nước, Ánh Sáng, Hạt Giống, Dinh Dưỡng, Phân Bón Vàng WILD) trên lưới Gapless Bento Grid không ô chết.
+    * **Desire (Ecosystem Showcase & Royal Visitors):** Trình diễn 3 cấp bậc thẻ thực vật học tiêu biểu với ảnh chụp thiên nhiên thực tế (Mầm non, Hoa quả, Đại thụ) và dải avatar của 10 Vị Khách Hoàng Gia quý phái.
+    * **Action (Grand Portal Footer):** Cổng kết nối `#footer-btn-enter` thúc đẩy người chơi lập tức bước vào hành trình kiến tạo đế chế.
+  - **Hiệu Ứng Bào Tử Đom Đóm Sinh Thái (`#particles-canvas`):** Render các hạt sáng lơ lửng tự nhiên trên nền canvas nhẹ nhàng, tự động ngắt animation khi thiết bị kích hoạt `prefers-reduced-motion`.
+  - **Tối Ưu Zero-Latency Prefetch:** Ứng dụng `requestIdleCallback` tải ngầm trước tài nguyên `index.html` và gọi pre-warm danh sách phòng `/api/rooms` giúp việc mở game diễn ra trong tích tắc.
+- **Kịch Bản & Cốt Truyện Thánh Địa Thực Vật Học Flora Valley (`.doc/storyline.md`):**
+  - **Xây Dựng Cốt Truyện Sử Thi (Lore & World-Building):** Thiết lập bối cảnh Fantasy – Strategy – Nature – Renaissance tại Thung lũng Flora Valley, nơi các Master Gardener cạnh tranh giành sự công nhận tối cao từ Viện Hàn Lâm Thảo Mộc Hoàng Gia.
+  - **Hệ Thống Phân Hạng Nghệ Nhân:** Lộ trình tiến hóa danh hiệu thực vật học rõ rệt: *Tập Sự (Apprentice) $\rightarrow$ Nghệ Nhân Ươm Mầm (Botanist) $\rightarrow$ Bậc Thầy Kiến Tạo (Master Gardener) $\rightarrow$ Đại Bậc Thầy Đế Chế (Grand Master of Flora Valley)* gắn liền với các mốc điểm Uy Tín ★ trong luật chơi.
+- **Hệ Thống Chuyển Động & Chuyển Cảnh Toàn Diện (Full Page Motion & Transitions System):**
+  - **Ứng dụng trọn bộ kỹ năng `charles-*`:** Tích hợp `charles-ux-animation`, `charles-polish`, `charles-unslop`, `charles-accent-heroes` cho toàn bộ các trang ngoại trừ bàn cờ in-game (`client/game.html` được bảo vệ nguyên trạng).
+  - **Native View Transitions API:** Kích hoạt `@view-transition { navigation: auto; }` chuyển trang mềm mại giữa Welcome $\leftrightarrow$ Index $\leftrightarrow$ Lobby $\leftrightarrow$ Waiting Room.
+  - **Tactile Button Press:** Phản hồi cơ học tức thì `:active { transform: scale(0.97); transition-duration: 80ms; }` và viền sáng ngọc bích trợ năng `:focus-visible` cho mọi nút bấm.
+  - **Hiệu Ứng Chuyển Động Tinh Tế Từng Màn Hình:**
+    * *Trang Đăng Ký (`index.html`):* Staggered entrance cascade, avatar picker nảy lò xo ngọc bích `scale(1.14)`, input glow lift, dải sáng quét qua nút Vào Sảnh.
+    * *Sảnh Chờ (`lobby.html`):* Thẻ phòng rơi phân tầng bậc thang (`:nth-child(1..6)`), hover physics nâng nhẹ `translateY(-4px) scale(1.01)` cùng viền phát quang.
+    * *Phòng Chờ (`waiting-room.html`):* Container cascade, thẻ người chơi bay vào với `@keyframes cardIn`, nhịp thở hoàng gia cho Chủ phòng (`hostBadgeGlow`), nút bắt đầu sẵn sàng (`startBtnPulse`), và thông báo Toast nảy lò xo (`toastPopIn`).
+    * *Cẩm Nang Luật (`rules.css`):* Chuyển tab mượt mà bằng `codexFadeIn`, hover elevation cho thẻ năng lượng và hành động, bảo đảm **0 ký tự em-dash** đáp ứng test tự động.
+- **Đồng Bộ Routing Toàn Hệ Thống (Universal Routing & Rewrites):**
+  - Cập nhật `vercel.json` định tuyến root `/` trỏ về `/client/welcome`.
+  - Cập nhật `client/serve.json` định tuyến root `/` trỏ về `/welcome.html`.
+  - Bổ sung nút quay lại trang Welcome từ thanh Top Bar của `client/index.html`.
+- **Kiểm Thử Tự Động Giao Diện Mới (Welcome Verification Suite):**
+  - Xây dựng tệp test suite chuyên trách `tests/test_welcome_dashboard_ui.js` gồm 21 test cases phủ trọn vẹn: tính toàn vẹn file, tiêu chuẩn AIDA, dữ liệu 6 tinh hoa/3 tier/10 khách quý, tối ưu giảm chuyển động và cấu hình routing $\rightarrow$ Đạt **21/21 PASS 100%**.
+  - Toàn bộ 111 test cases trên hệ thống kiểm thử tự động đều vượt qua tuyệt đối (**0 fail**).
+
 ## 🚀 [v1.4.1] — 2026-11-12
 ### 🍂 Thông Báo Người Chơi Rời Phòng, Chống Đóng Băng Lượt Đi & Chiến Thắng Mặc Định (Player Leave System & Walkover Victory)
 - **Xử Lý Rời Phòng Tại Phòng Chờ (Waiting Room):**
