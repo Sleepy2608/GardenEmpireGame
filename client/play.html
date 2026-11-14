@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Garden Empire - Game Trồng Cây Sinh Thái Trực Tuyến</title>
+  
+  <!-- SEO & Meta Tags -->
+  <meta name="description" content="Garden Empire là phiên bản trực tuyến miễn phí lấy cảm hứng từ Splendor, với chủ đề vườn cây sinh thái. Thu thập tài nguyên, trồng cây, tranh điểm uy tín và so tài với bạn bè trên trình duyệt.">
+  <meta name="keywords" content="garden empire, garden empire game, garden empire vercel app, garden empire online, splendor, splendor online, splendor online game, splendor free, splendor vercel app, splendor garden empire, splendor board game online, splendor free to play, splendor web game, splendor alternative, splendor like game, games like splendor, splendor clone, splendor inspired, gem game online, gem collector game, jewel game online, gem merchant game, resource collection game, engine building game, card drafting game, development card game, prestige game online, noble card game, renaissance board game online, marc andre game, days of wonder game, game trồng cây, game chiến thuật, game chiến thuật online, game sinh thái, game board game online, web game multiplayer, board game sinh thái, game trực tuyến miễn phí, tro choi tren web, game vui online, game ban be online, eco strategy game, eco-friendly game, strategy board game, multiplayer web game, free online board game, real-time strategy game, garden game online, plant game online">
+  <meta name="author" content="Garden Empire Team">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://garden-empire-game.vercel.app/play">
+  <meta name="theme-color" content="#061a0e">
+
+  <!-- Open Graph / Facebook / Zalo / Discord -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://garden-empire-game.vercel.app/">
+  <meta property="og:site_name" content="Garden Empire">
+  <meta property="og:locale" content="vi_VN">
+  <meta property="og:title" content="Garden Empire - Splendor Alternative | Free Online">
+  <meta property="og:description" content="Garden Empire là phiên bản trực tuyến miễn phí lấy cảm hứng từ Splendor, với chủ đề vườn cây sinh thái. Thu thập tài nguyên, trồng cây, tranh điểm uy tín và so tài với bạn bè trên trình duyệt.">
+  <meta property="og:image" content="https://garden-empire-game.vercel.app/assets/images/garden_empire.jpg">
+  <meta property="og:image:secure_url" content="https://garden-empire-game.vercel.app/assets/images/garden_empire.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="675">
+  <meta property="og:image:alt" content="Garden Empire - Splendor Alternative | Free Online">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://garden-empire-game.vercel.app/">
+  <meta name="twitter:title" content="Garden Empire - Game Trồng Cây Sinh Thái Trực Tuyến">
+  <meta name="twitter:description" content="Trồng cây, thu thập tài nguyên và so tài chiến thuật sinh thái cùng bạn bè trực tiếp trên trình duyệt.">
+  <meta name="twitter:image" content="https://garden-empire-game.vercel.app/assets/images/garden_empire.jpg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="alternate icon" type="image/png" href="favicon.png">
+
+  <!-- Schema.org JSON-LD (Google & Bing Rich Snippets) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Garden Empire",
+    "url": "https://garden-empire-game.vercel.app/",
+    "description": "Game chiến thuật sinh thái trực tuyến nhiều người chơi thời gian thực trên nền tảng web.",
+    "genre": ["Strategy", "Eco-friendly", "Board Game", "Multiplayer"],
+    "applicationCategory": "Game",
+    "operatingSystem": "Any",
+    "playMode": "MultiPlayer",
+    "inLanguage": "vi",
+    "image": "https://garden-empire-game.vercel.app/assets/images/garden_empire.jpg"
+  }
+  </script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/rules.css">
+  <link rel="stylesheet" href="css/index.css">
+  
+  <!-- Vercel Speed Insights -->
+  <script type="module">
+    import { injectSpeedInsights } from 'https://cdn.jsdelivr.net/npm/@vercel/speed-insights@1/dist/index.mjs';
+    injectSpeedInsights();
+  </script>
+  
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+  <div class="index-container">
+    
+    <!-- Dashboard Top Bar -->
+    <header class="dashboard-topbar">
+      <div class="dashboard-brand-left">
+        <span class="dashboard-brand-emblem anim-float">🌿</span>
+        <div>
+          <h1 class="dashboard-brand-title">GARDEN EMPIRE</h1>
+          <p class="dashboard-brand-sub">Chiến thuật xây dựng vườn sinh thái thượng uyển</p>
+        </div>
+      </div>
+      <div class="dashboard-actions-right">
+        <a href="welcome.html" class="btn-nature-secondary btn-sm" title="Quay lại Trang Giới Thiệu / Welcome Dashboard">
+          <span>🌿</span> <span>Trang Giới Thiệu</span>
+        </a>
+        <button type="button" id="btn-open-rules" class="btn-nature-secondary btn-sm" title="Mở cẩm nang luật chơi toàn màn hình">
+          <span>📖</span> <span>Cẩm Nang Toàn Màn Hình</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Dashboard Grid -->
+    <main class="dashboard-main-grid">
+      
+      <!-- Left Column: Guest Login Card -->
+      <section class="dashboard-login-col" aria-label="Đăng ký nghệ nhân vào sảnh">
+        <div class="guest-card glass-panel">
+          <div class="brand-hero">
+            <div class="brand-emblem anim-float">🌱</div>
+            <h2 class="brand-title">VÀO VƯỜN ĐẤU</h2>
+            <p class="brand-subtitle">Chọn linh vật vườn và đặt biệt danh nghệ nhân</p>
+          </div>
+          
+          <form id="guest-form">
+            <!-- Avatar Selection -->
+            <div class="form-group avatar-picker-group">
+              <label class="form-label"><b>Chọn Linh Vật Vườn:</b></label>
+              <div class="avatar-selection-row" id="avatar-selection-row">
+                <button type="button" class="avatar-option selected" data-avatar="🌱">🌱</button>
+                <button type="button" class="avatar-option" data-avatar="🌺">🌺</button>
+                <button type="button" class="avatar-option" data-avatar="🍄">🍄</button>
+                <button type="button" class="avatar-option" data-avatar="🌰">🌰</button>
+                <button type="button" class="avatar-option" data-avatar="🍀">🍀</button>
+              </div>
+              <input type="hidden" id="selected-avatar" value="🌱" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="guest-name"><b>Tên người chơi:</b></label>
+              <div class="input-glow-wrapper">
+                <input 
+                  type="text" 
+                  id="guest-name" 
+                  class="form-input" 
+                  placeholder="Nhập biệt danh của bạn..." 
+                  maxlength="20"
+                  required 
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+
+            <button type="submit" id="btn-enter-lobby" class="btn-nature-primary btn-block">
+              <span>✨</span> <span>Vào Sảnh Chờ</span>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Right Column: Interactive Game Rules & Codex -->
+      <section class="dashboard-codex-col" id="inline-rules-container" aria-label="Cẩm nang luật chơi Garden Empire">
+        <!-- Rendered by RulesUI.js on DOMContentLoaded -->
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- App Version Badge -->
+  <div class="app-version-badge" title="Garden Empire v1.5.0">
+    <span class="version-dot"></span>
+    <span>v1.5.0</span>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

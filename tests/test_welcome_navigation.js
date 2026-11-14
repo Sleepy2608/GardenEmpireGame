@@ -35,58 +35,70 @@ function runTest(name, fn) {
 // -----------------------------------------------------------------------------
 console.log('▶ Test Case 1: Route mapping trong client/js/utils/navigation.js');
 
-runTest('getRouteUrl("index") trên môi trường production/Vercel phải trả về "/index" (không được trả về "/")', () => {
+runTest('getRouteUrl("play") và getRouteUrl("index") trên môi trường production/Vercel phải trả về "/play"', () => {
   // Giả lập window.location cho production
   global.window = {
     location: {
       hostname: 'garden-empire-game.vercel.app',
       port: '',
-      pathname: '/'
+      pathname: '/',
+      protocol: 'https:'
     }
   };
 
-  const url = getRouteUrl('index');
-  assert.strictEqual(url, '/index', 'Route "index" phải trả về "/index" để không bị loop về "/"');
+  const playUrl = getRouteUrl('play');
+  const indexUrl = getRouteUrl('index');
+  assert.strictEqual(playUrl, '/play', 'Route "play" phải trả về "/play"');
+  assert.strictEqual(indexUrl, '/play', 'Route "index" phải trả về "/play" để không bị loop về "/"');
 });
 
-runTest('getRouteUrl("index") trên local python static server phải trả về "index.html"', () => {
+runTest('getRouteUrl("play") và getRouteUrl("index") trên local python static server phải trả về "play.html"', () => {
   global.window = {
     location: {
       hostname: 'localhost',
       port: '5500',
-      pathname: '/'
+      pathname: '/',
+      protocol: 'http:'
     }
   };
 
-  const url = getRouteUrl('index');
-  assert.strictEqual(url, 'index.html', 'Route "index" trên local port 5500 phải trả về "index.html"');
+  const playUrl = getRouteUrl('play');
+  const indexUrl = getRouteUrl('index');
+  assert.strictEqual(playUrl, 'play.html', 'Route "play" trên local port 5500 phải trả về "play.html"');
+  assert.strictEqual(indexUrl, 'play.html', 'Route "index" trên local port 5500 phải trả về "play.html"');
 });
 
 // -----------------------------------------------------------------------------
 // Test Case 2: Vercel & Serve Rewrites Integrity
 // -----------------------------------------------------------------------------
-console.log('\n▶ Test Case 2: Cấu hình Vercel & Serve Rewrites cho "/index"');
+console.log('\n▶ Test Case 2: Cấu hình Vercel & Serve Rewrites cho "/play" và "/index"');
 
 const vercelJson = JSON.parse(fs.readFileSync(path.resolve('./vercel.json'), 'utf-8'));
 const serveJson = JSON.parse(fs.readFileSync(path.resolve('./client/serve.json'), 'utf-8'));
 
-runTest('vercel.json phải có rewrite rõ ràng cho "/index" trỏ tới "/client/index.html"', () => {
+runTest('vercel.json phải có rewrite cho "/play" và "/index" trỏ tới "/client/play.html"', () => {
+  const playRule = vercelJson.rewrites.find(r => r.source === '/play');
   const indexRule = vercelJson.rewrites.find(r => r.source === '/index');
+  assert.ok(playRule, 'Phải có rewrite cho /play');
+  assert.strictEqual(playRule.destination, '/client/play.html');
   assert.ok(indexRule, 'Phải có rewrite cho /index');
-  assert.strictEqual(indexRule.destination, '/client/index.html');
+  assert.strictEqual(indexRule.destination, '/client/play.html');
 });
 
-runTest('vercel.json phải có rewrite cho "/index.html" trỏ tới "/client/index.html" chống redirect loop', () => {
+runTest('vercel.json phải có rewrite cho "/play.html" và "/index.html" chống redirect loop', () => {
+  const playHtmlRule = vercelJson.rewrites.find(r => r.source === '/play.html');
   const indexHtmlRule = vercelJson.rewrites.find(r => r.source === '/index.html');
+  assert.ok(playHtmlRule, 'Phải có rewrite cho /play.html');
+  assert.strictEqual(playHtmlRule.destination, '/client/play.html');
   assert.ok(indexHtmlRule, 'Phải có rewrite cho /index.html');
-  assert.strictEqual(indexHtmlRule.destination, '/client/index.html');
+  assert.strictEqual(indexHtmlRule.destination, '/client/play.html');
 });
 
-runTest('client/serve.json phải có rewrite cho "/index" và "/index.html"', () => {
-  const hasIndex = serveJson.rewrites.some(r => r.source === '/index' && r.destination === '/index.html');
-  const hasIndexHtml = serveJson.rewrites.some(r => r.source === '/index.html' && r.destination === '/index.html');
+runTest('client/serve.json phải có rewrite cho "/play" và "/index"', () => {
+  const hasPlay = serveJson.rewrites.some(r => r.source === '/play' && r.destination === '/play.html');
+  const hasIndex = serveJson.rewrites.some(r => r.source === '/index' && r.destination === '/play.html');
+  assert.ok(hasPlay, 'serve.json phải có rewrite cho /play');
   assert.ok(hasIndex, 'serve.json phải có rewrite cho /index');
-  assert.ok(hasIndexHtml, 'serve.json phải có rewrite cho /index.html');
 });
 
 // -----------------------------------------------------------------------------
@@ -102,6 +114,8 @@ runTest('welcome.js phải có hàm initPlayNavigation xử lý click cho tất 
   assert.ok(welcomeJs.includes('#hero-btn-start'), 'Xử lý nút #hero-btn-start');
   assert.ok(welcomeJs.includes('#footer-btn-enter'), 'Xử lý nút #footer-btn-enter');
   assert.ok(welcomeJs.includes('e.preventDefault()'), 'Phải preventDefault để tránh Vercel 308 cleanUrls loop');
+  assert.ok(welcomeJs.includes('play.html'), 'Có fallback điều hướng sang play.html trên môi trường local');
+  assert.ok(welcomeJs.includes('/play'), 'Có điều hướng sang /play trên môi trường production');
 });
 
 console.log('\n--------------------------------------------------------');
