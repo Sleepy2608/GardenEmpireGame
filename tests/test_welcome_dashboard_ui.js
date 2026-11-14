@@ -34,10 +34,12 @@ console.log('▶ [PHẦN 1] Tính Toàn Vẹn Của Các Tệp Mã Nguồn');
 const welcomeHtmlPath = path.join(rootDir, 'client', 'welcome.html');
 const welcomeCssPath = path.join(rootDir, 'client', 'css', 'welcome.css');
 const welcomeJsPath = path.join(rootDir, 'client', 'js', 'welcome.js');
+const playHtmlPath = path.join(rootDir, 'client', 'play.html');
 
 assert(fs.existsSync(welcomeHtmlPath), 'Tệp client/welcome.html phải tồn tại');
 assert(fs.existsSync(welcomeCssPath), 'Tệp client/css/welcome.css phải tồn tại');
 assert(fs.existsSync(welcomeJsPath), 'Tệp client/js/welcome.js phải tồn tại');
+assert(fs.existsSync(playHtmlPath), 'Tệp client/play.html phải tồn tại để chống cleanUrls loop');
 
 const htmlContent = fs.readFileSync(welcomeHtmlPath, 'utf8');
 const cssContent = fs.readFileSync(welcomeCssPath, 'utf8');
@@ -50,8 +52,8 @@ console.log('\n▶ [PHẦN 2] Chuẩn Mực AIDA & Thiết Kế Cao Cấp (gpt-t
 assert(htmlContent.includes('hero-headline-wide'), 'Tiêu đề Hero H1 sử dụng container rộng hero-headline-wide');
 assert(cssContent.includes('clamp('), 'H1 sử dụng clamp() để co giãn font chữ linh hoạt chống gãy 4-6 dòng');
 
-// 2.2. Nút Bắt Đầu Chơi liên kết sang index.html
-assert(htmlContent.includes('href="index.html"'), 'Có nút CTA liên kết trực tiếp sang giao diện index.html');
+// 2.2. Nút Bắt Đầu Chơi liên kết sang play.html / index.html
+assert(htmlContent.includes('href="play.html"') || htmlContent.includes('href="index.html"'), 'Có nút CTA liên kết trực tiếp sang giao diện play.html / index.html');
 assert(htmlContent.includes('id="hero-btn-start"'), 'Nút Hero CTA chính có id="hero-btn-start"');
 assert(htmlContent.includes('id="footer-btn-enter"'), 'Nút Footer Grand Portal có id="footer-btn-enter"');
 
