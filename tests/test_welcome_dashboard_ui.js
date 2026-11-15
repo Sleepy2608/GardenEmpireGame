@@ -34,12 +34,12 @@ console.log('▶ [PHẦN 1] Tính Toàn Vẹn Của Các Tệp Mã Nguồn');
 const welcomeHtmlPath = path.join(rootDir, 'client', 'welcome.html');
 const welcomeCssPath = path.join(rootDir, 'client', 'css', 'welcome.css');
 const welcomeJsPath = path.join(rootDir, 'client', 'js', 'welcome.js');
-const playHtmlPath = path.join(rootDir, 'client', 'play.html');
+const indexHtmlPath = path.join(rootDir, 'client', 'index.html');
 
 assert(fs.existsSync(welcomeHtmlPath), 'Tệp client/welcome.html phải tồn tại');
 assert(fs.existsSync(welcomeCssPath), 'Tệp client/css/welcome.css phải tồn tại');
 assert(fs.existsSync(welcomeJsPath), 'Tệp client/js/welcome.js phải tồn tại');
-assert(fs.existsSync(playHtmlPath), 'Tệp client/play.html phải tồn tại để chống cleanUrls loop');
+assert(fs.existsSync(indexHtmlPath), 'Tệp client/index.html phải tồn tại');
 
 const htmlContent = fs.readFileSync(welcomeHtmlPath, 'utf8');
 const cssContent = fs.readFileSync(welcomeCssPath, 'utf8');
@@ -52,8 +52,8 @@ console.log('\n▶ [PHẦN 2] Chuẩn Mực AIDA & Thiết Kế Cao Cấp (gpt-t
 assert(htmlContent.includes('hero-headline-wide'), 'Tiêu đề Hero H1 sử dụng container rộng hero-headline-wide');
 assert(cssContent.includes('clamp('), 'H1 sử dụng clamp() để co giãn font chữ linh hoạt chống gãy 4-6 dòng');
 
-// 2.2. Nút Bắt Đầu Chơi liên kết sang play.html / index.html
-assert(htmlContent.includes('href="play.html"') || htmlContent.includes('href="index.html"'), 'Có nút CTA liên kết trực tiếp sang giao diện play.html / index.html');
+// 2.2. Nút Bắt Đầu Chơi liên kết sang index.html
+assert(htmlContent.includes('href="index.html"'), 'Có nút CTA liên kết trực tiếp sang giao diện index.html');
 assert(htmlContent.includes('id="hero-btn-start"'), 'Nút Hero CTA chính có id="hero-btn-start"');
 assert(htmlContent.includes('id="footer-btn-enter"'), 'Nút Footer Grand Portal có id="footer-btn-enter"');
 
@@ -100,7 +100,7 @@ const indexHtmlContent = fs.readFileSync(path.join(rootDir, 'client', 'index.htm
 assert(indexHtmlContent.includes('href="welcome.html"'), 'client/index.html có nút liên kết quay lại welcome.html');
 
 const vercelJson = JSON.parse(fs.readFileSync(path.join(rootDir, 'vercel.json'), 'utf8'));
-const hasVercelRoot = vercelJson.rewrites.some(r => r.source === '/' && r.destination === '/client/welcome');
+const hasVercelRoot = vercelJson.rewrites.some(r => r.source === '/' && (r.destination === '/client/welcome.html' || r.destination === '/client/welcome'));
 assert(hasVercelRoot, 'vercel.json định tuyến root "/" tới "/client/welcome"');
 
 const serveJson = JSON.parse(fs.readFileSync(path.join(rootDir, 'client', 'serve.json'), 'utf8'));
