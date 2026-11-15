@@ -13,7 +13,7 @@ export class RulesUI {
    */
   static getRulesTemplate({ isModal = false, prefixId = 'codex' } = {}) {
     const closeBtnHtml = isModal
-      ? `<button type="button" class="codex-close-btn" id="${prefixId}-btn-close" aria-label="Đóng cẩm nang" title="Đóng (Esc)">✕</button>`
+      ? `<button type="button" class="codex-close-btn" id="${prefixId}-btn-close" aria-label="Đóng luật chơi" title="Đóng (Esc)">✕</button>`
       : '';
 
     return `
@@ -23,29 +23,29 @@ export class RulesUI {
           <div class="codex-title-wrap">
             <div class="codex-emblem" aria-hidden="true">📖</div>
             <div>
-              <h2 class="codex-heading">CẨM NANG NGHỆ NHÂN SINH THÁI</h2>
-              <p class="codex-subheading">Luật chơi cốt lõi, chiến thuật tài nguyên và cơ chế tranh danh tiếng</p>
+              <h2 class="codex-heading">LUẬT CHƠI GARDEN EMPIRE</h2>
+              <p class="codex-subheading">Quy tắc cốt lõi, chiến thuật tài nguyên và cơ chế tranh danh tiếng</p>
             </div>
           </div>
           ${closeBtnHtml}
         </header>
 
         <!-- Tab Bar -->
-        <nav class="codex-tabs-bar" role="tablist" aria-label="Danh mục cẩm nang luật">
+        <nav class="codex-tabs-bar" role="tablist" aria-label="Danh mục luật chơi">
           <button type="button" class="codex-tab-btn active" role="tab" id="${prefixId}-tab-btn-overview" aria-selected="true" aria-controls="${prefixId}-panel-overview" data-tab="overview">
             <span class="tab-icon">🌿</span> <span>Giới Thiệu</span>
           </button>
           <button type="button" class="codex-tab-btn" role="tab" id="${prefixId}-tab-btn-energies" aria-selected="false" aria-controls="${prefixId}-panel-energies" data-tab="energies">
-            <span class="tab-icon">💎</span> <span>6 Nguồn Năng Lượng</span>
+            <span class="tab-icon">💎</span> <span>6 Năng Lượng</span>
           </button>
           <button type="button" class="codex-tab-btn" role="tab" id="${prefixId}-tab-btn-actions" aria-selected="false" aria-controls="${prefixId}-panel-actions" data-tab="actions">
-            <span class="tab-icon">⚡</span> <span>3 Hành Động Trong Lượt</span>
+            <span class="tab-icon">⚡</span> <span>3 Hành Động</span>
           </button>
           <button type="button" class="codex-tab-btn" role="tab" id="${prefixId}-tab-btn-tiers" aria-selected="false" aria-controls="${prefixId}-panel-tiers" data-tab="tiers">
-            <span class="tab-icon">🌳</span> <span>Chợ Cây 3 Cấp Độ</span>
+            <span class="tab-icon">🌳</span> <span>Chợ Cây</span>
           </button>
           <button type="button" class="codex-tab-btn" role="tab" id="${prefixId}-tab-btn-endgame" aria-selected="false" aria-controls="${prefixId}-panel-endgame" data-tab="endgame">
-            <span class="tab-icon">🏆</span> <span>Khách Quý & Chung Kết 15★</span>
+            <span class="tab-icon">🏆</span> <span>Khách Quý</span>
           </button>
         </nav>
 
@@ -406,7 +406,7 @@ export class RulesUI {
       modalOverlay.className = 'codex-modal-overlay';
       modalOverlay.setAttribute('role', 'dialog');
       modalOverlay.setAttribute('aria-modal', 'true');
-      modalOverlay.setAttribute('aria-label', 'Cẩm nang luật chơi Garden Empire');
+      modalOverlay.setAttribute('aria-label', 'Luật chơi Garden Empire');
 
       const dialogWrapper = document.createElement('div');
       dialogWrapper.className = 'codex-modal-dialog';
