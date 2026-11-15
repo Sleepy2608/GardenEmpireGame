@@ -347,7 +347,7 @@ body.welcome-body {
 
 .hero-subhead {
   max-width: 760px;
-  margin: 0 auto 36px auto;
+  margin: 0 auto 48px auto;
   font-size: clamp(1rem, 1.6vw, 1.18rem);
   color: var(--welcome-text-secondary);
   line-height: 1.65;
@@ -489,22 +489,16 @@ body.welcome-body {
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 12px 10px 8px 10px;
-  background: linear-gradient(to top, rgba(3, 14, 8, 0.95) 0%, transparent 100%);
-  text-align: left;
-}
-
-.preview-card-tier {
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--welcome-gold-bright);
+  padding: 14px 10px 10px 10px;
+  background: linear-gradient(to top, rgba(3, 14, 8, 0.95) 0%, rgba(3, 14, 8, 0.6) 65%, transparent 100%);
+  text-align: center;
 }
 
 .preview-card-name {
-  font-size: 0.82rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 700;
   color: #ffffff;
+  letter-spacing: 0.02em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

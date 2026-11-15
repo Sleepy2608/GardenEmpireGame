@@ -146,7 +146,7 @@
   // 5. Seamless Navigation for Start Playing CTA Buttons (Anti-loop fix)
   function initPlayNavigation() {
     const playLinks = document.querySelectorAll(
-      '#nav-btn-play, #hero-btn-start, #footer-btn-enter, a[href="index.html"], a[href="/index"]'
+      '#nav-btn-play, #footer-btn-enter, a[href="index.html"], a[href="/index"]'
     );
     playLinks.forEach(link => {
       link.addEventListener('click', (e) => {
