@@ -50,6 +50,13 @@
       <div class="turn-indicator-banner" id="turn-indicator-banner">
         <span class="turn-pulse-dot"></span>
         <span class="turn-text" id="turn-message">Đang đồng bộ ván đấu...</span>
+        <span class="turn-timer-badge tabular-nums" id="turn-timer-badge" style="display: none;">
+          <span class="timer-clock-icon">⏱️</span>
+          <span class="timer-countdown-text" id="turn-countdown-text">60s</span>
+        </span>
+        <div class="turn-timer-progress-track" id="turn-timer-track">
+          <div class="turn-timer-progress-fill" id="turn-timer-fill" style="width: 100%;"></div>
+        </div>
       </div>
     </div>
 
@@ -845,6 +852,23 @@
         </div>
         <button type="button" class="btn-nature-primary rules-btn-got-it" id="btn-rules-got-it">
           <span>🌿</span> <span>Đã Hiểu & Đóng</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. AFK Kicked Modal (Truất quyền do bỏ lỡ 2 lượt liên tiếp) -->
+  <div class="modal-backdrop hidden" id="afk-kicked-modal" role="dialog" aria-modal="true" aria-labelledby="afk-modal-title">
+    <div class="modal-card glass-panel afk-modal-card">
+      <div class="afk-modal-icon">⏳</div>
+      <h2 class="afk-modal-title" id="afk-modal-title">BỊ TRUẤT QUYỀN THI ĐẤU</h2>
+      <p class="afk-modal-desc">
+        Bạn đã không thực hiện bất kỳ hành động nào trong <strong>2 lượt liên tiếp</strong> (AFK).
+        Hệ thống đã tự động xử thua mặc định nhằm bảo vệ sự công bằng và trải nghiệm của ván cờ.
+      </p>
+      <div class="afk-modal-actions">
+        <button type="button" class="btn-nature-primary charles-press" id="btn-afk-return-lobby">
+          <span>🏡</span> <span>Quay Về Sảnh</span>
         </button>
       </div>
     </div>
