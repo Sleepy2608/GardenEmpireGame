@@ -225,4 +225,87 @@ class GameEngineTurnTimerTest {
         assertEquals(0, p2.getConsecutiveAfkCount(), "Không được tăng AFK count của p2");
         assertEquals("p1", game.getState().getCurrentTurnPlayerId(), "Lượt đi vẫn là của p1");
     }
+
+    @Test
+    @DisplayName("Case 9: Ngân hàng cạn kiệt 5 loại token cơ bản khi AFK — Không lấy WILD, chỉ skip lượt")
+    void testAutoHarvestWhenBankEmptyOfBasicTokens() {
+        Game game = gameEngine.createNewGame("game-1", createPlayers(2));
+        Player p1 = gameEngine.getPlayer(game, "p1");
+
+        // Rút sạch 5 tài nguyên cơ bản khỏi Bank, chỉ chừa lại WILD
+        game.getState().getResourceBank().put(Resource.DIRT, 0);
+        game.getState().getResourceBank().put(Resource.WATER, 0);
+        game.getState().getResourceBank().put(Resource.SUNLIGHT, 0);
+        game.getState().getResourceBank().put(Resource.SEED, 0);
+        game.getState().getResourceBank().put(Resource.NUTRIENTS, 0);
+        game.getState().getResourceBank().put(Resource.WILD, 5);
+
+        // Hết giờ
+        gameEngine.handleTurnTimeout(game, "p1");
+
+        assertEquals(1, p1.getConsecutiveAfkCount());
+        assertEquals(0, p1.getTotalTokensCount(), "Không được nhận bất kỳ token nào khi Bank cạn kiệt tài nguyên cơ bản");
+        assertEquals(5, game.getState().getResourceBank().get(Resource.WILD), "Ngân hàng vẫn bảo toàn nguyên vẹn 5 token WILD");
+        assertEquals("p2", game.getState().getCurrentTurnPlayerId(), "Vẫn chuyển lượt bình thường sang p2");
+
+        boolean hasSkipLog = game.getState().getActionLogs().stream()
+                .anyMatch(log -> "AFK_AUTO_SKIP".equals(log.getActionType()) && "p1".equals(log.getPlayerId()));
+        assertTrue(hasSkipLog, "Phải ghi nhận log AFK_AUTO_SKIP");
+    }
+
+    @Test
+    @DisplayName("Case 10: Hành động Đặt chỗ (Reserve) hoặc Mua thẻ thành công phải xóa cờ phạt AFK")
+    void testReserveAndBuyPlantCardResetsConsecutiveAfkCount() {
+        Game game = gameEngine.createNewGame("game-1", createPlayers(2));
+        Player p1 = gameEngine.getPlayer(game, "p1");
+
+        // Giả lập p1 đang bị 1 gậy phạt AFK
+        p1.setConsecutiveAfkCount(1);
+        assertEquals(1, p1.getConsecutiveAfkCount());
+
+        // p1 thực hiện Đặt chỗ 1 thẻ Tier 1
+        PlantCard cardToReserve = game.getState().getVisibleTier1Cards().get(0);
+        gameEngine.reservePlantCard(game, "p1", cardToReserve.getId(), null);
+        assertEquals(0, p1.getConsecutiveAfkCount(), "Đặt chỗ thành công phải reset consecutiveAfkCount về 0");
+
+        // Chuyển lượt sang p2 -> p2 đi
+        gameEngine.takeTokens(game, "p2", Map.of(Resource.DIRT, 1, Resource.WATER, 1, Resource.SUNLIGHT, 1));
+
+        // Lượt tiếp theo của p1: Lại bị phạt 1 gậy AFK
+        p1.setConsecutiveAfkCount(1);
+        assertEquals(1, p1.getConsecutiveAfkCount());
+
+        // Cho p1 đủ tài nguyên mua thẻ Tier 1 đầu tiên
+        PlantCard cardToBuy = game.getState().getVisibleTier1Cards().get(0);
+        for (Map.Entry<Resource, Integer> entry : cardToBuy.getCost().entrySet()) {
+            p1.getTokens().put(entry.getKey(), entry.getValue());
+        }
+
+        gameEngine.buyPlantCard(game, "p1", cardToBuy.getId(), false);
+        assertEquals(0, p1.getConsecutiveAfkCount(), "Mua thẻ thành công phải reset consecutiveAfkCount về 0");
+    }
+
+    @Test
+    @DisplayName("Case 11: Người chơi bị truất quyền (hasLeft) sẽ bị bỏ qua vĩnh viễn trong vòng xoay lượt")
+    void testKickedPlayerIsSkippedInSubsequentTurnRotations() {
+        Game game = gameEngine.createNewGame("game-1", createPlayers(3));
+        Player p1 = gameEngine.getPlayer(game, "p1");
+
+        // Kích hoạt p1 AFK 2 lần để bị kick
+        gameEngine.handleTurnTimeout(game, "p1"); // AFK 1
+        gameEngine.takeTokens(game, "p2", Map.of(Resource.DIRT, 1, Resource.WATER, 1, Resource.SUNLIGHT, 1));
+        gameEngine.takeTokens(game, "p3", Map.of(Resource.DIRT, 1, Resource.WATER, 1, Resource.SUNLIGHT, 1));
+        gameEngine.handleTurnTimeout(game, "p1"); // AFK 2 -> Kick
+
+        assertTrue(p1.isHasLeft(), "p1 đã bị truất quyền");
+        assertEquals("p2", game.getState().getCurrentTurnPlayerId());
+
+        // p2 đi lượt tiếp theo
+        gameEngine.takeTokens(game, "p2", Map.of(Resource.DIRT, 1, Resource.WATER, 1, Resource.SUNLIGHT, 1));
+        assertEquals("p3", game.getState().getCurrentTurnPlayerId(), "Lượt đi tới p3");
+
+        // p3 đi -> Lượt tiếp theo phải bỏ qua p1 và quay lại p2
+        gameEngine.takeTokens(game, "p3", Map.of(Resource.DIRT, 1, Resource.WATER, 1, Resource.SUNLIGHT, 1));
+        assertEquals("p2", game.getState().getCurrentTurnPlayerId(), "Vòng xoay lượt phải tự động bỏ qua p1 và tới p2");
+    }
 }
