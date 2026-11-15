@@ -52,10 +52,14 @@ console.log('\n▶ [PHẦN 2] Chuẩn Mực AIDA & Thiết Kế Cao Cấp (gpt-t
 assert(htmlContent.includes('hero-headline-wide'), 'Tiêu đề Hero H1 sử dụng container rộng hero-headline-wide');
 assert(cssContent.includes('clamp('), 'H1 sử dụng clamp() để co giãn font chữ linh hoạt chống gãy 4-6 dòng');
 
-// 2.2. Nút Bắt Đầu Chơi liên kết sang index.html
+// 2.2. Nút Bắt Đầu Chơi liên kết sang index.html (Navbar & Footer Grand Portal)
 assert(htmlContent.includes('href="index.html"'), 'Có nút CTA liên kết trực tiếp sang giao diện index.html');
-assert(htmlContent.includes('id="hero-btn-start"'), 'Nút Hero CTA chính có id="hero-btn-start"');
+assert(htmlContent.includes('id="nav-btn-play"'), 'Nút Navbar CTA có id="nav-btn-play"');
 assert(htmlContent.includes('id="footer-btn-enter"'), 'Nút Footer Grand Portal có id="footer-btn-enter"');
+assert(!htmlContent.includes('Flora Valley Codex'), 'Thanh navbar tinh gọn, loại bỏ phụ đề rườm rà (Codex)');
+assert(!htmlContent.includes('preview-card-tier'), '3 thẻ bài mẫu tinh gọn, loại bỏ nhãn Tier và điểm số thừa thãi');
+assert(!htmlContent.includes('Garden Empire Project'), 'Footer sử dụng danh xưng chuẩn mực "Garden Empire Game", không gắn hậu tố "Project"');
+assert(!htmlContent.includes('Vào Vườn Đấu (Index)'), 'Footer loại bỏ các chú thích trong ngoặc đơn thừa thãi');
 
 // 2.3. Gapless Bento Grid
 assert(cssContent.includes('grid-auto-flow: dense'), 'Bento Grid áp dụng grid-auto-flow: dense triệt tiêu ô chết');
