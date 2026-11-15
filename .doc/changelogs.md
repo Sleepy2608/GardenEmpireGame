@@ -15,8 +15,10 @@ Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game**
   - **Chuẩn Hóa Danh Xưng "Luật Chơi":** Thống nhất thay thế cụm từ "Cẩm nang..." thành "Luật chơi" trên toàn bộ giao diện (`index.html`, `RulesUI.js`, `lobby.html`, `welcome.html`).
   - **Fit Hoàn Hảo 5 Tabs Luật Chơi (Zero Scrollbar):** Tái cấu trúc `.codex-tabs-bar` dạng Grid 5 cột (`repeat(5, minmax(0, 1fr))`), rút gọn nhãn nút tab (*Giới Thiệu*, *Năng Lượng*, *Hành Động*, *Chợ Cây*, *Khách Quý*), triệt tiêu hoàn toàn thanh cuộn ngang khó nhìn.
   - **Tối Ưu Xúc Giác Nút CTA:** Loại bỏ emoji ở nút "Vào Sảnh Chờ" để giao diện trang nhã, tương phản cao trên nền gradient hoàng gia.
-- **Nâng Cấp Phiên Bản Hệ Thống:**
+- **Nâng Cấp Phiên Bản Hệ Thống & Tự Động Hóa CI:**
   - Đồng bộ số hiệu phiên bản lên **v1.5.1** trên toàn bộ Client Badges (`index.html`, `lobby.html`, `waiting-room.html`, `welcome.html`), Server Maven (`pom.xml`) và tài liệu quy chuẩn (`AGENTS.md`, `README.md`).
+  - **Thiết Lập GitHub Actions CI (`.github/workflows/ci.yml`):** Tự động chạy toàn bộ 11 bộ test Frontend (Node.js 22) và 41 bộ test Backend (Java 21 / Maven) khi có Push hoặc Pull Request vào `main`.
+  - Bổ sung huy hiệu trạng thái CI Pipeline động trên `README.md`.
 
 ## 🚀 [v1.5.0] — 2026-11-14
 ### 🏛️ Cổng Chào Tân Binh, Cốt Truyện Đại Ngàn Flora Valley & Hệ Thống Chuyển Động Mượt Mà (Welcome Dashboard, Botanical Lore & Motion System)

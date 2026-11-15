@@ -1,0 +1,61 @@
+name: Garden Empire CI
+
+on:
+  push:
+    branches:
+      - main
+      - test
+      - 'feat/**'
+      - 'fix/**'
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # =========================================================================
+  # 1. FRONTEND UI & DOM TEST SUITE
+  # =========================================================================
+  frontend-tests:
+    name: 🌿 Frontend Tests (Node.js)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run All Frontend Unit & DOM Tests
+        run: node tests/run_all_tests.js
+
+  # =========================================================================
+  # 2. BACKEND GAME ENGINE & INTEGRATION TEST SUITE
+  # =========================================================================
+  backend-tests:
+    name: ☕ Backend Tests (Java 21 / Spring Boot 3)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21 (Eclipse Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Run Maven Tests
+        working-directory: server
+        run: mvn clean test --no-transfer-progress
+
