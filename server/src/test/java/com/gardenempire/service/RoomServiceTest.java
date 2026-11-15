@@ -201,4 +201,68 @@ class RoomServiceTest {
 
         assertTrue(roomManager.getRoom(roomId).isEmpty(), "Phòng FINISHED phải được dọn dẹp sau khi gọi đóng phòng");
     }
+
+    @Test
+    @DisplayName("Chủ phòng cập nhật thời gian mỗi lượt (60s, 120s, 300s) thành công")
+    void testUpdateRoomSettingsSuccess() {
+        String hostId = "host-timer-" + System.currentTimeMillis();
+        Player host = Player.builder().id(hostId).name("Chủ Phòng").avatar("🌱").build();
+        CreateRoomRequest req = new CreateRoomRequest();
+        req.setRoomName("Phòng Đấu Hẹn Giờ");
+        req.setMaxPlayers(3);
+        req.setHostPlayer(host);
+
+        Room room = roomService.createRoom(req);
+        String roomId = room.getId();
+        assertEquals(60, room.getTurnDurationSeconds(), "Mặc định thời gian mỗi lượt là 60s");
+
+        // Cập nhật lên 120s (2 phút)
+        Room updated120 = roomService.updateRoomSettings(roomId, hostId, 120);
+        assertEquals(120, updated120.getTurnDurationSeconds());
+
+        // Cập nhật lên 300s (5 phút)
+        Room updated300 = roomService.updateRoomSettings(roomId, hostId, 300);
+        assertEquals(300, updated300.getTurnDurationSeconds());
+    }
+
+    @Test
+    @DisplayName("Người chơi không phải Host không được cập nhật thời gian mỗi lượt")
+    void testNonHostCannotUpdateRoomSettings() {
+        String hostId = "host-real-" + System.currentTimeMillis();
+        Player host = Player.builder().id(hostId).name("Chủ Thật").avatar("🌱").build();
+        CreateRoomRequest req = new CreateRoomRequest();
+        req.setRoomName("Phòng Đấu Thật");
+        req.setMaxPlayers(3);
+        req.setHostPlayer(host);
+
+        Room room = roomService.createRoom(req);
+        String roomId = room.getId();
+
+        String guestId = "guest-fake-" + System.currentTimeMillis();
+        assertThrows(com.gardenempire.exception.GameException.class, () -> {
+            roomService.updateRoomSettings(roomId, guestId, 120);
+        }, "Chỉ chủ phòng mới có quyền thay đổi cài đặt");
+    }
+
+    @Test
+    @DisplayName("Cập nhật thời gian không nằm trong danh mục (60, 120, 300) bị từ chối")
+    void testInvalidTurnDurationRejected() {
+        String hostId = "host-invalid-" + System.currentTimeMillis();
+        Player host = Player.builder().id(hostId).name("Chủ").avatar("🌱").build();
+        CreateRoomRequest req = new CreateRoomRequest();
+        req.setRoomName("Phòng Thử");
+        req.setMaxPlayers(3);
+        req.setHostPlayer(host);
+
+        Room room = roomService.createRoom(req);
+        String roomId = room.getId();
+
+        assertThrows(com.gardenempire.exception.GameException.class, () -> {
+            roomService.updateRoomSettings(roomId, hostId, 15);
+        }, "Chỉ chấp nhận 60, 120, 300");
+
+        assertThrows(com.gardenempire.exception.GameException.class, () -> {
+            roomService.updateRoomSettings(roomId, hostId, 999);
+        });
+    }
 }
