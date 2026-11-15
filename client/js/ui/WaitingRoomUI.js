@@ -81,6 +81,14 @@ export class WaitingRoomUI {
 
     // Leave room
     document.getElementById('btn-leave-room')?.addEventListener('click', () => this._leaveRoom());
+
+    // Turn duration setting buttons (Phase 16)
+    document.querySelectorAll('.turn-pill-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const duration = parseInt(btn.dataset.duration, 10);
+        this._changeTurnDuration(duration);
+      });
+    });
   }
 
   // ── Render room info & player list ────────────────────────────
@@ -112,6 +120,52 @@ export class WaitingRoomUI {
 
     // Player list
     this._renderPlayerList(this.room.players || [], this.room.hostId, this.room.maxPlayers);
+
+    // Turn duration setting (Phase 16)
+    this._updateTurnDurationUI(this.room.turnDurationSeconds || 60);
+  }
+
+  // ── Turn duration setting (Phase 16) ──────────────────────────
+  async _changeTurnDuration(duration) {
+    if (!this.room || this.room.hostId !== this.myId) return;
+    if (this.room.turnDurationSeconds === duration) return;
+
+    this._updateTurnDurationUI(duration);
+
+    try {
+      const updatedRoom = await roomApi.updateRoomSettings(this.roomId, this.myId, duration);
+      this.room = updatedRoom;
+      this._showToast(`⏱️ Đã đặt thời gian mỗi lượt thành ${this._formatDurationLabel(duration)}`, 'success');
+      this._playNotificationSound();
+    } catch (err) {
+      this._showToast('Lỗi cập nhật thời gian: ' + err.message, 'error');
+      this._updateTurnDurationUI(this.room?.turnDurationSeconds || 60);
+    }
+  }
+
+  _updateTurnDurationUI(duration) {
+    const isHost = this.room?.hostId === this.myId;
+    const norm = [60, 120, 300].includes(duration) ? duration : 60;
+
+    document.querySelectorAll('.turn-pill-btn').forEach(btn => {
+      const d = parseInt(btn.dataset.duration, 10);
+      const isActive = d === norm;
+      btn.classList.toggle('active', isActive);
+      btn.disabled = !isHost;
+    });
+
+    const label = document.getElementById('turn-duration-label');
+    if (label) {
+      label.textContent = this._formatDurationLabel(norm);
+    }
+  }
+
+  _formatDurationLabel(duration) {
+    switch (duration) {
+      case 120: return '2 Phút (Chiến thuật)';
+      case 300: return '5 Phút (Thư thái)';
+      default:  return '1 Phút (Tiêu chuẩn)';
+    }
   }
 
   _renderPlayerList(players, hostId, maxPlayers) {
