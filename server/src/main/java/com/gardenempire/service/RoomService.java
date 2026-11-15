@@ -233,11 +233,28 @@ public class RoomService {
         }
 
         room.setStatus(RoomStatus.PLAYING);
-        String gameId = gameService.initGame(room.getId(), room.getPlayers());
+        String gameId = gameService.initGame(room.getId(), room.getPlayers(), room.getTurnDurationSeconds());
         room.setGameId(gameId);
         cleanupService.recordActivity(roomId);
         // Broadcast GAME_STARTED cho toàn bộ người trong phòng chờ
         messageHandler.broadcastGameStarted(roomId, gameId);
+        return room;
+    }
+
+    public Room updateRoomSettings(String roomId, String hostId, int turnDurationSeconds) {
+        Room room = getRoomById(roomId);
+        if (!room.getHostId().equals(hostId)) {
+            throw new GameException("Chỉ chủ phòng mới có quyền thay đổi cài đặt phòng");
+        }
+        if (room.getStatus() != RoomStatus.WAITING) {
+            throw new GameException("Chỉ có thể thay đổi cài đặt khi phòng đang ở trạng thái chờ");
+        }
+        if (turnDurationSeconds != 60 && turnDurationSeconds != 120 && turnDurationSeconds != 300) {
+            throw new GameException("Thời gian mỗi lượt không hợp lệ. Chỉ chấp nhận 60s (1p), 120s (2p) hoặc 300s (5p).");
+        }
+        room.setTurnDurationSeconds(turnDurationSeconds);
+        cleanupService.recordActivity(roomId);
+        messageHandler.broadcastRoomUpdate(roomId, room, null, null);
         return room;
     }
 

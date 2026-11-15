@@ -59,6 +59,13 @@ public class RoomController {
         return ResponseEntity.ok(roomService.startGame(roomId, hostId));
     }
 
+    @PutMapping("/{roomId}/settings")
+    public ResponseEntity<Room> updateRoomSettings(
+            @PathVariable String roomId,
+            @RequestBody com.gardenempire.dto.UpdateRoomSettingsRequest request) {
+        return ResponseEntity.ok(roomService.updateRoomSettings(roomId, request.getHostId(), request.getTurnDurationSeconds()));
+    }
+
     @PostMapping("/{roomId}/kick")
     public ResponseEntity<Room> kickPlayer(
             @PathVariable String roomId,
