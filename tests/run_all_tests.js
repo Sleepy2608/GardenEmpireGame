@@ -24,7 +24,8 @@ const testSuites = [
   'test_issue_30_verification.js',
   'test_game_log_toggle_3_recent.js',
   'test_waiting_room_turn_duration_ui.js',
-  'test_board_turn_timer_ui.js'
+  'test_board_turn_timer_ui.js',
+  'test_afk_and_kick_flow.js'
 ];
 
 console.log('\n🌿 ========================================================');

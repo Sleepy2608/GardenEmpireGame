@@ -4,7 +4,7 @@
 class SoundFXEngine {
   constructor() {
     this.ctx = null;
-    this.muted = localStorage.getItem('garden_empire_sound_muted') === 'true';
+    this.muted = typeof localStorage !== 'undefined' && localStorage.getItem('garden_empire_sound_muted') === 'true';
   }
 
   initContext() {
@@ -25,7 +25,9 @@ class SoundFXEngine {
 
   toggleMute() {
     this.muted = !this.muted;
-    localStorage.setItem('garden_empire_sound_muted', this.muted);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('garden_empire_sound_muted', this.muted);
+    }
     return this.muted;
   }
 
