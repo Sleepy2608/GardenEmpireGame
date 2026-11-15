@@ -58,3 +58,4 @@ jobs:
       - name: Run Maven Tests
         working-directory: server
         run: mvn clean test --no-transfer-progress
+

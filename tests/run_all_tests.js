@@ -52,3 +52,4 @@ if (failedSuites.length > 0) {
   console.log('🎉 TẤT CẢ 11 TEST SUITES FRONTEND ĐÃ VƯỢT QUA (100% PASS)!');
   process.exit(0);
 }
+
