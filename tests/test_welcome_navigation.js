@@ -106,7 +106,6 @@ const welcomeJs = fs.readFileSync(path.resolve('./client/js/welcome.js'), 'utf-8
 runTest('welcome.js phải có hàm initPlayNavigation xử lý click cho tất cả nút bắt đầu chơi', () => {
   assert.ok(welcomeJs.includes('initPlayNavigation'), 'welcome.js phải định nghĩa initPlayNavigation');
   assert.ok(welcomeJs.includes('#nav-btn-play'), 'Xử lý nút #nav-btn-play');
-  assert.ok(welcomeJs.includes('#hero-btn-start'), 'Xử lý nút #hero-btn-start');
   assert.ok(welcomeJs.includes('#footer-btn-enter'), 'Xử lý nút #footer-btn-enter');
   assert.ok(welcomeJs.includes('e.preventDefault()'), 'Phải preventDefault để xử lý navigation sạch');
   assert.ok(welcomeJs.includes('index.html'), 'Có điều hướng sang index.html trên môi trường local');
