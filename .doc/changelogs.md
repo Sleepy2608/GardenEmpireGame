@@ -3,6 +3,21 @@
 Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game** được ghi chép và lưu trữ đầy đủ tại tài liệu này từ giai đoạn khởi tạo ban đầu (v0.0.0).  
 Định dạng dựa trên [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), và dự án tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 🚀 [v1.5.1] — 2026-11-15
+### 🌿 Tinh Chỉnh Cổng Chào Tân Binh & Bảng Điều Khiển Nghệ Nhân (Welcome & Main Dashboard Index Refinements)
+- **Cổng Chào & Trang Đích Tân Binh (`client/welcome.html`, `client/css/welcome.css`):**
+  - **Tinh Gọn Header Navbar:** Loại bỏ tagline rườm rà "Flora Valley Codex", rút gọn danh sách menu xuống còn 3 phân khu cốt lõi (*Thung Lũng Flora*, *Hệ Sinh Thái*, *Quy Tắc*).
+  - **Tối Giản Hero Section:** Loại bỏ 2 nút CTA trùng lặp ở khu vực Hero để tập trung thị giác vào tiêu đề H1 và bộ 3 thẻ cây trồng mẫu.
+  - **Tối Giản Thẻ Bài Mẫu (Showcase Cards):** Chỉ giữ lại tên cây trồng (*Cỏ Ba Lá*, *Cự Sam Sequoia*, *Hoa Tulip*), loại bỏ phân hạng Tier và điểm sao thừa thãi.
+  - **Chuẩn Hóa Footer & Danh Xưng Thương Hiệu:** Bỏ chú thích trong ngoặc đơn `( )`, thống nhất danh xưng thương hiệu `Garden Empire Game`, loại bỏ hậu tố "Project".
+- **Bảng Điều Khiển Đăng Ký Vào Vườn Đấu (`client/index.html`, `client/css/index.css`):**
+  - **Floating Glass Pill Topbar:** Nâng cấp thanh header thành khối viên nang kính mờ viền ngọc bích phát quang, kết hợp font chữ Phục Hưng `'Playfair Display', serif` sang trọng.
+  - **Chuẩn Hóa Danh Xưng "Luật Chơi":** Thống nhất thay thế cụm từ "Cẩm nang..." thành "Luật chơi" trên toàn bộ giao diện (`index.html`, `RulesUI.js`, `lobby.html`, `welcome.html`).
+  - **Fit Hoàn Hảo 5 Tabs Luật Chơi (Zero Scrollbar):** Tái cấu trúc `.codex-tabs-bar` dạng Grid 5 cột (`repeat(5, minmax(0, 1fr))`), rút gọn nhãn nút tab (*Giới Thiệu*, *Năng Lượng*, *Hành Động*, *Chợ Cây*, *Khách Quý*), triệt tiêu hoàn toàn thanh cuộn ngang khó nhìn.
+  - **Tối Ưu Xúc Giác Nút CTA:** Loại bỏ emoji ở nút "Vào Sảnh Chờ" để giao diện trang nhã, tương phản cao trên nền gradient hoàng gia.
+- **Nâng Cấp Phiên Bản Hệ Thống:**
+  - Đồng bộ số hiệu phiên bản lên **v1.5.1** trên toàn bộ Client Badges (`index.html`, `lobby.html`, `waiting-room.html`, `welcome.html`), Server Maven (`pom.xml`) và tài liệu quy chuẩn (`AGENTS.md`, `README.md`).
+
 ## 🚀 [v1.5.0] — 2026-11-14
 ### 🏛️ Cổng Chào Tân Binh, Cốt Truyện Đại Ngàn Flora Valley & Hệ Thống Chuyển Động Mượt Mà (Welcome Dashboard, Botanical Lore & Motion System)
 - **Cổng Chào & Bảng Điều Khiển Khởi Động Tân Binh (Welcome Dashboard UI & Grand Portal):**
