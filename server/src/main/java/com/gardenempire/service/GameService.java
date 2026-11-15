@@ -6,12 +6,14 @@ import com.gardenempire.game.Game;
 import com.gardenempire.game.GameEngine;
 import com.gardenempire.game.GameState;
 import com.gardenempire.game.Player;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 
+@Slf4j
 @Service
 public class GameService {
     private final GameEngine gameEngine;
@@ -19,15 +21,122 @@ public class GameService {
     private Map<String, Game> activeGames = new ConcurrentHashMap<>();
     private Map<String, java.util.concurrent.locks.ReentrantLock> roomLocks = new ConcurrentHashMap<>();
 
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+    private final Map<String, ScheduledFuture<?>> turnTimerTasks = new ConcurrentHashMap<>();
+
+    public interface GameEventListener {
+        void onGameStateUpdated(String gameId, GameState state);
+        void onAfkWarning(String gameId, String playerId, int strike, int maxStrikes, String message);
+        void onPlayerKickedAfk(String gameId, Player player, GameState state);
+    }
+
+    private GameEventListener eventListener;
+
+    public void setEventListener(GameEventListener eventListener) {
+        this.eventListener = eventListener;
+    }
+
+    @jakarta.annotation.PreDestroy
+    public void cleanup() {
+        scheduler.shutdownNow();
+    }
+
     public GameService(GameEngine gameEngine, com.gardenempire.room.RoomManager roomManager) {
         this.gameEngine = gameEngine;
         this.roomManager = roomManager;
     }
 
     public String initGame(String roomId, List<Player> players) {
-        Game game = gameEngine.createNewGame(roomId, players);
+        return initGame(roomId, players, 60);
+    }
+
+    public String initGame(String roomId, List<Player> players, int turnDurationSeconds) {
+        Game game = gameEngine.createNewGame(roomId, players, turnDurationSeconds);
         activeGames.put(roomId, game);
+        startTurnTimer(roomId);
         return roomId;
+    }
+
+    public void startTurnTimer(String gameId) {
+        cancelTurnTimer(gameId);
+        Game game = activeGames.get(gameId);
+        if (game == null || game.getState() == null || game.getState().isGameOver()) {
+            return;
+        }
+        String currentTurnPlayerId = game.getState().getCurrentTurnPlayerId();
+        if (currentTurnPlayerId == null) {
+            return;
+        }
+
+        int duration = game.getState().getTurnDurationSeconds();
+        if (duration <= 0) {
+            duration = 60;
+        }
+
+        ScheduledFuture<?> task = scheduler.schedule(() -> {
+            handleTurnTimeout(gameId, currentTurnPlayerId);
+        }, duration, TimeUnit.SECONDS);
+
+        turnTimerTasks.put(gameId, task);
+    }
+
+    public void cancelTurnTimer(String gameId) {
+        ScheduledFuture<?> existingTask = turnTimerTasks.remove(gameId);
+        if (existingTask != null && !existingTask.isDone()) {
+            existingTask.cancel(false);
+        }
+    }
+
+    public void handleTurnTimeout(String gameId, String expectedPlayerId) {
+        java.util.concurrent.locks.ReentrantLock lock = roomLocks.computeIfAbsent(gameId, k -> new java.util.concurrent.locks.ReentrantLock(true));
+        lock.lock();
+        try {
+            Game game = activeGames.get(gameId);
+            if (game == null || game.getState() == null || game.getState().isGameOver()) {
+                return;
+            }
+
+            if (!expectedPlayerId.equals(game.getState().getCurrentTurnPlayerId())) {
+                return;
+            }
+
+            Player player;
+            try {
+                player = gameEngine.getPlayer(game, expectedPlayerId);
+            } catch (Exception ignored) {
+                return;
+            }
+
+            if (player.isHasLeft()) {
+                return;
+            }
+
+            int previousConsecutiveAfk = player.getConsecutiveAfkCount();
+            gameEngine.handleTurnTimeout(game, expectedPlayerId);
+            GameState state = game.getState();
+
+            if (state.isGameOver()) {
+                cancelTurnTimer(gameId);
+                var roomOpt = roomManager.getRoom(gameId);
+                roomOpt.ifPresent(r -> r.setStatus(com.gardenempire.room.RoomStatus.FINISHED));
+            } else {
+                startTurnTimer(gameId);
+            }
+
+            if (eventListener != null) {
+                eventListener.onGameStateUpdated(gameId, state);
+                if (previousConsecutiveAfk == 0) {
+                    String warnMsg = "⚠️ Bạn đã hết thời gian lượt đi! Hệ thống đã tự động thu thập tài nguyên và chuyển lượt. Nếu tiếp tục AFK ở lượt sau, bạn sẽ bị truất quyền thi đấu!";
+                    eventListener.onAfkWarning(gameId, expectedPlayerId, 1, 2, warnMsg);
+                } else {
+                    eventListener.onPlayerKickedAfk(gameId, player, state);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Lỗi khi xử lý timeout lượt cho gameId={}, playerId={}: ", gameId, expectedPlayerId, e);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public Game getGame(String gameId) {
@@ -47,8 +156,9 @@ public class GameService {
                     }
                     return null;
                 }
-                game = gameEngine.createNewGame(room.getId(), room.getPlayers());
+                game = gameEngine.createNewGame(room.getId(), room.getPlayers(), room.getTurnDurationSeconds());
                 activeGames.put(room.getId(), game);
+                startTurnTimer(room.getId());
                 return game;
             }
             throw new GameException("Không tìm thấy trận đấu với ID: " + gameId);
@@ -138,7 +248,10 @@ public class GameService {
             }
 
             if (game.getState().isGameOver()) {
+                cancelTurnTimer(gameId);
                 roomOpt.ifPresent(r -> r.setStatus(com.gardenempire.room.RoomStatus.FINISHED));
+            } else if (!isTurnExempt) {
+                startTurnTimer(gameId);
             }
 
             return game.getState();
@@ -148,6 +261,7 @@ public class GameService {
     }
 
     public void removeGame(String gameId) {
+        cancelTurnTimer(gameId);
         activeGames.remove(gameId);
         roomLocks.remove(gameId);
     }
@@ -162,8 +276,11 @@ public class GameService {
             }
             gameEngine.handlePlayerLeave(game, playerId);
             if (game.getState().isGameOver()) {
+                cancelTurnTimer(gameId);
                 var roomOpt = roomManager.getRoom(gameId);
                 roomOpt.ifPresent(r -> r.setStatus(com.gardenempire.room.RoomStatus.FINISHED));
+            } else {
+                startTurnTimer(gameId);
             }
             return game.getState();
         } finally {

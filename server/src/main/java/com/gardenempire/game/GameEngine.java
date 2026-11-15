@@ -15,6 +15,10 @@ public class GameEngine {
     }
 
     public Game createNewGame(String gameId, List<Player> players) {
+        return createNewGame(gameId, players, 60);
+    }
+
+    public Game createNewGame(String gameId, List<Player> players, int turnDurationSeconds) {
         if (players == null || players.size() < 2 || players.size() > 4) {
             throw new GameException("Số lượng người chơi phải từ 2 đến 4 người để bắt đầu trò chơi.");
         }
@@ -23,6 +27,11 @@ public class GameEngine {
         initializeDecksAndMarket(game);
         initializeBank(game, players.size());
         
+        int duration = (turnDurationSeconds == 60 || turnDurationSeconds == 120 || turnDurationSeconds == 300) 
+                ? turnDurationSeconds : 60;
+        game.getState().setTurnDurationSeconds(duration);
+        game.getState().setTurnStartTime(System.currentTimeMillis());
+
         // Chọn ngẫu nhiên người đi đầu tiên
         int randomIndex = this.random.nextInt(players.size());
         Player firstPlayer = players.get(randomIndex);
@@ -164,6 +173,7 @@ public class GameEngine {
         }
 
         Player player = getPlayer(game, playerId);
+        player.setConsecutiveAfkCount(0);
 
         // Chuyển token từ Bank sang Player
         for (Map.Entry<Resource, Integer> entry : requestedTokens.entrySet()) {
@@ -197,6 +207,7 @@ public class GameEngine {
     public void buyPlantCard(Game game, String playerId, String cardId, boolean fromReserved) {
         validateTurnAndActive(game, playerId);
         Player player = getPlayer(game, playerId);
+        player.setConsecutiveAfkCount(0);
 
         PlantCard targetCard = null;
         int tierFound = -1;
@@ -295,6 +306,7 @@ public class GameEngine {
     public void reservePlantCard(Game game, String playerId, String cardId, Integer tierFromDeck) {
         validateTurnAndActive(game, playerId);
         Player player = getPlayer(game, playerId);
+        player.setConsecutiveAfkCount(0);
 
         if (player.getReservedCards().size() >= 3) {
             throw new GameException("Bạn chỉ được giữ tối đa 3 thẻ cây trên tay.");
@@ -365,6 +377,7 @@ public class GameEngine {
     public void returnTokens(Game game, String playerId, Map<Resource, Integer> returnedTokens) {
         validateTurnAndActive(game, playerId);
         Player player = getPlayer(game, playerId);
+        player.setConsecutiveAfkCount(0);
 
         if (player.getTotalTokensCount() <= 10) {
             throw new GameException("Bạn đang có " + player.getTotalTokensCount() + " token (không vượt quá 10), không cần phải trả lại.");
@@ -490,6 +503,7 @@ public class GameEngine {
 
         if (nextPlayerId != null) {
             game.getState().setCurrentTurnPlayerId(nextPlayerId);
+            game.getState().setTurnStartTime(System.currentTimeMillis());
         } else {
             game.getState().setGameOver(true);
             game.getState().setCurrentTurnPlayerId(null);
@@ -570,7 +584,123 @@ public class GameEngine {
 
             if (nextPlayerId != null) {
                 game.getState().setCurrentTurnPlayerId(nextPlayerId);
+                game.getState().setTurnStartTime(System.currentTimeMillis());
             }
+        }
+    }
+
+    // =========================================================================
+    // QUẢN LÝ THỜI GIAN LƯỢT ĐI & XỬ LÝ AFK (PHASE 16)
+    // =========================================================================
+
+    /**
+     * Tự động thu thập tài nguyên ngẫu nhiên từ Ngân hàng khi người chơi bị hết giờ (AFK Timeout).
+     * Quy tắc:
+     * 1. Không vượt quá giới hạn 10 token trên tay (nếu đã đủ 10 token -> bỏ qua bước nhận token, chỉ skip).
+     * 2. Chỉ rút từ các loại tài nguyên cơ bản (Đất, Nước, Nắng, Hạt, Dinh Dưỡng) có số lượng > 0 trong Ngân hàng.
+     * 3. Tuyệt đối KHÔNG rút Phân bón vàng (WILD / FERTILIZER) khi AFK.
+     * 4. Rút tối đa min(3, 10 - tổng token hiện tại) loại tài nguyên khác nhau.
+     * 5. Trừ kho Ngân hàng và cộng vào kho người chơi, đồng thời ghi log hành động.
+     */
+    public Map<Resource, Integer> autoHarvestRandomTokens(Game game, Player player) {
+        if (game == null || game.getState() == null || player == null) {
+            return Collections.emptyMap();
+        }
+
+        int currentTokens = player.getTotalTokensCount();
+        int maxCanTake = Math.max(0, 10 - currentTokens);
+        int targetCount = Math.min(3, maxCanTake);
+
+        if (targetCount == 0) {
+            String msg = String.format("⏳ Nghệ nhân %s đã hết thời gian lượt đi (AFK). Do đã đủ 10 token, hệ thống tự động bỏ qua lượt đi.", player.getName());
+            addLog(game, player.getId(), "AFK_AUTO_SKIP", msg, Map.of("playerId", player.getId(), "reason", "MAX_TOKENS_REACHED"));
+            return Collections.emptyMap();
+        }
+
+        List<Resource> availableBasicResources = new ArrayList<>();
+        Map<Resource, Integer> bank = game.getState().getResourceBank();
+        for (Resource res : Resource.values()) {
+            if (res != Resource.WILD) {
+                int count = bank.getOrDefault(res, 0);
+                if (count > 0) {
+                    availableBasicResources.add(res);
+                }
+            }
+        }
+
+        if (availableBasicResources.isEmpty()) {
+            String msg = String.format("⏳ Nghệ nhân %s đã hết thời gian lượt đi (AFK). Ngân hàng đã cạn tài nguyên cơ bản, hệ thống tự động bỏ qua lượt đi.", player.getName());
+            addLog(game, player.getId(), "AFK_AUTO_SKIP", msg, Map.of("playerId", player.getId(), "reason", "BANK_EMPTY"));
+            return Collections.emptyMap();
+        }
+
+        Collections.shuffle(availableBasicResources, this.random);
+        int pickCount = Math.min(targetCount, availableBasicResources.size());
+        Map<Resource, Integer> harvested = new EnumMap<>(Resource.class);
+
+        for (int i = 0; i < pickCount; i++) {
+            Resource res = availableBasicResources.get(i);
+            harvested.put(res, 1);
+            bank.put(res, bank.get(res) - 1);
+            player.getTokens().put(res, player.getTokens().getOrDefault(res, 0) + 1);
+        }
+
+        String tokenStr = formatTokenMap(harvested);
+        String msg = String.format("⏳ Nghệ nhân %s đã hết thời gian lượt đi (AFK). Hệ thống tự động thu thập %s từ ngân hàng và chuyển lượt.", player.getName(), tokenStr);
+        addLog(game, player.getId(), "AFK_AUTO_HARVEST", msg, Map.of("playerId", player.getId(), "tokens", harvested.toString(), "count", pickCount));
+
+        return harvested;
+    }
+
+    /**
+     * Xử lý khi hết thời gian lượt đi (Turn Timeout / AFK).
+     * 1. Kiểm tra tính hợp lệ và đúng lượt của người chơi.
+     * 2. Tăng consecutiveAfkCount và totalAfkCount.
+     * 3. Nếu là lần 1 (Strike 1):
+     *    - Thu thập ngẫu nhiên token hợp lệ (autoHarvestRandomTokens).
+     *    - Ghi log cảnh báo AFK (1/2).
+     *    - Gọi endTurn() để chuyển lượt an toàn cho người tiếp theo.
+     * 4. Nếu là lần 2 liên tiếp (Strike 2):
+     *    - Ghi log truất quyền thi đấu do AFK 2 lần liên tiếp.
+     *    - Gọi handlePlayerLeave() để loại người chơi, chuyển lượt hoặc xử thắng mặc định (Walkover).
+     */
+    public void handleTurnTimeout(Game game, String playerId) {
+        if (game == null || game.getState() == null || playerId == null) {
+            return;
+        }
+
+        if (game.getState().isGameOver()) {
+            return;
+        }
+
+        Player player;
+        try {
+            player = getPlayer(game, playerId);
+        } catch (GameException ignored) {
+            return;
+        }
+
+        if (player.isHasLeft()) {
+            return;
+        }
+
+        // Phải đúng là đang tới lượt người chơi này
+        if (!playerId.equals(game.getState().getCurrentTurnPlayerId())) {
+            return;
+        }
+
+        player.setConsecutiveAfkCount(player.getConsecutiveAfkCount() + 1);
+        player.setTotalAfkCount(player.getTotalAfkCount() + 1);
+
+        if (player.getConsecutiveAfkCount() == 1) {
+            autoHarvestRandomTokens(game, player);
+            String warnMsg = String.format("⚠️ Cảnh báo: Nghệ nhân %s đã bỏ lỡ 1 lượt do AFK (1/2). Nếu tiếp tục không hành động ở lượt sau, bạn sẽ bị truất quyền thi đấu!", player.getName());
+            addLog(game, player.getId(), "AFK_WARNING", warnMsg, Map.of("playerId", player.getId(), "strike", 1, "maxStrikes", 2));
+            endTurn(game, playerId);
+        } else {
+            String forfeitMsg = String.format("⛔ Nghệ nhân %s đã bị truất quyền thi đấu do vắng mặt 2 lượt liên tiếp (AFK Timeout)!", player.getName());
+            addLog(game, player.getId(), "PLAYER_KICKED_AFK", forfeitMsg, Map.of("playerId", player.getId(), "reason", "CONSECUTIVE_AFK_TIMEOUT"));
+            handlePlayerLeave(game, playerId);
         }
     }
 

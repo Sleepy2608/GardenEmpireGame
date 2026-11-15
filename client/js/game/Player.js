@@ -7,6 +7,8 @@ export class Player {
     this.name = name;
     this.isHost = isHost;
     this.prestigePoints = 0;
+    this.consecutiveAfkCount = 0;
+    this.totalAfkCount = 0;
     this.tokens = {
       DIRT: 0,
       EARTH: 0,

@@ -27,6 +27,12 @@ public class Player {
     
     @Builder.Default
     private boolean hasLeft = false;
+
+    @Builder.Default
+    private int consecutiveAfkCount = 0;
+
+    @Builder.Default
+    private int totalAfkCount = 0;
     
     @Builder.Default
     private int prestigePoints = 0;

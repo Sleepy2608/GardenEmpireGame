@@ -79,6 +79,19 @@ export const roomApi = {
     return await res.json();
   },
 
+  async updateRoomSettings(roomId, hostId, turnDurationSeconds) {
+    const res = await fetch(`${getApiBase()}/${roomId}/settings`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ hostId, turnDurationSeconds })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'Không thể cập nhật cài đặt phòng');
+    }
+    return await res.json();
+  },
+
   async kickPlayer(roomId, hostId, targetPlayerId) {
     const res = await fetch(`${getApiBase()}/${roomId}/kick`, {
       method: 'POST',

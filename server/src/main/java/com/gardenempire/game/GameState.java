@@ -23,6 +23,10 @@ public class GameState {
     
     private String firstPlayerId;
     private String currentTurnPlayerId;
+    private long turnStartTime;
+
+    @Builder.Default
+    private int turnDurationSeconds = 60;
 
     @JsonProperty("isFinalRound")
     private boolean isFinalRound;

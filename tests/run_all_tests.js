@@ -22,7 +22,10 @@ const testSuites = [
   'test_chat_toggle_ui.js',
   'test_issue_15_verification.js',
   'test_issue_30_verification.js',
-  'test_game_log_toggle_3_recent.js'
+  'test_game_log_toggle_3_recent.js',
+  'test_waiting_room_turn_duration_ui.js',
+  'test_board_turn_timer_ui.js',
+  'test_afk_and_kick_flow.js'
 ];
 
 console.log('\n🌿 ========================================================');
@@ -49,7 +52,7 @@ if (failedSuites.length > 0) {
   console.error(`❌ Thất bại: ${failedSuites.length} suites (${failedSuites.join(', ')})`);
   process.exit(1);
 } else {
-  console.log('🎉 TẤT CẢ 11 TEST SUITES FRONTEND ĐÃ VƯỢT QUA (100% PASS)!');
+  console.log(`🎉 TẤT CẢ ${testSuites.length} TEST SUITES FRONTEND ĐÃ VƯỢT QUA (100% PASS)!`);
   process.exit(0);
 }
 

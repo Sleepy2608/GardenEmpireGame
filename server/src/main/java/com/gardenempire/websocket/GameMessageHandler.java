@@ -25,6 +25,26 @@ public class GameMessageHandler {
         this.gameService = gameService;
         this.objectMapper = objectMapper;
     }
+
+    @jakarta.annotation.PostConstruct
+    public void init() {
+        gameService.setEventListener(new GameService.GameEventListener() {
+            @Override
+            public void onGameStateUpdated(String gameId, GameState state) {
+                broadcastGameState(gameId, state);
+            }
+
+            @Override
+            public void onAfkWarning(String gameId, String playerId, int strike, int maxStrikes, String message) {
+                broadcastAfkWarning(gameId, playerId, strike, maxStrikes, message);
+            }
+
+            @Override
+            public void onPlayerKickedAfk(String gameId, com.gardenempire.game.Player player, GameState state) {
+                broadcastPlayerKickedAfk(gameId, player, state);
+            }
+        });
+    }
     
     private Map<String, Map<String, WebSocketSession>> gameSessions = new ConcurrentHashMap<>();
     private Map<String, Map<String, String>> playerSessions = new ConcurrentHashMap<>();
@@ -244,6 +264,44 @@ public class GameMessageHandler {
         payload.put("type", "CHAT_MESSAGE_RECEIVED");
         payload.put("message", message);
         broadcastToRoom(gameId, payload);
+    }
+
+    /**
+     * Broadcast cảnh báo timeout AFK cho người chơi và bàn đấu
+     * Frontend lắng nghe type = "AFK_TIMEOUT_WARNING"
+     */
+    public void broadcastAfkWarning(String gameId, String playerId, int strike, int maxStrikes, String message) {
+        Map<String, Object> payload = new java.util.LinkedHashMap<>();
+        payload.put("type", "AFK_TIMEOUT_WARNING");
+        payload.put("gameId", gameId);
+        payload.put("playerId", playerId);
+        payload.put("strike", strike);
+        payload.put("maxStrikes", maxStrikes);
+        payload.put("message", message);
+        broadcastToRoom(gameId, payload);
+    }
+
+    /**
+     * Broadcast sự kiện người chơi bị truất quyền thi đấu do AFK 2 lần liên tiếp
+     * Frontend lắng nghe type = "PLAYER_KICKED_AFK"
+     */
+    public void broadcastPlayerKickedAfk(String gameId, com.gardenempire.game.Player player, GameState state) {
+        Map<String, Object> payload = new java.util.LinkedHashMap<>();
+        payload.put("type", "PLAYER_KICKED_AFK");
+        payload.put("gameId", gameId);
+        if (player != null) {
+            payload.put("playerId", player.getId());
+            payload.put("playerName", player.getName());
+            payload.put("playerAvatar", player.getAvatar());
+        }
+        payload.put("reason", "CONSECUTIVE_AFK_TIMEOUT");
+        payload.put("message", "⛔ Bạn đã bị truất quyền thi đấu do vắng mặt 2 lượt liên tiếp.");
+        payload.put("gameState", state);
+        broadcastToRoom(gameId, payload);
+
+        if (state != null) {
+            broadcastGameState(gameId, state);
+        }
     }
 
     /** Gửi 1 message tới tất cả sessions đang mở trong 1 game/room */

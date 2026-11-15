@@ -337,6 +337,111 @@ body {
 }
 .player-slot-empty-icon { font-size: 1.5rem; opacity: 0.4; }
 
+/* ---------- Turn Duration Settings (Phase 16) ---------- */
+.wr-turn-settings {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.1rem 1.5rem;
+  background: hsla(145 35% 10% / 0.55);
+  border: 1px solid hsla(145 60% 40% / 0.25);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px hsla(160 40% 5% / 0.4);
+  animation: pageEntranceCascade 0.48s var(--ease-spring) both 0.15s;
+}
+
+.turn-settings-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: hsl(145 40% 75%);
+}
+
+.turn-settings-icon {
+  font-size: 1.15rem;
+}
+
+.turn-settings-title {
+  color: hsl(145 50% 85%);
+  letter-spacing: -0.01em;
+}
+
+.turn-duration-label {
+  font-weight: 700;
+  color: hsl(45 95% 65%);
+  background: hsla(45 80% 40% / 0.18);
+  border: 1px solid hsla(45 90% 55% / 0.3);
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  letter-spacing: 0.01em;
+}
+
+.turn-pill-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: hsla(145 30% 6% / 0.6);
+  padding: 0.35rem;
+  border-radius: 50px;
+  border: 1px solid hsla(145 60% 30% / 0.25);
+}
+
+.turn-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1.15rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: hsl(145 40% 70%);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.22s var(--ease-spring);
+  user-select: none;
+}
+
+.turn-pill-btn:hover:not(:disabled) {
+  color: hsl(145 80% 90%);
+  background: hsla(145 50% 25% / 0.35);
+  border-color: hsla(145 60% 40% / 0.3);
+  transform: translateY(-1px);
+}
+
+.turn-pill-btn.active {
+  color: hsl(145 95% 95%);
+  background: linear-gradient(135deg, hsl(145 70% 35%), hsl(160 65% 30%));
+  border-color: hsla(145 80% 60% / 0.5);
+  box-shadow: 0 2px 12px hsla(145 70% 35% / 0.45), 0 0 0 1px hsla(145 80% 60% / 0.3);
+  transform: scale(1.02);
+}
+
+.turn-pill-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+  pointer-events: none;
+}
+
+@media (max-width: 540px) {
+  .turn-pill-group {
+    width: 100%;
+    justify-content: center;
+  }
+  .turn-pill-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.78rem;
+  }
+}
+
 /* ---------- Controls ---------- */
 .wr-controls {
   display: flex;

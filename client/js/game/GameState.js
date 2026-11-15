@@ -6,6 +6,8 @@ export class GameState {
     this.gameId = null;
     this.players = [];
     this.currentTurnPlayerId = null;
+    this.turnStartTime = 0;
+    this.turnDurationSeconds = 60;
     this.isGameOver = false;
     this.winnerPlayerId = null;
 
@@ -53,6 +55,12 @@ export class GameState {
     }
     if (dto.finalRound !== undefined || dto.isFinalRound !== undefined) {
       this.isFinalRound = Boolean(dto.isFinalRound ?? dto.finalRound);
+    }
+    if (dto.turnStartTime !== undefined) {
+      this.turnStartTime = Number(dto.turnStartTime) || 0;
+    }
+    if (dto.turnDurationSeconds !== undefined) {
+      this.turnDurationSeconds = Number(dto.turnDurationSeconds) || 60;
     }
 
     if (dto.actionLogs) {

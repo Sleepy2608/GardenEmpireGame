@@ -88,14 +88,99 @@ html, body {
 }
 
 .turn-indicator-banner {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   gap: 0.65rem;
   background: rgba(0, 0, 0, 0.45);
   border: 1px solid var(--border-subtle);
-  padding: 0.45rem 1.25rem;
+  padding: 0.45rem 1.25rem 0.6rem 1.25rem;
   border-radius: var(--radius-full);
   transition: all var(--transition-normal);
+}
+
+.turn-timer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  transition: all var(--transition-fast);
+}
+
+.turn-timer-badge .timer-clock-icon {
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.turn-timer-progress-track {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.turn-timer-progress-fill {
+  height: 100%;
+  width: 100%;
+  border-radius: 2px;
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  transition: width 0.25s linear, background-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.turn-timer-progress-fill.timer-safe {
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.7);
+}
+
+.turn-timer-progress-fill.timer-warning {
+  background: #f59e0b;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
+}
+
+.turn-timer-badge.timer-warning {
+  border-color: rgba(245, 158, 11, 0.5);
+  color: #fbbf24;
+}
+
+.turn-timer-progress-fill.timer-danger {
+  background: #ef4444;
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.95);
+}
+
+.turn-timer-badge.timer-danger {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.65);
+  color: #fca5a5;
+  animation: charles-pulse-urgent 0.8s infinite alternate ease-in-out;
+}
+
+.turn-indicator-banner.timer-danger {
+  border-color: rgba(239, 68, 68, 0.5);
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+@keyframes charles-pulse-urgent {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+  }
+  100% {
+    transform: scale(1.05);
+    box-shadow: 0 0 14px rgba(239, 68, 68, 0.9);
+  }
 }
 
 .turn-pulse-dot {
@@ -4300,4 +4385,91 @@ body.is-fullscreen .player-master-dashboard,
     font-size: 0.75rem;
     border-radius: 8px;
   }
+}
+
+/* =============================================================================
+   AFK MANAGEMENT & TIMEOUT ALERT SYSTEM (Phase 16 - Giai đoạn 4)
+   ============================================================================= */
+.badge-afk-warning {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  color: #fbbf24;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.12rem 0.45rem;
+  border-radius: var(--radius-full);
+  font-variant-numeric: tabular-nums;
+  animation: pulseAmber 2s infinite ease-in-out;
+}
+
+.badge-player-kicked-afk {
+  background: rgba(239, 68, 68, 0.2) !important;
+  border: 1px solid rgba(239, 68, 68, 0.5) !important;
+  color: #fca5a5 !important;
+}
+
+.opponent-header-badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+@keyframes pulseAmber {
+  0%, 100% {
+    box-shadow: 0 0 4px rgba(245, 158, 11, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+  }
+}
+
+/* ── AFK Kicked Modal (2 Strikes Out) ────────────────── */
+.afk-modal-card {
+  max-width: 440px;
+  text-align: center;
+  padding: 2.2rem 2rem;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7), 0 0 32px rgba(239, 68, 68, 0.25);
+  animation: modalBoxPopIn 0.35s var(--ease-spring);
+}
+
+.afk-modal-icon {
+  font-size: 3.2rem;
+  margin-bottom: 0.85rem;
+  filter: drop-shadow(0 0 16px rgba(239, 68, 68, 0.6));
+  animation: charles-pulse-urgent 1.5s infinite alternate ease-in-out;
+}
+
+.afk-modal-title {
+  font-family: var(--font-title);
+  font-size: 1.45rem;
+  color: #fca5a5;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.85rem;
+  text-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+}
+
+.afk-modal-desc {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+  margin-bottom: 1.75rem;
+}
+
+.afk-modal-desc strong {
+  color: #f87171;
+}
+
+.afk-modal-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.afk-modal-actions .btn-nature-primary {
+  min-width: 180px;
+  justify-content: center;
 }
