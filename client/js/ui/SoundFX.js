@@ -100,6 +100,73 @@ class SoundFXEngine {
     this.playTone(587.33, 'sine', 0.08, 0.08, 0);    // D5
     this.playTone(880.00, 'sine', 0.12, 0.06, 0.04); // A5
   }
+
+  // 8. Đếm ngược tích tắc / nhịp tim (<= 10s lượt đi)
+  playTickTock(isUrgent = false) {
+    if (this.muted) return;
+    try {
+      this.initContext();
+      if (!this.ctx) return;
+      const freq = isUrgent ? 880 : 520;
+      const duration = 0.04;
+      const gainVal = isUrgent ? 0.09 : 0.05;
+      this.playTone(freq, 'sine', duration, gainVal, 0);
+      if (isUrgent) {
+        // Heartbeat second beat
+        this.playTone(freq * 0.85, 'sine', duration, gainVal * 0.7, 0.07);
+      }
+    } catch (_) {}
+  }
+
+  // 9. Âm thanh lướt qua khi bị tự động bỏ lượt do hết giờ (AFK Whoosh)
+  playWhooshSkip() {
+    if (this.muted) return;
+    try {
+      this.initContext();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(440, now);
+      osc.frequency.exponentialRampToValueAtTime(110, now + 0.22);
+
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.22);
+    } catch (_) {}
+  }
+
+  // 10. Âm thanh búa phán quyết khi người chơi bị truất quyền (2 Strikes Kicked)
+  playGavelStrike() {
+    if (this.muted) return;
+    try {
+      this.initContext();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(180, now);
+      osc.frequency.exponentialRampToValueAtTime(45, now + 0.35);
+
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.35);
+    } catch (_) {}
+  }
 }
 
 export const SoundFX = new SoundFXEngine();
