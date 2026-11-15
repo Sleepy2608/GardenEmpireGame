@@ -26,8 +26,8 @@ export function getRouteUrl(route, params = '') {
 
   const routeMap = {
     'welcome': isLocalStatic ? 'welcome.html' : '/',
-    'index': isLocalStatic ? 'play.html' : '/play',
-    'play': isLocalStatic ? 'play.html' : '/play',
+    'index': isLocalStatic ? 'index.html' : '/index',
+    'play': isLocalStatic ? 'index.html' : '/index',
     'lobby': isLocalStatic ? 'lobby.html' : '/lobby',
     'room': isLocalStatic ? 'waiting-room.html' : '/room',
     'waiting-room': isLocalStatic ? 'waiting-room.html' : '/room',

@@ -1,50 +1,58 @@
 {
-  "cleanUrls": true,
+  "cleanUrls": false,
   "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/play",
-      "destination": "/client/play.html"
-    },
-    {
-      "source": "/play.html",
-      "destination": "/client/play.html"
-    },
-    {
-      "source": "/index.html",
-      "destination": "/client/play.html"
-    },
-    {
-      "source": "/index",
-      "destination": "/client/play.html"
-    },
-    {
       "source": "/",
-      "destination": "/client/welcome"
+      "destination": "/client/welcome.html"
     },
     {
       "source": "/welcome",
-      "destination": "/client/welcome"
+      "destination": "/client/welcome.html"
+    },
+    {
+      "source": "/welcome.html",
+      "destination": "/client/welcome.html"
     },
     {
       "source": "/dashboard",
-      "destination": "/client/welcome"
+      "destination": "/client/welcome.html"
+    },
+    {
+      "source": "/index",
+      "destination": "/client/index.html"
+    },
+    {
+      "source": "/index.html",
+      "destination": "/client/index.html"
     },
     {
       "source": "/lobby",
-      "destination": "/client/lobby"
+      "destination": "/client/lobby.html"
+    },
+    {
+      "source": "/lobby.html",
+      "destination": "/client/lobby.html"
     },
     {
       "source": "/room",
-      "destination": "/client/waiting-room"
+      "destination": "/client/waiting-room.html"
     },
     {
       "source": "/waiting-room",
-      "destination": "/client/waiting-room"
+      "destination": "/client/waiting-room.html"
+    },
+    {
+      "source": "/waiting-room.html",
+      "destination": "/client/waiting-room.html"
     },
     {
       "source": "/game",
-      "destination": "/client/game"
+      "destination": "/client/game.html"
+    },
+    {
+      "source": "/game.html",
+      "destination": "/client/game.html"
     },
     {
       "source": "/(.*)",
