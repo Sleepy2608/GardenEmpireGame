@@ -36,10 +36,10 @@ export class RulesUI {
             <span class="tab-icon">🌿</span> <span>Giới Thiệu</span>
           </button>
           <button type="button" class="codex-tab-btn" role="tab" id="${prefixId}-tab-btn-energies" aria-selected="false" aria-controls="${prefixId}-panel-energies" data-tab="energies">
-            <span class="tab-icon">💎</span> <span>6 Năng Lượng</span>
+            <span class="tab-icon">💎</span> <span>Năng Lượng</span>
           </button>
           <button type="button" class="codex-tab-btn" role="tab" id="${prefixId}-tab-btn-actions" aria-selected="false" aria-controls="${prefixId}-panel-actions" data-tab="actions">
-            <span class="tab-icon">⚡</span> <span>3 Hành Động</span>
+            <span class="tab-icon">⚡</span> <span>Hành Động</span>
           </button>
           <button type="button" class="codex-tab-btn" role="tab" id="${prefixId}-tab-btn-tiers" aria-selected="false" aria-controls="${prefixId}-panel-tiers" data-tab="tiers">
             <span class="tab-icon">🌳</span> <span>Chợ Cây</span>
