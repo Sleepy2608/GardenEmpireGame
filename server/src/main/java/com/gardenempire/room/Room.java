@@ -32,4 +32,7 @@ public class Room {
     private List<Player> players = new ArrayList<>();
     
     private String gameId;
+    
+    @Builder.Default
+    private int turnDurationSeconds = 60;
 }
