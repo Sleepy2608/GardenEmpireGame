@@ -51,6 +51,9 @@ export class BoardUI {
     this.endgameTimerInterval = null;
     this.isVictoryModalOpen = false;
     this.hasStartedEndgameCountdown = false;
+    this.turnTimerInterval = null;
+    this.lastTickWholeSecond = -1;
+    this.lastTurnStartTime = -1;
 
     this.init();
   }
@@ -205,6 +208,7 @@ export class BoardUI {
           } catch (e) {
             // Ignore if already disconnected
           }
+          this.stopTurnTimer();
           this.socket.disconnect();
           navigateTo('lobby');
         }
@@ -226,6 +230,16 @@ export class BoardUI {
     const closeTokenModal = document.getElementById('modal-token-close');
     if (closeTokenModal) {
       closeTokenModal.addEventListener('click', () => this.closeModal('token-selector-modal'));
+    }
+
+    // AFK Kicked Modal Return to Lobby
+    const btnAfkReturn = document.getElementById('btn-afk-return-lobby');
+    if (btnAfkReturn) {
+      btnAfkReturn.addEventListener('click', () => {
+        this.stopTurnTimer();
+        if (this.socket) this.socket.disconnect();
+        navigateTo('lobby');
+      });
     }
 
     // Game Rules Modal Tabs & Navigation
@@ -383,7 +397,53 @@ export class BoardUI {
         this.render();
         this.checkSpecialGameStates();
       }
+    } else if (message.type === 'AFK_TIMEOUT_WARNING') {
+      // Auto-close open action modals and reset token selections
+      this.closeModal('card-action-modal');
+      this.closeModal('token-selector-modal');
+      this.closeModal('return-tokens-modal');
+      this.closeModal('game-rules-modal');
+      this.selectedTokens = {};
+
+      try {
+        SoundFX.playWhooshSkip();
+      } catch (_) {}
+
+      const isMe = message.playerId === this.guestId;
+      const count = message.consecutiveAfkCount || 1;
+      if (isMe) {
+        this.showToast(`⚠️ HẾT GIỜ! Bạn đã bị tính 1 lần AFK (${count}/2 lượt). Hệ thống đã tự động thu hoạch tài nguyên và chuyển lượt.`, 'warning');
+      } else {
+        const p = (this.gameState.players || []).find(pl => pl.id === message.playerId);
+        const pName = p?.name || 'Đối thủ';
+        this.showToast(`⏳ ${pName} đã hết giờ và bị cảnh báo AFK (${count}/2 lượt).`, 'warning');
+      }
+
+      if (message.gameState) {
+        this.gameState.updateFromDto(message.gameState);
+        this.render();
+        this.checkSpecialGameStates();
+      }
+    } else if (message.type === 'PLAYER_KICKED_AFK') {
+      try {
+        SoundFX.playGavelStrike();
+      } catch (_) {}
+
+      const isMe = message.playerId === this.guestId;
+      if (isMe) {
+        this.showAfkKickedModal();
+      } else {
+        const pName = message.playerName || 'Đối thủ';
+        this.showToast(`🚨 ${pName} đã bị truất quyền thi đấu do bỏ lỡ 2 lượt liên tiếp (AFK).`, 'error');
+      }
+
+      if (message.gameState) {
+        this.gameState.updateFromDto(message.gameState);
+        this.render();
+        this.checkSpecialGameStates();
+      }
     } else if (message.type === 'ROOM_CLOSED') {
+      this.stopTurnTimer();
       if (this.endgameTimerInterval) {
         clearInterval(this.endgameTimerInterval);
         this.endgameTimerInterval = null;
@@ -505,6 +565,114 @@ export class BoardUI {
       const name = activePlayer?.name || 'Đối thủ';
       messageEl.textContent = `⏳ Đang đợi ${name} suy nghĩ...`;
     }
+
+    // Reset ticks if turn timestamp changed
+    if (this.gameState.turnStartTime !== this.lastTurnStartTime) {
+      this.lastTurnStartTime = this.gameState.turnStartTime;
+      this.lastTickWholeSecond = -1;
+    }
+
+    this.startTurnTimer();
+  }
+
+  startTurnTimer() {
+    if (this.gameState.isGameOver) {
+      this.stopTurnTimer();
+      return;
+    }
+
+    const timerBadge = document.getElementById('turn-timer-badge');
+    const timerTrack = document.getElementById('turn-timer-track');
+    if (timerBadge) timerBadge.style.display = 'inline-flex';
+    if (timerTrack) timerTrack.style.display = 'block';
+
+    this.updateTurnTimerUI();
+
+    if (!this.turnTimerInterval) {
+      this.turnTimerInterval = setInterval(() => {
+        this.updateTurnTimerUI();
+      }, 250);
+    }
+  }
+
+  stopTurnTimer() {
+    if (this.turnTimerInterval) {
+      clearInterval(this.turnTimerInterval);
+      this.turnTimerInterval = null;
+    }
+    const timerBadge = document.getElementById('turn-timer-badge');
+    const timerTrack = document.getElementById('turn-timer-track');
+    const banner = document.getElementById('turn-indicator-banner');
+    if (timerBadge) timerBadge.style.display = 'none';
+    if (timerTrack) timerTrack.style.display = 'none';
+    if (banner) banner.classList.remove('timer-danger');
+    this.lastTickWholeSecond = -1;
+  }
+
+  updateTurnTimerUI() {
+    if (this.gameState.isGameOver) {
+      this.stopTurnTimer();
+      return;
+    }
+
+    const countdownText = document.getElementById('turn-countdown-text');
+    const fillEl = document.getElementById('turn-timer-fill');
+    const banner = document.getElementById('turn-indicator-banner');
+    const timerBadge = document.getElementById('turn-timer-badge');
+
+    const duration = this.gameState.turnDurationSeconds || 60;
+    const startTime = this.gameState.turnStartTime || Date.now();
+    const elapsedSeconds = Math.max(0, (Date.now() - startTime) / 1000);
+    const remainingSeconds = Math.max(0, duration - elapsedSeconds);
+    const wholeSeconds = Math.ceil(remainingSeconds);
+    const progressPercent = Math.max(0, Math.min(100, (remainingSeconds / duration) * 100));
+
+    if (countdownText) {
+      if (wholeSeconds >= 60) {
+        const m = Math.floor(wholeSeconds / 60);
+        const s = String(wholeSeconds % 60).padStart(2, '0');
+        countdownText.textContent = `${m}:${s}`;
+      } else {
+        countdownText.textContent = `${wholeSeconds}s`;
+      }
+    }
+
+    if (fillEl) {
+      fillEl.style.width = `${progressPercent}%`;
+      fillEl.classList.remove('timer-safe', 'timer-warning', 'timer-danger');
+      if (timerBadge) timerBadge.classList.remove('timer-warning', 'timer-danger');
+      if (banner) banner.classList.remove('timer-danger');
+
+      if (wholeSeconds <= 10) {
+        fillEl.classList.add('timer-danger');
+        if (timerBadge) timerBadge.classList.add('timer-danger');
+        if (banner) banner.classList.add('timer-danger');
+
+        const isMyTurn = this.gameState.currentTurnPlayerId === this.guestId;
+        if (isMyTurn && wholeSeconds > 0 && wholeSeconds !== this.lastTickWholeSecond) {
+          this.lastTickWholeSecond = wholeSeconds;
+          SoundFX.playTickTock(wholeSeconds <= 5);
+        }
+      } else if ((remainingSeconds / duration) <= 0.25) {
+        fillEl.classList.add('timer-warning');
+        if (timerBadge) timerBadge.classList.add('timer-warning');
+      } else {
+        fillEl.classList.add('timer-safe');
+      }
+    }
+  }
+
+  showAfkKickedModal() {
+    this.closeModal('card-action-modal');
+    this.closeModal('token-selector-modal');
+    this.closeModal('return-tokens-modal');
+    this.closeModal('game-rules-modal');
+    this.stopTurnTimer();
+    const modal = document.getElementById('afk-kicked-modal');
+    if (modal) {
+      modal.classList.remove('hidden');
+    }
+  }
   }
 
   // ==========================================

@@ -14,6 +14,15 @@ export class PlayerUI {
     const nameEl = document.getElementById('my-player-name');
     if (nameEl) nameEl.textContent = `${player.name || 'Người chơi'} ${Boolean(player.isHost ?? player.host) ? '👑' : ''}`;
 
+    const roleEl = document.getElementById('my-player-role');
+    if (roleEl) {
+      if (player.consecutiveAfkCount === 1) {
+        roleEl.innerHTML = `<span class="badge-afk-warning" title="Cảnh báo: Hết giờ 2 lần liên tiếp sẽ bị truất quyền thi đấu">⚠️ AFK (1/2)</span>`;
+      } else {
+        roleEl.textContent = Boolean(player.isHost ?? player.host) ? 'Chủ Vườn' : 'Khách Vườn';
+      }
+    }
+
     // Update Prestige Points & 15-Point Goal Bar
     const scoreNumEl = document.getElementById('my-score-num');
     if (scoreNumEl) scoreNumEl.textContent = player.prestigePoints || 0;
@@ -172,14 +181,31 @@ export class PlayerUI {
         </div>`
       : '';
 
+    // AFK Warning & Kick Status
+    const isAfkWarned = !hasLeft && opponent.consecutiveAfkCount === 1;
+    const isAfkKicked = hasLeft && ((opponent.consecutiveAfkCount || 0) >= 2);
+
+    let statusBadgeHtml = '';
+    if (isAfkKicked) {
+      statusBadgeHtml = '<span class="badge-player-left badge-player-kicked-afk" title="Bị truất quyền vì AFK 2 lượt liên tiếp">⏳ Truất Quyền AFK</span>';
+    } else if (hasLeft) {
+      statusBadgeHtml = '<span class="badge-player-left">🍂 Đã Rời Ván</span>';
+    } else {
+      statusBadgeHtml = `<span class="player-box-score-badge opponent-score-badge">★ ${opponent.prestigePoints || 0}</span>`;
+    }
+
+    const afkWarnBadgeHtml = isAfkWarned
+      ? '<span class="badge-afk-warning" title="Cảnh báo: Bỏ lỡ thêm 1 lượt nữa sẽ bị truất quyền!">⚠️ AFK (1/2)</span>'
+      : '';
+
     el.innerHTML = `
       <!-- Section 1: Header (Tên & Điểm) -->
       <div class="player-box-section player-box-header opponent-card-header">
         <span class="player-box-name opponent-name" title="${opponent.name || 'Đối thủ'}">${opponent.name || 'Đối thủ'} ${Boolean(opponent.isHost ?? opponent.host) ? '👑' : ''}</span>
-        ${hasLeft 
-          ? '<span class="badge-player-left">🍂 Đã Rời Ván</span>' 
-          : `<span class="player-box-score-badge opponent-score-badge">★ ${opponent.prestigePoints || 0}</span>`
-        }
+        <div class="opponent-header-badges">
+          ${afkWarnBadgeHtml}
+          ${statusBadgeHtml}
+        </div>
       </div>
 
       <!-- Section 2: Cây đã trồng & Tài nguyên vĩnh viễn -->
