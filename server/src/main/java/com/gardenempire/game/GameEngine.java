@@ -261,8 +261,10 @@ public class GameEngine {
         for (Map.Entry<Resource, Integer> pay : tokensToPay.entrySet()) {
             Resource res = pay.getKey();
             int count = pay.getValue();
-            player.getTokens().put(res, player.getTokens().get(res) - count);
-            bank.put(res, bank.getOrDefault(res, 0) + count);
+            if (count > 0) {
+                player.getTokens().put(res, player.getTokens().getOrDefault(res, 0) - count);
+                bank.put(res, bank.getOrDefault(res, 0) + count);
+            }
         }
 
         if (wildNeeded > 0) {
