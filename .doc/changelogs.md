@@ -3,6 +3,32 @@
 Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game** được ghi chép và lưu trữ đầy đủ tại tài liệu này từ giai đoạn khởi tạo ban đầu (v0.0.0).  
 Định dạng dựa trên [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), và dự án tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 🚀 [v1.6.0] — 2026-11-16
+### ⏱️ Giới Hạn Thời Gian Mỗi Lượt, Tự Động Thu Hoạch & Xử Phạt AFK 2 Lần (Turn Timer & Two-Strike AFK Management System)
+- **Cấu Hình Thời Gian Mỗi Lượt Tại Phòng Chờ (`client/waiting-room.html`, `client/css/waiting-room.css`, `client/js/ui/WaitingRoomUI.js`, `RoomService.java`):**
+  - **3 Tùy Chọn Thời Gian Linh Hoạt:** Cho phép Chủ phòng (Host) cấu hình thời gian suy nghĩ mỗi lượt trước khi khai mạc trận đấu: `1 Phút (Tiêu chuẩn)`, `2 Phút (Chiến thuật)`, `5 Phút (Thư thái)`.
+  - **Segmented Pill Controls:** Giao diện cụm nút chọn viên nang kính mờ Deep Forest Glassmorphism, tự động đồng bộ thời gian thực qua WebSocket (`ROOM_UPDATE`) cho toàn bộ thành viên trong phòng chờ.
+  - **Bảo Mật Quyền Host:** Endpoint `PUT /api/rooms/{id}/settings` xác thực quyền Chủ phòng và từ chối các giá trị ngoài danh mục (fallback về 60s an toàn).
+- **Bộ Đếm Thời Gian Thực & Cơ Chế Xử Phạt AFK Backend (`server/`):**
+  - **Thread-safe Scheduled Timer:** `GameService` tích hợp `ScheduledExecutorService` và `ReentrantLock` tự động kích hoạt bộ đếm ngược theo thời lượng đã cấu hình, hủy bộ đếm khi người chơi thực hiện nước đi hợp lệ.
+  - **Thu Hoạch Tài Nguyên Tự Động Hợp Lệ:** Khi hết giờ lần 1, hệ thống tự động bốc ngẫu nhiên 1–3 token thường từ Bank cho người chơi (bảo đảm không vượt trần 10 token, tuyệt đối không bốc token Phân Bón Vàng WILD ⭐).
+  - **Cơ Chế Phạt 2 Gậy (Two-Strike Out Rule):**
+    * *Strike 1 (AFK Warning):* Bị phạt cảnh báo 1 lần (`consecutiveAfkCount = 1`), tự động skip lượt. Nếu ở lượt tiếp theo người chơi thực hiện nước đi hợp lệ (bốc token, đặt chỗ, mua cây, trả token), số gậy phạt lập tức được xóa về 0.
+    * *Strike 2 (AFK Kick):* Nếu bỏ lỡ 2 lượt liên tiếp, người chơi lập tức bị truất quyền thi đấu (`hasLeft = true`). Ván đấu tự động chuyển lượt hoặc kích hoạt Thắng Mặc Định (Walkover Victory) nếu chỉ còn 1 người duy nhất.
+    * *Anti-Freeze Turn Rotation:* Vòng xoay lượt tiếp theo vĩnh viễn bỏ qua người chơi đã bị truất quyền.
+  - **WebSocket Event Broadcasts:** Phát sóng `AFK_TIMEOUT_WARNING` (kèm số gậy phạt) và `PLAYER_KICKED_AFK` tới toàn bộ bàn đấu.
+- **Trực Quan Hóa Bàn Đấu, Thanh Đếm Ngược & Trải Nghiệm Xúc Giác (`client/`):**
+  - **Banner Đếm Ngược Co-Axial (`game.html`, `game.css`, `BoardUI.js`):** Tích hợp thanh tiến trình `#turn-timer-track` / `#turn-timer-fill` và huy hiệu số `#turn-timer-badge` với `font-variant-numeric: tabular-nums` chống xô lệch layout.
+  - **Đổi Màu Động 3 Cấp Độ:** Xanh ngọc bích Emerald (`.timer-safe` > 20%), Vàng hổ phách Amber (`.timer-warning` <= 20%), và Đỏ Ruby khẩn cấp (`.timer-danger` <= 10s) kết hợp animation nhịp tim `@keyframes charles-pulse-urgent`.
+  - **Âm Thanh Tương Tác Web Audio (`SoundFX.js`):** Tích hợp âm thanh tích tắc nhịp tim `playTickTock()` khi <= 10s, âm thanh lướt gió `playWhooshSkip()` khi skip lượt, và tiếng búa phán quyết `playGavelStrike()` khi bị truất quyền.
+  - **Huy Hiệu Ghế Ngồi Tabletop (`PlayerUI.js`):** Hiển thị huy hiệu `⚠️ AFK (1/2)` trên ghế người bị cảnh báo và `⏳ Truất Quyền AFK` kèm hiệu ứng mờ `player-abandoned` khi bị kick.
+  - **Modal Truất Quyền Thi Đấu (`#afk-kicked-modal`):** Thông báo rõ ràng lý do bị kick và nút "Quay Về Sảnh".
+- **Kiểm Thử Tự Động Toàn Diện (Zero-Regression Testing Suite):**
+  - **Backend JUnit 5:** 58/58 test cases PASS 100% (bao gồm 11 test cases chuyên biệt trong `GameEngineTurnTimerTest.java`, `GameServiceTurnTimerTest.java`, `RoomServiceTest.java`).
+  - **Frontend DOM & E2E:** 14/14 test suites PASS 100% (262 assertions đạt yêu cầu), bổ sung 3 test suite mới `test_waiting_room_turn_duration_ui.js` (22 cases), `test_board_turn_timer_ui.js` (49 cases), và `test_afk_and_kick_flow.js` (34 cases).
+- **Đồng Bộ Số Hiệu Phiên Bản Toàn Hệ Thống:**
+  - Đồng bộ số hiệu phiên bản lên **v1.6.0** trên toàn bộ Client Badges (`index.html`, `lobby.html`, `waiting-room.html`, `welcome.html`), Server Maven (`pom.xml`) và tài liệu quy chuẩn (`AGENTS.md`, `README.md`).
+
 ## 🚀 [v1.5.1] — 2026-11-15
 ### 🌿 Tinh Chỉnh Cổng Chào Tân Binh & Bảng Điều Khiển Nghệ Nhân (Welcome & Main Dashboard Index Refinements)
 - **Cổng Chào & Trang Đích Tân Binh (`client/welcome.html`, `client/css/welcome.css`):**
