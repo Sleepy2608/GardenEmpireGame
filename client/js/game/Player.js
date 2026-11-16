@@ -6,6 +6,8 @@ export class Player {
     this.id = id;
     this.name = name;
     this.isHost = isHost;
+    this.isBot = false;
+    this.hasLeft = false;
     this.prestigePoints = 0;
     this.consecutiveAfkCount = 0;
     this.totalAfkCount = 0;

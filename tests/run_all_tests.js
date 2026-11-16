@@ -28,7 +28,9 @@ const testSuites = [
   'test_afk_and_kick_flow.js',
   'test_bgm_controller.js',
   'test_music_integration.js',
-  'test_audio_lifecycle_e2e.js'
+  'test_audio_lifecycle_e2e.js',
+  'test_bot_ui_and_badges.js',
+  'test_bot_gameplay_e2e.js'
 ];
 
 console.log('\n🌿 ========================================================');
