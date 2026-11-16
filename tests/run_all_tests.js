@@ -27,7 +27,8 @@ const testSuites = [
   'test_board_turn_timer_ui.js',
   'test_afk_and_kick_flow.js',
   'test_bgm_controller.js',
-  'test_music_integration.js'
+  'test_music_integration.js',
+  'test_audio_lifecycle_e2e.js'
 ];
 
 console.log('\n🌿 ========================================================');
