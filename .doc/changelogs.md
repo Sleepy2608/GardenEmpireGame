@@ -5,14 +5,14 @@ Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game**
 
 ## 🚀 [v1.6.0] — 2026-11-16
 ### 🎵 Hệ Thống Nhạc Nền Phục Hưng & Âm Thanh Không Gian Đa Giai Đoạn (Renaissance Botanical Soundtrack & Dynamic BGM System)
-- **Thư Viện Âm Thanh 100% CC0 Public Domain (Miễn Bản Quyền Vĩnh Viễn & An Toàn Stream / YouTube) (`client/assets/audio/`):**
-  - Tuyển chọn 5 tác phẩm âm nhạc chuẩn mực thời kỳ Phục Hưng được cấp phép **CC0 1.0 Universal / Public Domain Dedication** (OpenGameArt / RandomMind / John Dowland), dung lượng tối ưu ~18MB:
-    * *Welcome Portal (Cổng Chào Đón):* `welcome-bgm.mp3` (*Medieval: The Bard's Tale* — RandomMind) — Âm hưởng cổ tích huyền bí, sáo gỗ và đàn hạc phương Tây.
-    * *Lobby & Waiting Room (Sảnh & Phòng Chờ):* `lobby-bgm.mp3` (*Medieval: The Old Tower Inn* — RandomMind) — Giai điệu lute và sáo rộn ràng, thư thái phong cách quán trọ cổ kính.
-    * *Tabletop Normal Turn (Bàn Cờ Lượt Thường):* `game-normal-bgm.mp3` (*If My Complaints Could Passions Move (1597)* — John Dowland) — Độc tấu đàn lute Phục Hưng kinh điển 1597, hỗ trợ tư duy chiến thuật sâu sắc kiểu Splendor.
-    * *Final Round (Vòng Chung Kết):* `game-final-bgm.mp3` (*Medieval: Minstrel Dance* — RandomMind) — Nhịp điệu vũ hội lễ hội trung cổ dồn dập, tăng kịch tính và cảm giác hồi hộp khi chạm mốc $\ge 15$ điểm.
-    * *Victory Podium (Bục Vinh Danh):* `victory-fanfare.mp3` (*Medieval: Victory Theme* — RandomMind) — Khúc khải hoàn kèn đồng ăn mừng chiến thắng hoành tráng.
-  - Tuyên bố pháp lý công quyền và bảo hộ không tranh chấp bản quyền tại `client/assets/audio/ATTRIBUTION.md`.
+- **Thư Viện Âm Thanh Phục Hưng CC-BY 4.0 Chuẩn Mực & Ghi Nhận Tác Quyền In-Game (`client/assets/audio/`):**
+  - Tuyển chọn 5 kiệt tác âm nhạc chuẩn mực thời kỳ Phục Hưng sáng tác bởi nhà soạn nhạc danh tiếng **Kevin MacLeod** (Incompetech), cấp phép theo chuẩn quốc tế **Creative Commons: By Attribution 4.0 (CC-BY 4.0)**, dung lượng tối ưu ~25MB:
+    * *Welcome Portal (Cổng Chào Đón):* `welcome-bgm.mp3` (*Willow and the Light*, ISRC `USUAN1100591`) — Âm hưởng cổ tích huyền bí, tiếng sáo và đàn hạc phương Tây ngân vang.
+    * *Lobby & Waiting Room (Sảnh & Phòng Chờ):* `lobby-bgm.mp3` (*Angevin B*, ISRC `USUAN1200111`) — Giai điệu lute và sáo rộn ràng, thư thái đậm chất hội quán thời trung cổ - Phục Hưng.
+    * *Tabletop Normal Turn (Bàn Cờ Lượt Thường):* `game-normal-bgm.mp3` (*Suonatore di Liuto*, ISRC `USUAN1400023`) — Độc tấu đàn lute Phục Hưng kinh điển, kích thích tư duy chiến thuật sâu sắc.
+    * *Final Round (Vòng Chung Kết):* `game-final-bgm.mp3` (*Master of the Feast*, ISRC `USUAN1400019`) — Nhịp điệu trống và kèn Phục Hưng dồn dập, đẩy kịch tính lên đỉnh điểm khi kích hoạt ngưỡng 15 điểm.
+    * *Victory Podium (Bục Vinh Danh):* `victory-fanfare.mp3` (*The Curtain Rises*, ISRC `USUAN1100085`) — Khúc khải hoàn kèn đồng ăn mừng chiến thắng rực rỡ.
+  - Ghi nhận đầy đủ nguồn gốc và bản quyền tại `client/assets/audio/ATTRIBUTION.md`, chân trang `welcome.html` và Cẩm nang luật chơi `RulesUI.js`.
 - **Module Quản Lý Nhạc Nền Độc Lập (`client/js/ui/BGMController.js`):**
   - **Kiến Trúc Máy Trạng Thái (Phase State Machine):** Phân chia 5 trạng thái phase chuẩn xác `WELCOME`, `LOBBY`, `GAME_NORMAL`, `GAME_FINAL`, `SILENCE`.
   - **Chuyển Cảnh Âm Lượng Tuyến Tính (Linear Sequential Fade):** Tự động fade-out bài cũ trước khi nạp source mới và fade-in êm ái, loại bỏ hoàn toàn hiện tượng ngắt âm thô ráp.
