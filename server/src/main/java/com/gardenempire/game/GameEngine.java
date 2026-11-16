@@ -677,6 +677,9 @@ public class GameEngine {
     }
 
     private List<Resource> selectSmartHarvestResources(GameState state, Player player, List<Resource> availableBasic, int targetCount) {
+        if (targetCount <= 0) {
+            return Collections.emptyList();
+        }
         List<PlantCard> candidates = com.gardenempire.game.bot.SmartAfkBotEngine.getAllVisibleCards(state);
         PlantCard bestGoal = null;
         double bestScore = -1.0;
@@ -694,17 +697,17 @@ public class GameEngine {
         if (bestGoal != null) {
             Map<Resource, Integer> missing = com.gardenempire.game.bot.SmartAfkBotEngine.getMissingResources(player, bestGoal);
             for (Resource res : availableBasic) {
+                if (chosen.size() >= targetCount) break;
                 if (missing.getOrDefault(res, 0) > 0) {
                     chosen.add(res);
-                    if (chosen.size() == targetCount) break;
                 }
             }
         }
 
         for (Resource res : availableBasic) {
+            if (chosen.size() >= targetCount) break;
             if (!chosen.contains(res)) {
                 chosen.add(res);
-                if (chosen.size() == targetCount) break;
             }
         }
 
