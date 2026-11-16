@@ -49,9 +49,14 @@
         <span class="wr-logo-icon">🌿</span>
         <span class="wr-logo-text">Garden Empire</span>
       </div>
-      <div class="wr-self-badge" id="self-badge">
-        <span id="self-avatar" class="self-avatar">🌱</span>
-        <span id="self-name" class="self-name">Nghệ nhân</span>
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button type="button" id="btn-toggle-sound" class="btn-nature-secondary btn-sm" title="Bật/Tắt âm thanh" aria-label="Bật/Tắt âm thanh" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 8px; padding: 6px 10px; cursor: pointer; color: white;">
+          <span id="sound-icon">🔊</span>
+        </button>
+        <div class="wr-self-badge" id="self-badge">
+          <span id="self-avatar" class="self-avatar">🌱</span>
+          <span id="self-name" class="self-name">Nghệ nhân</span>
+        </div>
       </div>
     </header>
 
@@ -150,6 +155,9 @@
     <span class="version-dot"></span>
     <span>v1.6.0</span>
   </div>
+
+  <!-- Background Music Player -->
+  <audio id="bgm-player" loop preload="auto" class="hidden"></audio>
 
   <script type="module" src="js/ui/WaitingRoomUI.js"></script>
 </body>

@@ -83,6 +83,10 @@ export class RulesUI {
                 <p class="stat-desc">Không gian chiếu cờ 3D sống động ở trung tâm, các đối thủ ngồi bao quanh bàn cờ và co giãn tự động theo kích thước màn hình.</p>
               </div>
             </div>
+
+            <div class="rules-audio-credits" style="margin-top: 1.5rem; padding: 12px 16px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; font-size: 0.82rem; color: #a7f3d0;">
+              <strong>🎵 Âm Nhạc &amp; Tác Quyền:</strong> Các bản nhạc nền thời kỳ Phục Hưng trong game (<em>Suonatore di Liuto, Angevin B, Willow and the Light, Master of the Feast, The Curtain Rises</em>) được sáng tác bởi <strong>Kevin MacLeod</strong> (<a href="https://incompetech.com" target="_blank" rel="noopener" style="color: #6ee7b7; text-decoration: underline;">incompetech.com</a>), cấp phép theo chuẩn quốc tế <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color: #6ee7b7; text-decoration: underline;">CC-BY 4.0</a>.
+            </div>
           </div>
 
           <!-- PANEL 2: 6 NGUỒN NĂNG LƯỢNG -->

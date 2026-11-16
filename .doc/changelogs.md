@@ -4,6 +4,30 @@ Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game**
 Định dạng dựa trên [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), và dự án tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## 🚀 [v1.6.0] — 2026-11-16
+### 🎵 Hệ Thống Nhạc Nền Phục Hưng & Âm Thanh Không Gian Đa Giai Đoạn (Renaissance Botanical Soundtrack & Dynamic BGM System)
+- **Thư Viện Âm Thanh Phục Hưng CC-BY 4.0 Chuẩn Mực & Ghi Nhận Tác Quyền In-Game (`client/assets/audio/`):**
+  - Tuyển chọn 5 kiệt tác âm nhạc chuẩn mực thời kỳ Phục Hưng sáng tác bởi nhà soạn nhạc danh tiếng **Kevin MacLeod** (Incompetech), cấp phép theo chuẩn quốc tế **Creative Commons: By Attribution 4.0 (CC-BY 4.0)**, dung lượng tối ưu ~25MB:
+    * *Welcome Portal (Cổng Chào Đón):* `welcome-bgm.mp3` (*Willow and the Light*, ISRC `USUAN1100591`) — Âm hưởng cổ tích huyền bí, tiếng sáo và đàn hạc phương Tây ngân vang.
+    * *Lobby & Waiting Room (Sảnh & Phòng Chờ):* `lobby-bgm.mp3` (*Angevin B*, ISRC `USUAN1200111`) — Giai điệu lute và sáo rộn ràng, thư thái đậm chất hội quán thời trung cổ - Phục Hưng.
+    * *Tabletop Normal Turn (Bàn Cờ Lượt Thường):* `game-normal-bgm.mp3` (*Suonatore di Liuto*, ISRC `USUAN1400023`) — Độc tấu đàn lute Phục Hưng kinh điển, kích thích tư duy chiến thuật sâu sắc.
+    * *Final Round (Vòng Chung Kết):* `game-final-bgm.mp3` (*Master of the Feast*, ISRC `USUAN1400019`) — Nhịp điệu trống và kèn Phục Hưng dồn dập, đẩy kịch tính lên đỉnh điểm khi kích hoạt ngưỡng 15 điểm.
+    * *Victory Podium (Bục Vinh Danh):* `victory-fanfare.mp3` (*The Curtain Rises*, ISRC `USUAN1100085`) — Khúc khải hoàn kèn đồng ăn mừng chiến thắng rực rỡ.
+  - Ghi nhận đầy đủ nguồn gốc và bản quyền tại `client/assets/audio/ATTRIBUTION.md`, chân trang `welcome.html` và Cẩm nang luật chơi `RulesUI.js`.
+- **Module Quản Lý Nhạc Nền Độc Lập (`client/js/ui/BGMController.js`):**
+  - **Kiến Trúc Máy Trạng Thái (Phase State Machine):** Phân chia 5 trạng thái phase chuẩn xác `WELCOME`, `LOBBY`, `GAME_NORMAL`, `GAME_FINAL`, `SILENCE`.
+  - **Chuyển Cảnh Âm Lượng Tuyến Tính (Linear Sequential Fade):** Tự động fade-out bài cũ trước khi nạp source mới và fade-in êm ái, loại bỏ hoàn toàn hiện tượng ngắt âm thô ráp.
+  - **Cơ Chế Volume Ducking Tự Động:** Hạ âm lượng nền xuống `0.08` khi phát SFX và xuống `0.05` khi đồng hồ lượt đi vào trạng thái khẩn cấp $\le 10\text{s}$, tự động unduck phục hồi về `0.25` khi qua lượt.
+  - **Kháng Rào Cản Autoplay Policy:** Bắt và xử lý an toàn lỗi `NotAllowedError` từ trình duyệt di động / desktop; tự động mở khóa phát nhạc sau cử chỉ chạm đầu tiên (`click`, `pointerdown`, `keydown`).
+- **Tích Hợp Giao Diện & Điều Khiển Toàn Cục (`client/`):**
+  - **Nút Bật/Tắt Âm Thanh Toàn Cục:** Bổ sung nút `#btn-toggle-sound` trên Navbar Cổng Chào Đón (`welcome.html`, `welcome.css`), Sảnh Chờ (`lobby.html`), Phòng Chờ (`waiting-room.html`) và Bàn Cờ (`game.html`).
+  - **Đồng Bộ Hai Chiều Với SoundFX:** Đồng bộ trạng thái tắt/bật giữa SFX và BGM thông qua khóa `garden_empire_sound_muted` trong `localStorage`.
+  - **Kèn Khải Hoàn Chiến Thắng:** `SoundFX.playVictorySound()` tích hợp phát song song tệp kèn fanfare và tổng hợp sóng âm Web Audio.
+- **Bộ Kiểm Thử Tự Động Toàn Diện (Zero-Regression):**
+  - **Unit Test Suite:** `tests/test_bgm_controller.js` đạt 50/50 assertions.
+  - **Integration Test Suite:** `tests/test_music_integration.js` đạt 29/29 assertions.
+  - **E2E Lifecycle QA Suite:** `tests/test_audio_lifecycle_e2e.js` đạt 24/24 assertions mô phỏng chính xác hành trình 10 bước của người chơi.
+  - **Frontend Runner:** 17/17 test suites (100% PASS).
+
 ### ⏱️ Giới Hạn Thời Gian Mỗi Lượt, Tự Động Thu Hoạch & Xử Phạt AFK 2 Lần (Turn Timer & Two-Strike AFK Management System)
 - **Cấu Hình Thời Gian Mỗi Lượt Tại Phòng Chờ (`client/waiting-room.html`, `client/css/waiting-room.css`, `client/js/ui/WaitingRoomUI.js`, `RoomService.java`):**
   - **3 Tùy Chọn Thời Gian Linh Hoạt:** Cho phép Chủ phòng (Host) cấu hình thời gian suy nghĩ mỗi lượt trước khi khai mạc trận đấu: `1 Phút (Tiêu chuẩn)`, `2 Phút (Chiến thuật)`, `5 Phút (Thư thái)`.

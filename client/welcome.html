@@ -56,11 +56,16 @@
         <li><a href="#strategy" class="nav-link-item">Quy Tắc</a></li>
       </ul>
 
-      <!-- CTA to Index -->
-      <a href="index.html" class="nav-cta-btn" id="nav-btn-play">
-        <span>Bắt Đầu Chơi</span>
-        <span>→</span>
-      </a>
+      <!-- Sound Toggle & CTA to Index -->
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button type="button" id="btn-toggle-sound" class="welcome-btn-sound" title="Bật/Tắt âm thanh" aria-label="Bật/Tắt âm thanh">
+          <span id="sound-icon">🔊</span>
+        </button>
+        <a href="index.html" class="nav-cta-btn" id="nav-btn-play">
+          <span>Bắt Đầu Chơi</span>
+          <span>→</span>
+        </a>
+      </div>
     </nav>
   </header>
 
@@ -361,11 +366,36 @@
       <p class="footer-credit">
         © 2026 Garden Empire Game · Lấy cảm hứng từ kiệt tác board game Splendor · Phiên bản v1.6.0
       </p>
+      <p class="footer-credit" style="font-size: 0.8rem; opacity: 0.75; margin-top: 4px;">
+        Âm nhạc thời Phục Hưng sáng tác bởi Kevin MacLeod (<a href="https://incompetech.com" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">incompetech.com</a>) · Cấp phép theo <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">CC-BY 4.0</a>
+      </p>
     </div>
   </footer>
 
+  <!-- Background Music Player -->
+  <audio id="bgm-player" loop preload="auto" class="hidden"></audio>
+
   <!-- Welcome Scripts -->
   <script src="js/welcome.js"></script>
+  <script type="module">
+    import { bgmController, BGM_PHASES } from './js/ui/BGMController.js';
+    document.addEventListener('DOMContentLoaded', () => {
+      bgmController.init();
+      bgmController.setPhase(BGM_PHASES.WELCOME);
+
+      const soundBtn = document.getElementById('btn-toggle-sound');
+      const soundIcon = document.getElementById('sound-icon');
+      if (soundIcon) {
+        soundIcon.textContent = bgmController.isMuted ? '🔇' : '🔊';
+      }
+      if (soundBtn && soundIcon) {
+        soundBtn.addEventListener('click', () => {
+          const isMuted = bgmController.toggleMute();
+          soundIcon.textContent = isMuted ? '🔇' : '🔊';
+        });
+      }
+    });
+  </script>
 </body>
 </html>
 

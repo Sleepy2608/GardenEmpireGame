@@ -2,6 +2,7 @@ import { GameState } from '../game/GameState.js';
 import { GameSocket } from '../websocket/gameSocket.js';
 import { roomApi } from '../api/roomApi.js';
 import { SoundFX } from './SoundFX.js';
+import { bgmController, BGM_PHASES } from './BGMController.js';
 import { PlantCardUI } from './PlantCardUI.js';
 import { VisitorUI } from './VisitorUI.js';
 import { ResourceUI } from './ResourceUI.js';
@@ -71,9 +72,12 @@ export class BoardUI {
     const roomTextEl = document.getElementById('room-id-text');
     if (roomTextEl) roomTextEl.textContent = this.roomId;
 
+    bgmController.init();
+    bgmController.setPhase(BGM_PHASES.GAME_NORMAL);
+
     const soundIcon = document.getElementById('sound-icon');
     if (soundIcon) {
-      soundIcon.textContent = SoundFX.isMuted() ? '🔇' : '🔊';
+      soundIcon.textContent = (SoundFX.isMuted() || bgmController.isMuted) ? '🔇' : '🔊';
     }
   }
 
@@ -184,6 +188,7 @@ export class BoardUI {
     if (soundBtn && soundIcon) {
       soundBtn.addEventListener('click', () => {
         const isMuted = SoundFX.toggleMute();
+        bgmController.toggleMute();
         soundIcon.textContent = isMuted ? '🔇' : '🔊';
         this.showToast(isMuted ? '🔇 Đã tắt âm thanh' : '🔊 Đã bật âm thanh');
       });
@@ -553,6 +558,9 @@ export class BoardUI {
 
     if (this.gameState.isFinalRound) {
       banner.classList.add('final-round');
+      if (bgmController.currentPhase !== BGM_PHASES.GAME_FINAL) {
+        bgmController.setPhase(BGM_PHASES.GAME_FINAL);
+      }
     }
 
     if (isMyTurn) {
@@ -607,6 +615,7 @@ export class BoardUI {
     if (timerTrack) timerTrack.style.display = 'none';
     if (banner) banner.classList.remove('timer-danger');
     this.lastTickWholeSecond = -1;
+    bgmController.unduck();
   }
 
   updateTurnTimerUI() {
@@ -652,6 +661,7 @@ export class BoardUI {
         if (isMyTurn && wholeSeconds > 0 && wholeSeconds !== this.lastTickWholeSecond) {
           this.lastTickWholeSecond = wholeSeconds;
           SoundFX.playTickTock(wholeSeconds <= 5);
+          bgmController.duck(0.05);
         }
       } else if ((remainingSeconds / duration) <= 0.25) {
         fillEl.classList.add('timer-warning');
@@ -935,6 +945,7 @@ export class BoardUI {
     if (this.gameState.isGameOver && victoryModal) {
       if (!this.hasPlayedVictorySound) {
         this.hasPlayedVictorySound = true;
+        bgmController.pause();
         SoundFX.playVictorySound();
       }
       if (!this.hasStartedEndgameCountdown) {

@@ -28,6 +28,11 @@ class SoundFXEngine {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('garden_empire_sound_muted', this.muted);
     }
+    if (typeof window !== 'undefined' && window.bgmController) {
+      if (window.bgmController.isMuted !== this.muted) {
+        window.bgmController.toggleMute();
+      }
+    }
     return this.muted;
   }
 
@@ -84,8 +89,17 @@ class SoundFXEngine {
     this.playTone(1174.66, 'sine', 0.5, 0.22, 0.32); // D6
   }
 
-  // 5. Chiến thắng
+  // 5. Chiến thắng & Fanfare
   playVictorySound() {
+    if (this.muted) return;
+    try {
+      if (typeof Audio !== 'undefined') {
+        const fanfare = new Audio('assets/audio/sfx/victory-fanfare.mp3');
+        fanfare.volume = 0.5;
+        fanfare.play().catch(() => {});
+      }
+    } catch (_) {}
+
     const notes = [523.25, 659.25, 783.99, 1046.5, 1318.51];
     notes.forEach((freq, idx) => {
       this.playTone(freq, 'triangle', 0.4, 0.2, idx * 0.12);

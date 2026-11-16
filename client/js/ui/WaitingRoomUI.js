@@ -7,6 +7,7 @@ import { GameSocket } from '../websocket/gameSocket.js';
 import { CONFIG } from '../config.js';
 import { sessionGuard } from '../utils/sessionGuard.js';
 import { navigateTo } from '../utils/navigation.js';
+import { bgmController, BGM_PHASES } from './BGMController.js';
 
 export class WaitingRoomUI {
   constructor() {
@@ -63,6 +64,22 @@ export class WaitingRoomUI {
 
   // ── Static button bindings ────────────────────────────────────
   _bindStaticEvents() {
+    // Background Music (Phase LOBBY) & Sound Toggle
+    bgmController.init();
+    bgmController.setPhase(BGM_PHASES.LOBBY);
+
+    const soundBtn = document.getElementById('btn-toggle-sound');
+    const soundIcon = document.getElementById('sound-icon');
+    if (soundIcon) {
+      soundIcon.textContent = bgmController.isMuted ? '🔇' : '🔊';
+    }
+    if (soundBtn && soundIcon) {
+      soundBtn.addEventListener('click', () => {
+        const isMuted = bgmController.toggleMute();
+        soundIcon.textContent = isMuted ? '🔇' : '🔊';
+      });
+    }
+
     // Copy room code
     document.getElementById('btn-copy-code')?.addEventListener('click', () => {
       const code = document.getElementById('room-code')?.textContent || '';
