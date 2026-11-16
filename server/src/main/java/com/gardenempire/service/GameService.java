@@ -68,6 +68,19 @@ public class GameService {
             return;
         }
 
+        Player player = null;
+        try {
+            player = gameEngine.getPlayer(game, currentTurnPlayerId);
+        } catch (Exception ignored) {}
+
+        if (player != null && player.isBot() && !player.isHasLeft()) {
+            ScheduledFuture<?> task = scheduler.schedule(() -> {
+                executeBotTurn(gameId, currentTurnPlayerId);
+            }, 300, TimeUnit.MILLISECONDS);
+            turnTimerTasks.put(gameId, task);
+            return;
+        }
+
         int duration = game.getState().getTurnDurationSeconds();
         if (duration <= 0) {
             duration = 60;
@@ -260,6 +273,48 @@ public class GameService {
         }
     }
 
+    public void executeBotTurn(String gameId, String expectedPlayerId) {
+        java.util.concurrent.locks.ReentrantLock lock = roomLocks.computeIfAbsent(gameId, k -> new java.util.concurrent.locks.ReentrantLock(true));
+        lock.lock();
+        try {
+            Game game = activeGames.get(gameId);
+            if (game == null || game.getState() == null || game.getState().isGameOver()) {
+                return;
+            }
+            if (!expectedPlayerId.equals(game.getState().getCurrentTurnPlayerId())) {
+                return;
+            }
+            Player player;
+            try {
+                player = gameEngine.getPlayer(game, expectedPlayerId);
+            } catch (Exception ignored) {
+                return;
+            }
+            if (!player.isBot() || player.isHasLeft()) {
+                return;
+            }
+
+            gameEngine.executeBotTurn(game, expectedPlayerId);
+            GameState state = game.getState();
+
+            if (state.isGameOver()) {
+                cancelTurnTimer(gameId);
+                var roomOpt = roomManager.getRoom(gameId);
+                roomOpt.ifPresent(r -> r.setStatus(com.gardenempire.room.RoomStatus.FINISHED));
+            } else {
+                startTurnTimer(gameId);
+            }
+
+            if (eventListener != null) {
+                eventListener.onGameStateUpdated(gameId, state);
+            }
+        } catch (Exception e) {
+            log.error("Lỗi khi thực thi nước đi của bot cho gameId={}, playerId={}: ", gameId, expectedPlayerId, e);
+        } finally {
+            lock.unlock();
+        }
+    }
+
     public void removeGame(String gameId) {
         cancelTurnTimer(gameId);
         activeGames.remove(gameId);
@@ -267,6 +322,10 @@ public class GameService {
     }
 
     public GameState handlePlayerLeave(String gameId, String playerId) {
+        return handlePlayerLeave(gameId, playerId, false);
+    }
+
+    public GameState handlePlayerLeave(String gameId, String playerId, boolean replaceWithBot) {
         java.util.concurrent.locks.ReentrantLock lock = roomLocks.computeIfAbsent(gameId, k -> new java.util.concurrent.locks.ReentrantLock(true));
         lock.lock();
         try {
@@ -274,13 +333,16 @@ public class GameService {
             if (game == null) {
                 return null;
             }
-            gameEngine.handlePlayerLeave(game, playerId);
+            gameEngine.handlePlayerLeave(game, playerId, replaceWithBot);
             if (game.getState().isGameOver()) {
                 cancelTurnTimer(gameId);
                 var roomOpt = roomManager.getRoom(gameId);
                 roomOpt.ifPresent(r -> r.setStatus(com.gardenempire.room.RoomStatus.FINISHED));
             } else {
                 startTurnTimer(gameId);
+            }
+            if (eventListener != null) {
+                eventListener.onGameStateUpdated(gameId, game.getState());
             }
             return game.getState();
         } finally {
