@@ -56,11 +56,16 @@
         <li><a href="#strategy" class="nav-link-item">Quy Tắc</a></li>
       </ul>
 
-      <!-- CTA to Index -->
-      <a href="index.html" class="nav-cta-btn" id="nav-btn-play">
-        <span>Bắt Đầu Chơi</span>
-        <span>→</span>
-      </a>
+      <!-- Sound Toggle & CTA to Index -->
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button type="button" id="btn-toggle-sound" class="welcome-btn-sound" title="Bật/Tắt âm thanh" aria-label="Bật/Tắt âm thanh">
+          <span id="sound-icon">🔊</span>
+        </button>
+        <a href="index.html" class="nav-cta-btn" id="nav-btn-play">
+          <span>Bắt Đầu Chơi</span>
+          <span>→</span>
+        </a>
+      </div>
     </nav>
   </header>
 
@@ -364,8 +369,30 @@
     </div>
   </footer>
 
+  <!-- Background Music Player -->
+  <audio id="bgm-player" loop preload="auto" class="hidden"></audio>
+
   <!-- Welcome Scripts -->
   <script src="js/welcome.js"></script>
+  <script type="module">
+    import { bgmController, BGM_PHASES } from './js/ui/BGMController.js';
+    document.addEventListener('DOMContentLoaded', () => {
+      bgmController.init();
+      bgmController.setPhase(BGM_PHASES.WELCOME);
+
+      const soundBtn = document.getElementById('btn-toggle-sound');
+      const soundIcon = document.getElementById('sound-icon');
+      if (soundIcon) {
+        soundIcon.textContent = bgmController.isMuted ? '🔇' : '🔊';
+      }
+      if (soundBtn && soundIcon) {
+        soundBtn.addEventListener('click', () => {
+          const isMuted = bgmController.toggleMute();
+          soundIcon.textContent = isMuted ? '🔇' : '🔊';
+        });
+      }
+    });
+  </script>
 </body>
 </html>
 
