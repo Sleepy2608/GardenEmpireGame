@@ -5,6 +5,7 @@ import { roomApi } from '../api/roomApi.js';
 import { sessionGuard } from '../utils/sessionGuard.js';
 import { navigateTo } from '../utils/navigation.js';
 import { RulesUI } from './RulesUI.js';
+import { bgmController, BGM_PHASES } from './BGMController.js';
 
 export class LobbyUI {
   constructor() {
@@ -51,6 +52,22 @@ export class LobbyUI {
       modalId: 'rules-modal',
       openTriggerSelector: '#btn-open-rules, #btn-sidebar-rules'
     });
+
+    // Background Music (Phase LOBBY) & Sound Toggle
+    bgmController.init();
+    bgmController.setPhase(BGM_PHASES.LOBBY);
+
+    const soundBtn = document.getElementById('btn-toggle-sound');
+    const soundIcon = document.getElementById('sound-icon');
+    if (soundIcon) {
+      soundIcon.textContent = bgmController.isMuted ? '🔇' : '🔊';
+    }
+    if (soundBtn && soundIcon) {
+      soundBtn.addEventListener('click', () => {
+        const isMuted = bgmController.toggleMute();
+        soundIcon.textContent = isMuted ? '🔇' : '🔊';
+      });
+    }
 
     // Refresh Room List
     const btnRefresh = document.getElementById('btn-refresh-rooms');

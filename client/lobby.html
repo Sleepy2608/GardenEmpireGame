@@ -49,6 +49,10 @@
       </div>
 
       <div style="display: flex; align-items: center; gap: 1rem;">
+        <button type="button" id="btn-toggle-sound" class="btn-nature-secondary btn-sm" title="Bật/Tắt âm thanh" aria-label="Bật/Tắt âm thanh">
+          <span id="sound-icon">🔊</span>
+        </button>
+
         <button type="button" id="btn-open-rules" class="btn-nature-gold btn-sm" title="Xem luật chơi chi tiết">
           <span>📖</span> <span>Luật Chơi</span>
         </button>
@@ -150,6 +154,9 @@
     <span class="version-dot"></span>
     <span>v1.6.0</span>
   </div>
+
+  <!-- Background Music Player -->
+  <audio id="bgm-player" loop preload="auto" class="hidden"></audio>
 
   <script type="module" src="js/ui/LobbyUI.js"></script>
 </body>
