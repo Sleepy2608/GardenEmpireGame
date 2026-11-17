@@ -1,5 +1,5 @@
 /*
-   GARDEN EMPIRE — SYNTHETIC WEB AUDIO SOUND FX ENGINE
+   GARDEN EMPIRE - SYNTHETIC WEB AUDIO SOUND FX ENGINE
 */
 class SoundFXEngine {
   constructor() {
@@ -199,6 +199,19 @@ class SoundFXEngine {
       osc.start(now);
       osc.stop(now + 0.35);
     } catch (_) {}
+  }
+
+  // 11. Âm thanh chuông báo khi tới lượt người chơi (Turn Alert)
+  playTurnAlert() {
+    if (this.muted || this.volume <= 0) return;
+    this.playTone(659.25, 'sine', 0.15, 0.14, 0);    // E5
+    this.playTone(880.00, 'sine', 0.25, 0.16, 0.1);  // A5
+    this.playTone(1046.50, 'sine', 0.35, 0.12, 0.22); // C6
+  }
+
+  // 12. Âm thanh pop tin nhắn chat (Chat Pop)
+  playChatPop() {
+    this.playChatSound();
   }
 }
 
