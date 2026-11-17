@@ -9,7 +9,7 @@
  *  5. BoardUI: Xử lý chiến thắng mặc định (Walkover) khi chỉ còn 1 người ở lại
  */
 
-import { PlayerUI } from '../client/js/ui/PlayerUI.js';
+import { PlayerUI } from '../../client/js/ui/PlayerUI.js';
 
 let passedTests = 0;
 let failedTests = 0;

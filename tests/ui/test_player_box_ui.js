@@ -4,8 +4,8 @@
  * Phủ Happy Path, Biên (Boundary), Active Turn, Responsive Classes & Tabletop Seating.
  */
 
-import { PlayerUI } from '../client/js/ui/PlayerUI.js';
-import { ResourceUI } from '../client/js/ui/ResourceUI.js';
+import { PlayerUI } from '../../client/js/ui/PlayerUI.js';
+import { ResourceUI } from '../../client/js/ui/ResourceUI.js';
 
 let passedTests = 0;
 let failedTests = 0;

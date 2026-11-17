@@ -17,7 +17,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 // Load RulesUI module
-import { RulesUI } from '../client/js/ui/RulesUI.js';
+import { RulesUI } from '../../client/js/ui/RulesUI.js';
 
 describe('🌿 TEST SUITE: RULES & GAME CODEX UI (5 TABS & MODAL)', () => {
 

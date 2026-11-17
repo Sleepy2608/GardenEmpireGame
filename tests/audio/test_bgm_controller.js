@@ -3,7 +3,7 @@
  * Kiểm thử toàn diện module BGMController quản lý nhạc nền và hiệu ứng âm thanh
  */
 
-import { BGMController, BGM_PHASES, BGM_TRACKS, bgmController } from '../client/js/ui/BGMController.js';
+import { BGMController, BGM_PHASES, BGM_TRACKS, bgmController } from '../../client/js/ui/BGMController.js';
 
 let passedTests = 0;
 let failedTests = 0;

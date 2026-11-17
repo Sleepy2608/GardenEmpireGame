@@ -7,14 +7,14 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { GameState } from '../client/js/game/GameState.js';
-import { Player } from '../client/js/game/Player.js';
-import { PlayerUI } from '../client/js/ui/PlayerUI.js';
-import { SoundFX } from '../client/js/ui/SoundFX.js';
+import { GameState } from '../../client/js/game/GameState.js';
+import { Player } from '../../client/js/game/Player.js';
+import { PlayerUI } from '../../client/js/ui/PlayerUI.js';
+import { SoundFX } from '../../client/js/ui/SoundFX.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, '..');
+const rootDir = path.resolve(__dirname, '../..');
 
 let passedTests = 0;
 let failedTests = 0;

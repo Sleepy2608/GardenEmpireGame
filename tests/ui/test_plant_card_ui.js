@@ -13,7 +13,7 @@
 import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';
-import { PlantCardUI } from '../client/js/ui/PlantCardUI.js';
+import { PlantCardUI } from '../../client/js/ui/PlantCardUI.js';
 
 let passedTests = 0;
 let failedTests = 0;

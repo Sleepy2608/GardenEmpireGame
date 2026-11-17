@@ -9,8 +9,8 @@
  * - Tuân thủ tuyệt đối quy tắc Anti-slop Zero em-dash
  */
 
-import { GameState } from '../client/js/game/GameState.js';
-import { Player } from '../client/js/game/Player.js';
+import { GameState } from '../../client/js/game/GameState.js';
+import { Player } from '../../client/js/game/Player.js';
 
 let passedTests = 0;
 let failedTests = 0;

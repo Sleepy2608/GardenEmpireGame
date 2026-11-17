@@ -7,7 +7,7 @@
 import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';
-import { getRouteUrl } from '../client/js/utils/navigation.js';
+import { getRouteUrl } from '../../client/js/utils/navigation.js';
 
 console.log('\n🌿 ========================================================');
 console.log('🧪 TEST SUITE: WELCOME NAVIGATION & PLAY BUTTON FLOW');

@@ -3,8 +3,8 @@
  * Mô phỏng toàn bộ hành trình trải nghiệm âm thanh của người chơi từ Cổng Chào Đón đến Bục Vinh Quang
  */
 
-import { BGMController, BGM_PHASES, BGM_TRACKS } from '../client/js/ui/BGMController.js';
-import { SoundFX } from '../client/js/ui/SoundFX.js';
+import { BGMController, BGM_PHASES, BGM_TRACKS } from '../../client/js/ui/BGMController.js';
+import { SoundFX } from '../../client/js/ui/SoundFX.js';
 
 let passedTests = 0;
 let failedTests = 0;
