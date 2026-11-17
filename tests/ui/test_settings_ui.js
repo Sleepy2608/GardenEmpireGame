@@ -572,4 +572,218 @@ describe('⚙️ TEST SUITE: SETTINGS MODAL & PREFERENCES UI (4 TABS & CONTROLS)
     assert.ok(chatUiContent.includes('playChatSound'), 'ChatUI.js phải gọi SoundFX.playChatSound');
   });
 
+  // ===========================================================================
+  // PHẦN 8: KIỂM THỬ TRỢ NĂNG, PHÍM TẮT VÀ TOÀN TRÌNH HỆ THỐNG (GIAI ĐOẠN 5)
+  // ===========================================================================
+  it('8.1. Hỗ trợ phím tắt toàn cục Esc và O hoặc dấu phẩy để mở và đóng modal', () => {
+    let keydownHandler = null;
+    let isAttached = false;
+    let modalClasses = new Set();
+    const createdModal = {
+      classList: {
+        add: (c) => modalClasses.add(c),
+        remove: (c) => modalClasses.delete(c),
+        contains: (c) => modalClasses.has(c)
+      },
+      setAttribute: () => {},
+      querySelector: () => null,
+      querySelectorAll: () => [],
+      addEventListener: () => {}
+    };
+
+    globalThis.document = {
+      getElementById: (id) => (isAttached && id === 'test-kb-modal' ? createdModal : null),
+      createElement: () => createdModal,
+      querySelectorAll: () => [],
+      addEventListener: (evt, handler) => {
+        if (evt === 'keydown') keydownHandler = handler;
+      },
+      body: {
+        appendChild: () => { isAttached = true; },
+        style: {}
+      }
+    };
+
+    SettingsUI.setupModal({
+      modalId: 'test-kb-modal',
+      prefixId: 'test-kb'
+    });
+
+    assert.ok(typeof keydownHandler === 'function', 'Phải đăng ký keydown listener');
+
+    // Nhấn phím 'o' để mở modal
+    let prevented = false;
+    keydownHandler({
+      key: 'o',
+      target: { tagName: 'div' },
+      preventDefault: () => { prevented = true; }
+    });
+    assert.strictEqual(modalClasses.has('active'), true, 'Phím o phải mở modal');
+    assert.strictEqual(prevented, true, 'Phím o phải preventDefault');
+
+    // Nhấn Escape để đóng modal
+    keydownHandler({
+      key: 'Escape',
+      target: { tagName: 'div' },
+      preventDefault: () => {}
+    });
+    assert.strictEqual(modalClasses.has('active'), false, 'Phím Escape phải đóng modal');
+
+    // Khi đang gõ trong input text, không được kích hoạt phím o
+    keydownHandler({
+      key: 'o',
+      target: { tagName: 'input' },
+      preventDefault: () => {}
+    });
+    assert.strictEqual(modalClasses.has('active'), false, 'Không mở modal khi đang gõ input');
+
+    delete globalThis.document;
+  });
+
+  it('8.2. Đóng modal khi click ra ngoài backdrop, không đóng khi click vào card', () => {
+    let clickHandler = null;
+    let isAttached = false;
+    let modalClasses = new Set(['active']);
+    const createdModal = {
+      classList: {
+        add: (c) => modalClasses.add(c),
+        remove: (c) => modalClasses.delete(c),
+        contains: (c) => modalClasses.has(c)
+      },
+      setAttribute: () => {},
+      querySelector: () => null,
+      querySelectorAll: () => [],
+      addEventListener: (evt, handler) => {
+        if (evt === 'click') clickHandler = handler;
+      }
+    };
+
+    globalThis.document = {
+      getElementById: (id) => (isAttached && id === 'test-click-modal' ? createdModal : null),
+      createElement: () => createdModal,
+      querySelectorAll: () => [],
+      addEventListener: () => {},
+      body: {
+        appendChild: () => { isAttached = true; },
+        style: {}
+      }
+    };
+
+    SettingsUI.setupModal({
+      modalId: 'test-click-modal',
+      prefixId: 'test-click'
+    });
+
+    assert.ok(typeof clickHandler === 'function', 'Phải đăng ký click listener');
+
+    // Click vào card con bên trong modal
+    const innerCardElement = { tagName: 'div' };
+    clickHandler({ target: innerCardElement });
+    assert.strictEqual(modalClasses.has('active'), true, 'Click bên trong card không làm đóng modal');
+
+    // Click ra ngoài vùng backdrop (target === createdModal)
+    clickHandler({ target: createdModal });
+    assert.strictEqual(modalClasses.has('active'), false, 'Click vào backdrop overlay phải đóng modal');
+
+    delete globalThis.document;
+  });
+
+  it('8.3. Nút Khôi Phục Mặc Định hoàn nguyên toàn bộ cấu hình Audio, Display và Gameplay', () => {
+    const listeners = {};
+    const mockRoot = {
+      querySelector: (selector) => {
+        if (selector.includes('btn-reset-defaults')) {
+          return {
+            addEventListener: (evt, cb) => { listeners.reset = cb; }
+          };
+        }
+        return {
+          addEventListener: () => {}
+        };
+      }
+    };
+
+    SettingsUI.bindSettingsControls(mockRoot, 'test-reset');
+
+    // Thay đổi nhiều giá trị cấu hình
+    settingsManager.setMasterVolume(0.15);
+    settingsManager.setDisplaySetting('particlesEnabled', false);
+    settingsManager.setDisplaySetting('reducedMotion', true);
+    settingsManager.setGameplaySetting('turnAlertSound', false);
+
+    assert.strictEqual(settingsManager.getMasterVolume(), 0.15);
+    assert.strictEqual(settingsManager.getDisplaySetting('particlesEnabled'), false);
+    assert.strictEqual(settingsManager.getGameplaySetting('turnAlertSound'), false);
+
+    // Kích hoạt nút khôi phục mặc định
+    assert.ok(typeof listeners.reset === 'function', 'Phải gắn listener cho nút Reset');
+    listeners.reset();
+
+    // Xác nhận đã phục hồi về mặc định
+    assert.strictEqual(settingsManager.getMasterVolume(), 0.8, 'Master phục hồi về 0.8');
+    assert.strictEqual(settingsManager.getDisplaySetting('particlesEnabled'), true, 'Particles phục hồi về true');
+    assert.strictEqual(settingsManager.getDisplaySetting('reducedMotion'), false, 'Reduced motion phục hồi về false');
+    assert.strictEqual(settingsManager.getGameplaySetting('turnAlertSound'), true, 'Turn alert phục hồi về true');
+  });
+
+  it('8.4. Kiểm tra đầy đủ thuộc tính trợ năng ARIA trong template và setup modal', () => {
+    const template = SettingsUI.getModalTemplate({ prefixId: 'test-aria' });
+
+    assert.ok(template.includes('role="document"'), 'Hộp thoại phải có role="document"');
+    assert.ok(template.includes('role="tablist"'), 'Khung tab phải có role="tablist"');
+    assert.ok(template.includes('role="tab"'), 'Các nút tab phải có role="tab"');
+    assert.ok(template.includes('role="tabpanel"'), 'Các panels nội dung phải có role="tabpanel"');
+    assert.ok(template.includes('aria-label='), 'Các nút bấm điều khiển phải có aria-label');
+
+    // Kiểm tra role="dialog" và aria-modal="true" được gắn trên overlay qua setupModal
+    let overlayAttrs = {};
+    const mockOverlay = {
+      setAttribute: (k, v) => { overlayAttrs[k] = v; },
+      classList: { add: () => {}, remove: () => {}, contains: () => false },
+      querySelector: () => null,
+      querySelectorAll: () => [],
+      addEventListener: () => {}
+    };
+
+    globalThis.document = {
+      getElementById: () => null,
+      createElement: () => mockOverlay,
+      querySelectorAll: () => [],
+      addEventListener: () => {},
+      body: { appendChild: () => {}, style: {} }
+    };
+
+    SettingsUI.setupModal({ modalId: 'test-aria-overlay', prefixId: 'test-aria' });
+    assert.strictEqual(overlayAttrs['role'], 'dialog', 'Overlay phải được gán role="dialog"');
+    assert.strictEqual(overlayAttrs['aria-modal'], 'true', 'Overlay phải được gán aria-modal="true"');
+
+    delete globalThis.document;
+  });
+
+  it('8.5. SettingsUI.toggleFullscreen() hoạt động an toàn và không gây crash ngoại lệ', () => {
+    // Trường hợp không có fullscreenElement: gọi requestFullscreen
+    let requested = false;
+    globalThis.document = {
+      fullscreenElement: null,
+      documentElement: {
+        requestFullscreen: () => { requested = true; }
+      }
+    };
+
+    SettingsUI.toggleFullscreen();
+    assert.strictEqual(requested, true, 'Phải gọi requestFullscreen khi đang không fullscreen');
+
+    // Trường hợp đang fullscreen: gọi exitFullscreen
+    let exited = false;
+    globalThis.document = {
+      fullscreenElement: {},
+      exitFullscreen: () => { exited = true; }
+    };
+
+    SettingsUI.toggleFullscreen();
+    assert.strictEqual(exited, true, 'Phải gọi exitFullscreen khi đang ở fullscreen');
+
+    delete globalThis.document;
+  });
+
 });
