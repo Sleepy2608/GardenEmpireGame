@@ -560,9 +560,19 @@ export class SettingsUI {
       // Đồng bộ trạng thái ban đầu
       SettingsUI.syncUIFromSettings(modalOverlay, prefixId);
 
+      // Đồng bộ biểu tượng âm thanh trên navbar nếu có
+      const updateNavbarSoundIcon = () => {
+        const soundIcon = document.getElementById('sound-icon');
+        if (soundIcon) {
+          soundIcon.textContent = settingsManager.isMasterMuted() ? '🔇' : '🔊';
+        }
+      };
+      updateNavbarSoundIcon();
+
       // Lắng nghe thay đổi từ SettingsManager để cập nhật ngược lại UI nếu có mutation từ nguồn khác
       settingsManager.addListener(() => {
         SettingsUI.syncUIFromSettings(modalOverlay, prefixId);
+        updateNavbarSoundIcon();
       });
 
       // Nút đóng modal (header ✕ và footer Xong)

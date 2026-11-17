@@ -10,6 +10,7 @@ import { PlayerUI } from './PlayerUI.js';
 import { TabletopFit } from './TabletopFit.js';
 import { gameLogUI } from './GameLogUI.js';
 import { chatUI } from './ChatUI.js';
+import { SettingsUI } from './SettingsUI.js';
 import { sessionGuard } from '../utils/sessionGuard.js';
 import { navigateTo } from '../utils/navigation.js';
 
@@ -193,6 +194,9 @@ export class BoardUI {
         this.showToast(isMuted ? '🔇 Đã tắt âm thanh' : '🔊 Đã bật âm thanh');
       });
     }
+
+    // Settings Modal
+    SettingsUI.setupModal({ openTriggerSelector: '#btn-open-settings' });
 
     // Copy Room Code
     const roomBadge = document.getElementById('room-code-display');
