@@ -5,6 +5,7 @@ import { roomApi } from '../api/roomApi.js';
 import { sessionGuard } from '../utils/sessionGuard.js';
 import { navigateTo } from '../utils/navigation.js';
 import { RulesUI } from './RulesUI.js';
+import { SettingsUI } from './SettingsUI.js';
 import { bgmController, BGM_PHASES } from './BGMController.js';
 
 export class LobbyUI {
@@ -51,6 +52,11 @@ export class LobbyUI {
     RulesUI.setupModal({
       modalId: 'rules-modal',
       openTriggerSelector: '#btn-open-rules, #btn-sidebar-rules'
+    });
+
+    // Cài Đặt Hệ Thống Modal
+    SettingsUI.setupModal({
+      openTriggerSelector: '#btn-open-settings'
     });
 
     // Background Music (Phase LOBBY) & Sound Toggle

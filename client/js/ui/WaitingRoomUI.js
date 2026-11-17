@@ -8,6 +8,7 @@ import { CONFIG } from '../config.js';
 import { sessionGuard } from '../utils/sessionGuard.js';
 import { navigateTo } from '../utils/navigation.js';
 import { bgmController, BGM_PHASES } from './BGMController.js';
+import { SettingsUI } from './SettingsUI.js';
 
 export class WaitingRoomUI {
   constructor() {
@@ -67,6 +68,11 @@ export class WaitingRoomUI {
     // Background Music (Phase LOBBY) & Sound Toggle
     bgmController.init();
     bgmController.setPhase(BGM_PHASES.LOBBY);
+
+    // Cài Đặt Hệ Thống Modal
+    SettingsUI.setupModal({
+      openTriggerSelector: '#btn-open-settings'
+    });
 
     const soundBtn = document.getElementById('btn-toggle-sound');
     const soundIcon = document.getElementById('sound-icon');

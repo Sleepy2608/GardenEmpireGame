@@ -264,7 +264,12 @@ export class ChatUI {
       const hasOtherPlayerMessage = newMessages.some(m => m.playerId !== myPlayerId);
 
       if (hasOtherPlayerMessage && this.lastRenderedCount > 0) {
-        SoundFX.playChatSound();
+        const canPlayChatSound = (typeof window !== 'undefined' && window.settingsManager)
+          ? window.settingsManager.getGameplaySetting('chatMessageSound') !== false
+          : true;
+        if (canPlayChatSound) {
+          SoundFX.playChatSound();
+        }
         if (this.isCollapsed) {
           this.unreadCount += newMessages.filter(m => m.playerId !== myPlayerId).length;
           this.updateUnreadBadge();

@@ -10,6 +10,7 @@ import { PlayerUI } from './PlayerUI.js';
 import { TabletopFit } from './TabletopFit.js';
 import { gameLogUI } from './GameLogUI.js';
 import { chatUI } from './ChatUI.js';
+import { SettingsUI } from './SettingsUI.js';
 import { sessionGuard } from '../utils/sessionGuard.js';
 import { navigateTo } from '../utils/navigation.js';
 
@@ -55,6 +56,7 @@ export class BoardUI {
     this.turnTimerInterval = null;
     this.lastTickWholeSecond = -1;
     this.lastTurnStartTime = -1;
+    this.lastNotifiedTurnStartTime = -1;
 
     this.init();
   }
@@ -193,6 +195,9 @@ export class BoardUI {
         this.showToast(isMuted ? '🔇 Đã tắt âm thanh' : '🔊 Đã bật âm thanh');
       });
     }
+
+    // Settings Modal
+    SettingsUI.setupModal({ openTriggerSelector: '#btn-open-settings' });
 
     // Copy Room Code
     const roomBadge = document.getElementById('room-code-display');
@@ -576,6 +581,17 @@ export class BoardUI {
       messageEl.textContent = this.gameState.isFinalRound
         ? '🔥 LƯỢT CUỐI CỦA BẠN (VÒNG CHUNG KẾT)!'
         : '✨ ĐANG TỚI LƯỢT CỦA BẠN';
+
+      // Phát chuông báo khi tới lượt mình nếu được bật trong cài đặt
+      if (this.lastNotifiedTurnStartTime !== this.gameState.turnStartTime) {
+        this.lastNotifiedTurnStartTime = this.gameState.turnStartTime;
+        const canPlayTurnAlert = (typeof window !== 'undefined' && window.settingsManager)
+          ? window.settingsManager.getGameplaySetting('turnAlertSound') !== false
+          : true;
+        if (canPlayTurnAlert) {
+          SoundFX.playTurnAlert();
+        }
+      }
     } else {
       const activePlayer = this.gameState.players.find(p => p.id === this.gameState.currentTurnPlayerId);
       const name = activePlayer?.name || 'Đối thủ';

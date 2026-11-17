@@ -1,6 +1,7 @@
 import { sessionGuard } from './utils/sessionGuard.js';
 import { navigateTo } from './utils/navigation.js';
 import { RulesUI } from './ui/RulesUI.js';
+import { SettingsUI } from './ui/SettingsUI.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // 🚀 Pre-warm backend & Prefetch rooms: Đánh thức Render và nạp sẵn danh sách phòng vào bộ nhớ đệm (0ms tại Sảnh)
@@ -29,6 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 📖 Khởi tạo Modal Cẩm Nang Toàn Màn Hình cho nút bấm Top Bar
   RulesUI.setupModal({ modalId: 'rules-modal', openTriggerSelector: '#btn-open-rules' });
+
+  // ⚙️ Khởi tạo Modal Cài Đặt Hệ Thống cho nút bấm Top Bar
+  SettingsUI.setupModal({ openTriggerSelector: '#btn-open-settings' });
 
   const guestForm = document.getElementById('guest-form');
   const guestNameInput = document.getElementById('guest-name');

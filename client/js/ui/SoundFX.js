@@ -1,10 +1,21 @@
 /*
-   GARDEN EMPIRE — SYNTHETIC WEB AUDIO SOUND FX ENGINE
+   GARDEN EMPIRE - SYNTHETIC WEB AUDIO SOUND FX ENGINE
 */
 class SoundFXEngine {
   constructor() {
     this.ctx = null;
+    this.volume = 1.0;
     this.muted = typeof localStorage !== 'undefined' && localStorage.getItem('garden_empire_sound_muted') === 'true';
+  }
+
+  setMasterVolume(val) {
+    this.volume = Math.max(0, Math.min(1, Number(val) || 0));
+    return this.volume;
+  }
+
+  setMuted(bool) {
+    this.muted = Boolean(bool);
+    return this.muted;
   }
 
   initContext() {
@@ -28,6 +39,11 @@ class SoundFXEngine {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('garden_empire_sound_muted', this.muted);
     }
+    if (typeof window !== 'undefined' && window.settingsManager) {
+      if (window.settingsManager.isMasterMuted() !== this.muted) {
+        window.settingsManager.setMasterMuted(this.muted);
+      }
+    }
     if (typeof window !== 'undefined' && window.bgmController) {
       if (window.bgmController.isMuted !== this.muted) {
         window.bgmController.toggleMute();
@@ -37,7 +53,7 @@ class SoundFXEngine {
   }
 
   playTone(freq, type = 'sine', duration = 0.15, gainVal = 0.1, startDelay = 0) {
-    if (this.muted) return;
+    if (this.muted || this.volume <= 0) return;
     try {
       this.initContext();
       if (!this.ctx) return;
@@ -48,7 +64,8 @@ class SoundFXEngine {
       osc.type = type;
       osc.frequency.setValueAtTime(freq, this.ctx.currentTime + startDelay);
 
-      gain.gain.setValueAtTime(gainVal, this.ctx.currentTime + startDelay);
+      const effectiveGain = gainVal * this.volume;
+      gain.gain.setValueAtTime(effectiveGain, this.ctx.currentTime + startDelay);
       gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + startDelay + duration);
 
       osc.connect(gain);
@@ -91,11 +108,11 @@ class SoundFXEngine {
 
   // 5. Chiến thắng & Fanfare
   playVictorySound() {
-    if (this.muted) return;
+    if (this.muted || this.volume <= 0) return;
     try {
       if (typeof Audio !== 'undefined') {
         const fanfare = new Audio('assets/audio/sfx/victory-fanfare.mp3');
-        fanfare.volume = 0.5;
+        fanfare.volume = Math.max(0, Math.min(1, 0.5 * this.volume));
         fanfare.play().catch(() => {});
       }
     } catch (_) {}
@@ -182,6 +199,19 @@ class SoundFXEngine {
       osc.start(now);
       osc.stop(now + 0.35);
     } catch (_) {}
+  }
+
+  // 11. Âm thanh chuông báo khi tới lượt người chơi (Turn Alert)
+  playTurnAlert() {
+    if (this.muted || this.volume <= 0) return;
+    this.playTone(659.25, 'sine', 0.15, 0.14, 0);    // E5
+    this.playTone(880.00, 'sine', 0.25, 0.16, 0.1);  // A5
+    this.playTone(1046.50, 'sine', 0.35, 0.12, 0.22); // C6
+  }
+
+  // 12. Âm thanh pop tin nhắn chat (Chat Pop)
+  playChatPop() {
+    this.playChatSound();
   }
 }
 
