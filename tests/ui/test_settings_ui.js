@@ -319,8 +319,8 @@ describe('⚙️ TEST SUITE: SETTINGS MODAL & PREFERENCES UI (4 TABS & CONTROLS)
     const emDashes = (cssContent.match(/—/g) || []).length;
     const enDashes = (cssContent.match(/–/g) || []).length;
 
-    assert.strictEqual(emDashes, 0, 'settings.css không được chứa ký tự em-dash (—)');
-    assert.strictEqual(enDashes, 0, 'settings.css không được chứa ký tự en-dash (–)');
+    assert.strictEqual(emDashes, 0, 'settings.css không được chứa ký tự em-dash');
+    assert.strictEqual(enDashes, 0, 'settings.css không được chứa ký tự en-dash');
   });
 
   it('4.3. Quy tắc 9.G Anti-slop: Template và code trong SettingsUI.js không chứa em-dash hay en-dash', () => {
@@ -330,8 +330,8 @@ describe('⚙️ TEST SUITE: SETTINGS MODAL & PREFERENCES UI (4 TABS & CONTROLS)
     const emDashes = (jsContent.match(/—/g) || []).length;
     const enDashes = (jsContent.match(/–/g) || []).length;
 
-    assert.strictEqual(emDashes, 0, 'SettingsUI.js không được chứa ký tự em-dash (—)');
-    assert.strictEqual(enDashes, 0, 'SettingsUI.js không được chứa ký tự en-dash (–)');
+    assert.strictEqual(emDashes, 0, 'SettingsUI.js không được chứa ký tự em-dash');
+    assert.strictEqual(enDashes, 0, 'SettingsUI.js không được chứa ký tự en-dash');
   });
 
   // ===========================================================================
@@ -367,6 +367,111 @@ describe('⚙️ TEST SUITE: SETTINGS MODAL & PREFERENCES UI (4 TABS & CONTROLS)
     SettingsUI.closeModal('settings-modal');
     assert.strictEqual(SettingsUI.isOpen('settings-modal'), false);
     assert.strictEqual(globalThis.document.body.style.overflow, '');
+
+    delete globalThis.document;
+  });
+
+  // ===========================================================================
+  // PHẦN 6: KIỂM THỬ TÍCH HỢP NÚT BÁNH RĂNG TRÊN TOÀN BỘ 5 MÀN HÌNH (GIAI ĐOẠN 3)
+  // ===========================================================================
+  it('6.1. client/welcome.html phải tích hợp css/settings.css, nút #btn-open-settings và setupModal', () => {
+    const htmlPath = path.resolve('client/welcome.html');
+    const content = fs.readFileSync(htmlPath, 'utf-8');
+
+    assert.ok(content.includes('css/settings.css'), 'welcome.html phải nạp css/settings.css');
+    assert.ok(content.includes('id="btn-open-settings"'), 'welcome.html phải có nút #btn-open-settings');
+    assert.ok(content.includes('SettingsUI.setupModal'), 'welcome.html phải gọi SettingsUI.setupModal');
+  });
+
+  it('6.2. client/index.html & js/main.js phải tích hợp css/settings.css và nút #btn-open-settings', () => {
+    const htmlPath = path.resolve('client/index.html');
+    const htmlContent = fs.readFileSync(htmlPath, 'utf-8');
+    const jsPath = path.resolve('client/js/main.js');
+    const jsContent = fs.readFileSync(jsPath, 'utf-8');
+
+    assert.ok(htmlContent.includes('css/settings.css'), 'index.html phải nạp css/settings.css');
+    assert.ok(htmlContent.includes('id="btn-open-settings"'), 'index.html phải có nút #btn-open-settings');
+    assert.ok(jsContent.includes('SettingsUI.setupModal'), 'main.js phải gọi SettingsUI.setupModal');
+  });
+
+  it('6.3. client/lobby.html & js/ui/LobbyUI.js phải tích hợp css/settings.css và nút #btn-open-settings', () => {
+    const htmlPath = path.resolve('client/lobby.html');
+    const htmlContent = fs.readFileSync(htmlPath, 'utf-8');
+    const jsPath = path.resolve('client/js/ui/LobbyUI.js');
+    const jsContent = fs.readFileSync(jsPath, 'utf-8');
+
+    assert.ok(htmlContent.includes('css/settings.css'), 'lobby.html phải nạp css/settings.css');
+    assert.ok(htmlContent.includes('id="btn-open-settings"'), 'lobby.html phải có nút #btn-open-settings');
+    assert.ok(jsContent.includes('SettingsUI.setupModal'), 'LobbyUI.js phải gọi SettingsUI.setupModal');
+  });
+
+  it('6.4. client/waiting-room.html & js/ui/WaitingRoomUI.js phải tích hợp css/settings.css và nút #btn-open-settings', () => {
+    const htmlPath = path.resolve('client/waiting-room.html');
+    const htmlContent = fs.readFileSync(htmlPath, 'utf-8');
+    const jsPath = path.resolve('client/js/ui/WaitingRoomUI.js');
+    const jsContent = fs.readFileSync(jsPath, 'utf-8');
+
+    assert.ok(htmlContent.includes('css/settings.css'), 'waiting-room.html phải nạp css/settings.css');
+    assert.ok(htmlContent.includes('id="btn-open-settings"'), 'waiting-room.html phải có nút #btn-open-settings');
+    assert.ok(jsContent.includes('SettingsUI.setupModal'), 'WaitingRoomUI.js phải gọi SettingsUI.setupModal');
+  });
+
+  it('6.5. client/game.html & js/ui/BoardUI.js phải tích hợp css/settings.css và nút #btn-open-settings', () => {
+    const htmlPath = path.resolve('client/game.html');
+    const htmlContent = fs.readFileSync(htmlPath, 'utf-8');
+    const jsPath = path.resolve('client/js/ui/BoardUI.js');
+    const jsContent = fs.readFileSync(jsPath, 'utf-8');
+
+    assert.ok(htmlContent.includes('css/settings.css'), 'game.html phải nạp css/settings.css');
+    assert.ok(htmlContent.includes('id="btn-open-settings"'), 'game.html phải có nút #btn-open-settings');
+    assert.ok(jsContent.includes('SettingsUI.setupModal'), 'BoardUI.js phải gọi SettingsUI.setupModal');
+  });
+
+  it('6.6. setupModal() tự động đồng bộ trạng thái biểu tượng #sound-icon trên navbar', () => {
+    const soundIcon = { textContent: '🔊' };
+    let createdModal = null;
+    const mockModal = {
+      id: 'settings-modal',
+      classList: {
+        classes: new Set(),
+        add(cls) { this.classes.add(cls); },
+        remove(cls) { this.classes.delete(cls); },
+        contains(cls) { return this.classes.has(cls); }
+      },
+      querySelector() { return null; },
+      querySelectorAll() { return []; },
+      setAttribute() {},
+      appendChild() {},
+      addEventListener() {}
+    };
+
+    globalThis.document = {
+      getElementById(id) {
+        if (id === 'sound-icon') return soundIcon;
+        if (id === 'settings-modal') return createdModal;
+        return null;
+      },
+      createElement(tag) {
+        createdModal = mockModal;
+        return mockModal;
+      },
+      querySelectorAll() { return []; },
+      addEventListener() {},
+      body: { appendChild() {}, style: { overflow: '' } }
+    };
+
+    SettingsUI.setupModal();
+
+    // Mặc định ban đầu chưa mute
+    assert.strictEqual(soundIcon.textContent, '🔊');
+
+    // Chuyển master mute sang true
+    settingsManager.setMasterMuted(true);
+    assert.strictEqual(soundIcon.textContent, '🔇', 'sound-icon phải tự động đổi sang 🔇');
+
+    // Chuyển master mute về false
+    settingsManager.setMasterMuted(false);
+    assert.strictEqual(soundIcon.textContent, '🔊', 'sound-icon phải tự động đổi lại 🔊');
 
     delete globalThis.document;
   });
