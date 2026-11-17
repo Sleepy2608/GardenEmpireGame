@@ -30,6 +30,7 @@
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="css/welcome.css">
+  <link rel="stylesheet" href="css/settings.css">
 </head>
 <body class="welcome-body">
 
@@ -56,10 +57,13 @@
         <li><a href="#strategy" class="nav-link-item">Quy Tắc</a></li>
       </ul>
 
-      <!-- Sound Toggle & CTA to Index -->
+      <!-- Sound Toggle, Settings & CTA to Index -->
       <div style="display: flex; align-items: center; gap: 0.75rem;">
         <button type="button" id="btn-toggle-sound" class="welcome-btn-sound" title="Bật/Tắt âm thanh" aria-label="Bật/Tắt âm thanh">
           <span id="sound-icon">🔊</span>
+        </button>
+        <button type="button" id="btn-open-settings" class="btn-navbar-settings" title="Cài đặt hệ thống (O)" aria-label="Cài đặt hệ thống">
+          <span>⚙️</span>
         </button>
         <a href="index.html" class="nav-cta-btn" id="nav-btn-play">
           <span>Bắt Đầu Chơi</span>
@@ -379,9 +383,12 @@
   <script src="js/welcome.js"></script>
   <script type="module">
     import { bgmController, BGM_PHASES } from './js/ui/BGMController.js';
+    import { SettingsUI } from './js/ui/SettingsUI.js';
     document.addEventListener('DOMContentLoaded', () => {
       bgmController.init();
       bgmController.setPhase(BGM_PHASES.WELCOME);
+
+      SettingsUI.setupModal({ openTriggerSelector: '#btn-open-settings' });
 
       const soundBtn = document.getElementById('btn-toggle-sound');
       const soundIcon = document.getElementById('sound-icon');
