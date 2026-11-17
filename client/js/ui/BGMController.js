@@ -141,6 +141,31 @@ export class BGMController {
   }
 
   /**
+   * Apply effective volume calculated by SettingsManager.
+   * @param {number} effectiveVolume (0.0 to 1.0)
+   * @param {boolean} [isMuted]
+   */
+  applySettingsVolume(effectiveVolume, isMuted) {
+    if (typeof isMuted === 'boolean') {
+      this._isMuted = isMuted;
+    }
+    const clamped = Math.max(0, Math.min(1, Number(effectiveVolume) || 0));
+    this.baseVolume = clamped;
+    this.duckVolume = clamped * 0.32;
+    this.dangerVolume = clamped * 0.20;
+
+    if (this.audio) {
+      if (this._isMuted) {
+        this.audio.volume = 0;
+      } else {
+        const targetVol = this._isDucked ? this.duckVolume : this.baseVolume;
+        this.audio.volume = targetVol;
+      }
+    }
+    return clamped;
+  }
+
+  /**
    * Toggle mute state and sync with localStorage key 'garden_empire_sound_muted'
    * @returns {boolean} New mute state
    */
@@ -148,6 +173,12 @@ export class BGMController {
     this._isMuted = !this._isMuted;
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('garden_empire_sound_muted', this._isMuted.toString());
+    }
+
+    if (typeof window !== 'undefined' && window.settingsManager) {
+      if (window.settingsManager.isMasterMuted() !== this._isMuted) {
+        window.settingsManager.setMasterMuted(this._isMuted);
+      }
     }
 
     if (this.audio) {
