@@ -16,7 +16,9 @@ export class PlayerUI {
 
     const roleEl = document.getElementById('my-player-role');
     if (roleEl) {
-      if (player.consecutiveAfkCount === 1) {
+      if (Boolean(player.isBot ?? player.bot)) {
+        roleEl.innerHTML = `<span class="badge-bot" style="background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.5); color: #93c5fd; border-radius: 4px; padding: 1px 6px; font-size: 0.72rem;">🤖 TRỢ LÝ BOT</span>`;
+      } else if (player.consecutiveAfkCount === 1) {
         roleEl.innerHTML = `<span class="badge-afk-warning" title="Cảnh báo: Hết giờ 2 lần liên tiếp sẽ bị truất quyền thi đấu">⚠️ AFK (1/2)</span>`;
       } else {
         roleEl.textContent = Boolean(player.isHost ?? player.host) ? 'Chủ Vườn' : 'Khách Vườn';
@@ -182,6 +184,7 @@ export class PlayerUI {
       : '';
 
     // AFK Warning & Kick Status
+    const isBot = Boolean(opponent.isBot ?? opponent.bot);
     const isAfkWarned = !hasLeft && opponent.consecutiveAfkCount === 1;
     const isAfkKicked = hasLeft && ((opponent.consecutiveAfkCount || 0) >= 2);
 
@@ -197,12 +200,16 @@ export class PlayerUI {
     const afkWarnBadgeHtml = isAfkWarned
       ? '<span class="badge-afk-warning" title="Cảnh báo: Bỏ lỡ thêm 1 lượt nữa sẽ bị truất quyền!">⚠️ AFK (1/2)</span>'
       : '';
+    const botBadgeHtml = isBot
+      ? '<span class="badge-bot" style="background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.5); color: #93c5fd; border-radius: 4px; padding: 1px 6px; font-size: 0.72rem; margin-right: 4px;">🤖 BOT</span>'
+      : '';
 
     el.innerHTML = `
       <!-- Section 1: Header (Tên & Điểm) -->
       <div class="player-box-section player-box-header opponent-card-header">
         <span class="player-box-name opponent-name" title="${opponent.name || 'Đối thủ'}">${opponent.name || 'Đối thủ'} ${Boolean(opponent.isHost ?? opponent.host) ? '👑' : ''}</span>
         <div class="opponent-header-badges">
+          ${botBadgeHtml}
           ${afkWarnBadgeHtml}
           ${statusBadgeHtml}
         </div>

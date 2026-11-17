@@ -38,7 +38,7 @@ global.document = {
   getElementById: () => createMockElement('div')
 };
 
-const { PlayerUI } = await import('../client/js/ui/PlayerUI.js');
+const { PlayerUI } = await import('../../client/js/ui/PlayerUI.js');
 
 console.log('\n🌿 ========================================================');
 console.log('🧪 VERIFICATION TEST: ISSUE #15 — PLAYER BOXES FLEXIBILITY & WORD COLLAPSE');

@@ -5,7 +5,7 @@
  */
 
 import assert from 'node:assert';
-import { GameState } from '../client/js/game/GameState.js';
+import { GameState } from '../../client/js/game/GameState.js';
 
 console.log('\n🏆 ========================================================');
 console.log('🧪 VERIFICATION TEST: ISSUE #30 — GAME END ANNOUNCEMENT');

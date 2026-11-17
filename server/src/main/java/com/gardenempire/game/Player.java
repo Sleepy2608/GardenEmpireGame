@@ -29,6 +29,10 @@ public class Player {
     private boolean hasLeft = false;
 
     @Builder.Default
+    @JsonProperty("isBot")
+    private boolean isBot = false;
+
+    @Builder.Default
     private int consecutiveAfkCount = 0;
 
     @Builder.Default
@@ -59,5 +63,10 @@ public class Player {
     @JsonProperty("host")
     public boolean isHostCompat() {
         return isHost;
+    }
+
+    @JsonProperty("bot")
+    public boolean isBotCompat() {
+        return isBot;
     }
 }

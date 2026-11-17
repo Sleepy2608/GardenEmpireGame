@@ -161,7 +161,7 @@ global.window = {
 global.requestAnimationFrame = (cb) => cb();
 
 // Import động ChatUI
-const { ChatUI } = await import('../client/js/ui/ChatUI.js');
+const { ChatUI } = await import('../../client/js/ui/ChatUI.js');
 
 function setupMockDOM() {
   const elements = {

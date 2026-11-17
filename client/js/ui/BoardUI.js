@@ -447,6 +447,14 @@ export class BoardUI {
         this.render();
         this.checkSpecialGameStates();
       }
+    } else if (message.type === 'BOT_TAKEOVER') {
+      const pName = message.playerName || 'Người chơi';
+      this.showToast(`🤖 ${pName} đã rời đi. Trợ Lý AI đã tiếp quản vị trí để ván đấu tiếp tục!`, 'info');
+      if (message.gameState) {
+        this.gameState.updateFromDto(message.gameState);
+        this.render();
+        this.checkSpecialGameStates();
+      }
     } else if (message.type === 'ROOM_CLOSED') {
       this.stopTurnTimer();
       if (this.endgameTimerInterval) {

@@ -261,8 +261,10 @@ public class GameEngine {
         for (Map.Entry<Resource, Integer> pay : tokensToPay.entrySet()) {
             Resource res = pay.getKey();
             int count = pay.getValue();
-            player.getTokens().put(res, player.getTokens().get(res) - count);
-            bank.put(res, bank.getOrDefault(res, 0) + count);
+            if (count > 0) {
+                player.getTokens().put(res, player.getTokens().getOrDefault(res, 0) - count);
+                bank.put(res, bank.getOrDefault(res, 0) + count);
+            }
         }
 
         if (wildNeeded > 0) {
@@ -518,6 +520,10 @@ public class GameEngine {
      * 3. Nếu chỉ còn duy nhất 1 người chơi active -> kết thúc ván, người còn lại thắng mặc định (Walkover)
      */
     public void handlePlayerLeave(Game game, String playerId) {
+        handlePlayerLeave(game, playerId, false);
+    }
+
+    public void handlePlayerLeave(Game game, String playerId, boolean replaceWithBot) {
         if (game == null || game.getState() == null || playerId == null) {
             return;
         }
@@ -531,6 +537,22 @@ public class GameEngine {
 
         if (player.isHasLeft()) {
             return; // Đã rời từ trước
+        }
+
+        if (replaceWithBot) {
+            player.setBot(true);
+            player.setHasLeft(false);
+            if (!player.getName().contains("🤖")) {
+                player.setName(player.getName() + " (🤖 Bot)");
+            }
+            String takeoverMsg = String.format("🤖 Nghệ nhân %s đã rời đi. Trợ Lý AI đã tiếp quản vị trí để ván đấu tiếp tục diễn ra!", player.getName());
+            addLog(game, player.getId(), "BOT_TAKEOVER", takeoverMsg, Map.of("playerId", player.getId(), "playerName", player.getName()));
+
+            // Nếu người rời đang giữ lượt đi -> Bot đánh hộ ngay lập tức
+            if (playerId.equals(game.getState().getCurrentTurnPlayerId())) {
+                executeBotTurn(game, playerId);
+            }
+            return;
         }
 
         player.setHasLeft(true);
@@ -634,12 +656,14 @@ public class GameEngine {
             return Collections.emptyMap();
         }
 
-        Collections.shuffle(availableBasicResources, this.random);
-        int pickCount = Math.min(targetCount, availableBasicResources.size());
+        // Tối ưu hóa bốc token thông minh theo Thẻ Mục Tiêu (ưu tiên các màu còn thiếu)
+        List<Resource> chosen = selectSmartHarvestResources(game.getState(), player, availableBasicResources, targetCount);
+
+        int pickCount = chosen.size();
         Map<Resource, Integer> harvested = new EnumMap<>(Resource.class);
 
         for (int i = 0; i < pickCount; i++) {
-            Resource res = availableBasicResources.get(i);
+            Resource res = chosen.get(i);
             harvested.put(res, 1);
             bank.put(res, bank.get(res) - 1);
             player.getTokens().put(res, player.getTokens().getOrDefault(res, 0) + 1);
@@ -650,6 +674,44 @@ public class GameEngine {
         addLog(game, player.getId(), "AFK_AUTO_HARVEST", msg, Map.of("playerId", player.getId(), "tokens", harvested.toString(), "count", pickCount));
 
         return harvested;
+    }
+
+    private List<Resource> selectSmartHarvestResources(GameState state, Player player, List<Resource> availableBasic, int targetCount) {
+        if (targetCount <= 0) {
+            return Collections.emptyList();
+        }
+        List<PlantCard> candidates = com.gardenempire.game.bot.SmartAfkBotEngine.getAllVisibleCards(state);
+        PlantCard bestGoal = null;
+        double bestScore = -1.0;
+        for (PlantCard c : candidates) {
+            int missing = com.gardenempire.game.bot.SmartAfkBotEngine.calculateMissingTokens(player, c);
+            double val = com.gardenempire.game.bot.SmartAfkBotEngine.evaluateCardValue(state, player, c, false);
+            double score = val / (missing + 0.6);
+            if (score > bestScore) {
+                bestScore = score;
+                bestGoal = c;
+            }
+        }
+
+        List<Resource> chosen = new ArrayList<>();
+        if (bestGoal != null) {
+            Map<Resource, Integer> missing = com.gardenempire.game.bot.SmartAfkBotEngine.getMissingResources(player, bestGoal);
+            for (Resource res : availableBasic) {
+                if (chosen.size() >= targetCount) break;
+                if (missing.getOrDefault(res, 0) > 0) {
+                    chosen.add(res);
+                }
+            }
+        }
+
+        for (Resource res : availableBasic) {
+            if (chosen.size() >= targetCount) break;
+            if (!chosen.contains(res)) {
+                chosen.add(res);
+            }
+        }
+
+        return chosen;
     }
 
     /**
@@ -689,6 +751,11 @@ public class GameEngine {
             return;
         }
 
+        if (player.isBot()) {
+            executeBotTurn(game, playerId);
+            return;
+        }
+
         player.setConsecutiveAfkCount(player.getConsecutiveAfkCount() + 1);
         player.setTotalAfkCount(player.getTotalAfkCount() + 1);
 
@@ -702,6 +769,27 @@ public class GameEngine {
             addLog(game, player.getId(), "PLAYER_KICKED_AFK", forfeitMsg, Map.of("playerId", player.getId(), "reason", "CONSECUTIVE_AFK_TIMEOUT"));
             handlePlayerLeave(game, playerId);
         }
+    }
+
+    /**
+     * Thực hiện lượt chơi tự động cho Bot hoặc người chơi được Bot điều khiển.
+     */
+    public com.gardenempire.game.bot.SmartAfkBotEngine.BotAction executeBotTurn(Game game, String playerId) {
+        validateTurnAndActive(game, playerId);
+        Player player = getPlayer(game, playerId);
+
+        com.gardenempire.game.bot.SmartAfkBotEngine.BotAction action = com.gardenempire.game.bot.SmartAfkBotEngine.calculateBestMove(game.getState(), player);
+        com.gardenempire.game.bot.SmartAfkBotEngine.executeMove(this, game, player, action);
+
+        String botLogMsg = String.format("🤖 [%s] đã thực hiện: %s", player.getName(), action.getReason());
+        addLog(game, player.getId(), "BOT_ACTION", botLogMsg, Map.of(
+                "playerId", player.getId(),
+                "actionType", action.getType().name(),
+                "reason", action.getReason() != null ? action.getReason() : "",
+                "durationNanos", action.getCalculationDurationNanos()
+        ));
+
+        return action;
     }
 
     private void determineWinner(Game game) {

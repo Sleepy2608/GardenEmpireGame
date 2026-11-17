@@ -1,54 +1,92 @@
 /**
- * GARDEN EMPIRE - AUTOMATED TEST RUNNER (ALL SUITES)
- * Runs all standalone unit, DOM and UI test suites.
+ * GARDEN EMPIRE — AUTOMATED RECURSIVE TEST RUNNER
+ * Tự động quét và thực thi đệ quy toàn bộ test suites trong tests/
+ * Hỗ trợ các module: welcome/, ui/, bot/, audio/, regression/, e2e/
  * Exits with 0 if all pass, 1 if any fail.
  */
 
 import { spawnSync } from 'child_process';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const testSuites = [
-  'test_welcome_dashboard_ui.js',
-  'test_welcome_navigation.js',
-  'test_rules_ui.js',
-  'test_player_box_ui.js',
-  'test_plant_card_ui.js',
-  'test_player_leave_notification_ui.js',
-  'test_endgame_announcement_ui.js',
-  'test_chat_toggle_ui.js',
-  'test_issue_15_verification.js',
-  'test_issue_30_verification.js',
-  'test_game_log_toggle_3_recent.js',
-  'test_waiting_room_turn_duration_ui.js',
-  'test_board_turn_timer_ui.js',
-  'test_afk_and_kick_flow.js',
-  'test_bgm_controller.js',
-  'test_music_integration.js',
-  'test_audio_lifecycle_e2e.js'
-];
+const includeLiveE2E = process.argv.includes('--e2e') || process.argv.includes('--all');
+
+/**
+ * Quét đệ quy tìm kiếm tất cả các tệp kiểm thử test_*.js
+ */
+function findTestSuitesRecursively(dir) {
+  let results = [];
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (entry.name === 'screenshots' || entry.name === 'node_modules') {
+        continue;
+      }
+      if (entry.name === 'e2e' && !includeLiveE2E) {
+        continue;
+      }
+      results = results.concat(findTestSuitesRecursively(fullPath));
+    } else if (entry.isFile()) {
+      if (entry.name.startsWith('test_') && entry.name.endsWith('.js')) {
+        results.push(fullPath);
+      }
+    }
+  }
+  return results;
+}
+
+// Thứ tự ưu tiên module để hiển thị báo cáo mạch lạc
+const folderPriority = ['welcome', 'ui', 'bot', 'audio', 'regression', 'e2e'];
+
+function getPriority(filePath) {
+  const relPath = path.relative(__dirname, filePath).replace(/\\/g, '/');
+  const folder = relPath.split('/')[0];
+  const idx = folderPriority.indexOf(folder);
+  return idx !== -1 ? idx : 99;
+}
+
+const testSuites = findTestSuitesRecursively(__dirname).sort((a, b) => {
+  const pA = getPriority(a);
+  const pB = getPriority(b);
+  if (pA !== pB) return pA - pB;
+  return a.localeCompare(b);
+});
 
 console.log('\n🌿 ========================================================');
-console.log('🧪 GARDEN EMPIRE — AUTOMATED FRONTEND TEST RUNNER');
-console.log('🌿 ========================================================\n');
+console.log('🧪 GARDEN EMPIRE — AUTOMATED RECURSIVE TEST RUNNER');
+console.log('🌿 ========================================================');
+console.log(`🔍 Tự động phát hiện: ${testSuites.length} test suites`);
+if (!includeLiveE2E) {
+  console.log('💡 Ghi chú: Đang bỏ qua các bài test Live WebSocket (dùng --e2e để chạy cùng server).');
+}
+console.log('');
 
 let failedSuites = [];
+const startTime = Date.now();
 
-for (const suite of testSuites) {
-  const suitePath = path.join(__dirname, suite);
-  console.log(`\n▶ [RUNNING] node tests/${suite}`);
+for (const suitePath of testSuites) {
+  const relPath = path.relative(__dirname, suitePath).replace(/\\/g, '/');
+  const category = relPath.split('/')[0].toUpperCase();
+  console.log(`\n▶ [${category}] node tests/${relPath}`);
+
   const result = spawnSync(process.execPath, [suitePath], { stdio: 'inherit' });
   if (result.status !== 0) {
-    failedSuites.push(suite);
+    failedSuites.push(relPath);
   }
 }
 
+const elapsedSeconds = ((Date.now() - startTime) / 1000).toFixed(2);
+
 console.log('\n========================================================');
-console.log('🏁 TỔNG KẾT TOÀN BỘ BỘ TEST FRONTEND');
+console.log('🏁 TỔNG KẾT TOÀN BỘ BỘ TEST FRONTEND (RECURSIVE)');
 console.log('========================================================');
+console.log(`⏱️ Thời gian thực thi: ${elapsedSeconds}s`);
 console.log(`✅ Thành công: ${testSuites.length - failedSuites.length} / ${testSuites.length} test suites`);
 
 if (failedSuites.length > 0) {
@@ -58,4 +96,3 @@ if (failedSuites.length > 0) {
   console.log(`🎉 TẤT CẢ ${testSuites.length} TEST SUITES FRONTEND ĐÃ VƯỢT QUA (100% PASS)!`);
   process.exit(0);
 }
-
