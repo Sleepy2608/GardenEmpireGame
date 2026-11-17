@@ -26,6 +26,32 @@ Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game**
 - **Tái Cấu Trúc Module Hóa Thư Mục Kiểm Thử & Runner Đệ Quy (`tests/`):**
   - Gom nhóm toàn bộ 23 tệp test vào 6 module chuyên biệt chuẩn Domain-Driven: `welcome/` (2 suites), `ui/` (9 suites), `bot/` (3 suites), `audio/` (3 suites), `regression/` (2 suites), `e2e/` (4 suites).
   - Nâng cấp `run_all_tests.js` thành runner quét đệ quy tự động nhận diện bài test mới, hỗ trợ cờ `--e2e` cho bài test WebSocket Live.
+
+### ⚙️ Hệ Thống Cài Đặt Toàn Cục & Tùy Chọn Trải Nghiệm Đa Phân Khu (Global Settings Button & Modular Preferences System)
+- **Kiến Trúc Quản Lý Cấu Hình Tập Trung (`client/js/settings/SettingsManager.js`):**
+  - Quản lý tập trung 3 nhóm cấu hình: `audio` (Master / BGM / SFX Volume & Mute), `display` (Eco Particles, Reduced Motion, Card Hover Zoom), và `gameplay` (Turn Alert Sound, Chat Message Sound, Colorblind Mode, Bot Strategy Hint).
+  - Tự động lưu và khôi phục từ `localStorage` (`garden_empire_user_settings`), đồng bộ 2 chiều tương thích ngược với các khóa legacy (`garden_empire_sound_muted`, `garden_empire_bgm_volume`).
+  - Tính toán ma trận âm lượng hiệu lực độc lập: Effective BGM = Master * BGM, Effective SFX = Master * SFX.
+  - Cơ chế Event Bus nội bộ (`addListener`) phát sóng tức thì các thay đổi tới `BGMController`, `SoundFX` và giao diện người dùng.
+- **Giao Diện Modal Kính Mờ 4 Phân Khu Ngữ Nghĩa (`client/css/settings.css`, `client/js/ui/SettingsUI.js`):**
+  - Cấu trúc Deep Forest Glassmorphism sang trọng với 4 Tabs chuyển đổi mượt mà bằng cả chuột và phím mũi tên:
+    * *Tab Âm Thanh (Audio):* 3 Sliders Master, BGM, SFX với nhãn phần trăm trực quan, 3 nút Mute độc lập, nút "Thử Âm" nghe thử xúc giác SFX.
+    * *Tab Đồ Họa (Display):* 3 Toggle Switches kiểm soát hạt bào tử đom đóm (Eco Particles), giảm chuyển động (Reduced Motion), và phóng to thẻ bài khi hover (Card Hover Zoom).
+    * *Tab Bàn Đấu (Gameplay):* Toggle chuông báo khi đến lượt (Turn Alert Sound), chuông tin nhắn chat (Chat Message Sound), chế độ hỗ trợ khiếm thị màu (Colorblind Mode), và hiển thị gợi ý Bot.
+    * *Tab Hệ Thống (System):* Nút chuyển đổi toàn màn hình (Fullscreen), hiển thị số hiệu phiên bản v1.7.0, danh mục phím tắt hữu ích (`O`, `,`, `Esc`, `M`), ghi nhận tác quyền âm nhạc CC-BY 4.0.
+  - Header với biểu tượng ⚙️ phát quang và nút đóng ✕, Footer trang bị nút "Khôi Phục Mặc Định" (Reset to Defaults) và nút "Xong" xác nhận.
+- **Tích Hợp Đồng Bộ Trên Toàn Bộ 5 Màn Hình Trải Nghiệm:**
+  - Nút Bánh Răng `#btn-open-settings` tích hợp nhất quán trên Header Cổng Chào (`welcome.html`), Sảnh Chờ (`lobby.html`), Phòng Chờ (`waiting-room.html`), Bảng Điều Khiển (`index.html`) và Bàn Cờ Thi Đấu Tabletop (`game.html`).
+  - Hỗ trợ phím tắt toàn cục: Nhấn phím `O` hoặc `,` để bật/tắt nhanh modal ở bất kỳ trang nào, phím `Esc` để đóng nhanh.
+  - Tự động đồng bộ biểu tượng loa `#sound-icon` trên navbar khi tắt/bật âm thanh từ modal hoặc phím tắt.
+- **Tối Ưu Hiệu Năng & Tương Tác Xúc Giác:**
+  - Khi tắt Eco Particles hoặc bật Reduced Motion, canvas đom đóm `#particles-canvas` tạm dừng vòng lặp render animation để tiết kiệm CPU/GPU.
+  - Bàn cờ in-game tự động phát chuông hòa âm E5, A5, C6 (`SoundFX.playTurnAlert()`) khi bắt đầu lượt đi của mình.
+  - Khung Chat in-game tự động phát tiếng pop (`SoundFX.playChatPop()`) khi nhận tin nhắn mới từ đối thủ.
+  - Bảo vệ nguyên trạng bàn cờ in-game (`game.html`), không ảnh hưởng luồng thi đấu hay kết nối WebSocket.
+- **Bộ Kiểm Thử Tự Động Toàn Diện Phủ Kín 5 Giai Đoạn:**
+  - `tests/ui/test_settings_manager.js`: 52 assertions kiểm tra khởi tạo, lưu trữ, ma trận âm lượng và event bus.
+  - `tests/ui/test_settings_ui.js`: 30 test cases kiểm tra template modal, 4 tabs, sliders/toggles, anti-slop, tích hợp 5 màn hình, dataset CSS, âm thanh lượt/chat, phím tắt Esc/O và trợ năng ARIA.
 - **Đồng Bộ Số Hiệu Phiên Bản Toàn Hệ Thống:**
   - Nâng cấp lên **v1.7.0** trên toàn bộ Client Badges (`index.html`, `lobby.html`, `waiting-room.html`, `welcome.html`), Server Maven (`pom.xml`), README và tài liệu quy chuẩn `.agents/AGENTS.md`.
 
