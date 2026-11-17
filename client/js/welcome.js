@@ -57,9 +57,16 @@
       });
     }
 
-    let animationFrameId;
+    let animationFrameId = null;
 
     function renderParticles() {
+      // Pause if disabled via settings
+      if (document.documentElement.dataset.particles === 'false' || document.documentElement.dataset.reducedMotion === 'true') {
+        ctx.clearRect(0, 0, width, height);
+        animationFrameId = null;
+        return;
+      }
+
       ctx.clearRect(0, 0, width, height);
 
       particles.forEach(p => {
@@ -83,16 +90,40 @@
       animationFrameId = requestAnimationFrame(renderParticles);
     }
 
+    function startLoop() {
+      if (!animationFrameId && document.documentElement.dataset.particles !== 'false') {
+        animationFrameId = requestAnimationFrame(renderParticles);
+      }
+    }
+
     // Pause rendering when tab is inactive to save battery & CPU
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
-        cancelAnimationFrame(animationFrameId);
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
       } else {
-        animationFrameId = requestAnimationFrame(renderParticles);
+        startLoop();
       }
     });
 
-    animationFrameId = requestAnimationFrame(renderParticles);
+    // Listen to SettingsManager if available
+    if (typeof window !== 'undefined' && window.settingsManager) {
+      window.settingsManager.addListener((change) => {
+        if (change && change.section === 'display') {
+          if (change.key === 'particlesEnabled' || change.key === 'reducedMotion') {
+            if (change.value === false && change.key === 'particlesEnabled') {
+              if (animationFrameId) cancelAnimationFrame(animationFrameId);
+              animationFrameId = null;
+              ctx.clearRect(0, 0, width, height);
+            } else {
+              startLoop();
+            }
+          }
+        }
+      });
+    }
+
+    startLoop();
   }
 
   // 3. Tactile 3D Card Hover Physics

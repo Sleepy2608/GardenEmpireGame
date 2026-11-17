@@ -386,6 +386,7 @@ export class SettingsUI {
     if (toggleParticles) {
       toggleParticles.addEventListener('change', (e) => {
         settingsManager.setDisplaySetting('particlesEnabled', e.target.checked);
+        SettingsUI.applyDisplayAndGameplayPreferences();
       });
     }
 
@@ -393,6 +394,7 @@ export class SettingsUI {
     if (toggleReducedMotion) {
       toggleReducedMotion.addEventListener('change', (e) => {
         settingsManager.setDisplaySetting('reducedMotion', e.target.checked);
+        SettingsUI.applyDisplayAndGameplayPreferences();
       });
     }
 
@@ -400,6 +402,7 @@ export class SettingsUI {
     if (toggleCardZoom) {
       toggleCardZoom.addEventListener('change', (e) => {
         settingsManager.setDisplaySetting('cardHoverZoom', e.target.checked);
+        SettingsUI.applyDisplayAndGameplayPreferences();
       });
     }
 
@@ -408,6 +411,7 @@ export class SettingsUI {
     if (toggleTurnAlert) {
       toggleTurnAlert.addEventListener('change', (e) => {
         settingsManager.setGameplaySetting('turnAlertSound', e.target.checked);
+        SettingsUI.applyDisplayAndGameplayPreferences();
       });
     }
 
@@ -415,6 +419,7 @@ export class SettingsUI {
     if (toggleChatSound) {
       toggleChatSound.addEventListener('change', (e) => {
         settingsManager.setGameplaySetting('chatMessageSound', e.target.checked);
+        SettingsUI.applyDisplayAndGameplayPreferences();
       });
     }
 
@@ -422,6 +427,7 @@ export class SettingsUI {
     if (toggleColorblind) {
       toggleColorblind.addEventListener('change', (e) => {
         settingsManager.setGameplaySetting('colorblindMode', e.target.checked);
+        SettingsUI.applyDisplayAndGameplayPreferences();
       });
     }
 
@@ -429,6 +435,7 @@ export class SettingsUI {
     if (toggleBotHint) {
       toggleBotHint.addEventListener('change', (e) => {
         settingsManager.setGameplaySetting('botHintEnabled', e.target.checked);
+        SettingsUI.applyDisplayAndGameplayPreferences();
       });
     }
 
@@ -454,8 +461,9 @@ export class SettingsUI {
    * @param {string} prefixId
    */
   static syncUIFromSettings(container, prefixId = 'settings') {
-    const root = typeof container === 'string' ? document.querySelector(container) : container;
-    if (!root) return;
+    if (typeof document === 'undefined' && typeof container === 'string') return;
+    const root = typeof container === 'string' ? (typeof document !== 'undefined' && typeof document.querySelector === 'function' ? document.querySelector(container) : null) : container;
+    if (!root || typeof root.querySelector !== 'function') return;
 
     const s = settingsManager.getSettings();
 
@@ -560,8 +568,12 @@ export class SettingsUI {
       // Đồng bộ trạng thái ban đầu
       SettingsUI.syncUIFromSettings(modalOverlay, prefixId);
 
+      // Áp dụng các tùy chọn đồ họa và trợ năng lên thẻ html ngay khi khởi tạo
+      SettingsUI.applyDisplayAndGameplayPreferences();
+
       // Đồng bộ biểu tượng âm thanh trên navbar nếu có
       const updateNavbarSoundIcon = () => {
+        if (typeof document === 'undefined' || typeof document.getElementById !== 'function') return;
         const soundIcon = document.getElementById('sound-icon');
         if (soundIcon) {
           soundIcon.textContent = settingsManager.isMasterMuted() ? '🔇' : '🔊';
@@ -570,8 +582,9 @@ export class SettingsUI {
       updateNavbarSoundIcon();
 
       // Lắng nghe thay đổi từ SettingsManager để cập nhật ngược lại UI nếu có mutation từ nguồn khác
-      settingsManager.addListener(() => {
+      settingsManager.addListener((change, currentSettings) => {
         SettingsUI.syncUIFromSettings(modalOverlay, prefixId);
+        SettingsUI.applyDisplayAndGameplayPreferences(currentSettings);
         updateNavbarSoundIcon();
       });
 
@@ -676,6 +689,27 @@ export class SettingsUI {
     if (typeof document === 'undefined') return false;
     const modal = document.getElementById(modalId);
     return Boolean(modal && modal.classList.contains('active'));
+  }
+
+  /**
+   * Áp dụng các thuộc tính data-attributes lên thẻ html để điều khiển CSS
+   * @param {Object} [settings] Cấu hình từ SettingsManager (mặc định lấy cấu hình hiện tại)
+   */
+  static applyDisplayAndGameplayPreferences(settings = null) {
+    if (typeof document === 'undefined') return;
+    const s = settings || settingsManager.getSettings();
+    const docEl = document.documentElement;
+    if (!docEl || !docEl.dataset) return;
+
+    if (s.display) {
+      docEl.dataset.particles = String(Boolean(s.display.particlesEnabled));
+      docEl.dataset.reducedMotion = String(Boolean(s.display.reducedMotion));
+      docEl.dataset.cardHoverZoom = String(Boolean(s.display.cardHoverZoom));
+    }
+    if (s.gameplay) {
+      docEl.dataset.colorblind = String(Boolean(s.gameplay.colorblindMode));
+      docEl.dataset.botHint = String(Boolean(s.gameplay.botHintEnabled));
+    }
   }
 
   /**

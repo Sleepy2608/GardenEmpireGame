@@ -748,3 +748,49 @@
     padding: 0.85rem 1.15rem;
   }
 }
+
+/* =============================================================================
+   12. DISPLAY & GAMEPLAY PREFERENCE HOOKS (DATA ATTRIBUTES)
+   ============================================================================= */
+
+/* Eco Particles toggle */
+[data-particles="false"] #particles-canvas,
+[data-particles="false"] .ambient-bg {
+  display: none !important;
+}
+
+/* Reduced Motion preference */
+[data-reduced-motion="true"] *,
+[data-reduced-motion="true"] *::before,
+[data-reduced-motion="true"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Card Hover Zoom toggle */
+[data-card-hover-zoom="false"] .plant-card:hover,
+[data-card-hover-zoom="false"] .market-card:hover,
+[data-card-hover-zoom="false"] .preview-card:hover,
+[data-card-hover-zoom="false"] .bento-card:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Colorblind Mode accessibility */
+[data-colorblind="true"] .token-orb,
+[data-colorblind="true"] .energy-gem,
+[data-colorblind="true"] .inventory-token-slot {
+  letter-spacing: 0.04em;
+  font-weight: 800;
+}
+
+/* Bot Strategy Hint assistance */
+[data-bot-hint="true"] .plant-card.affordable.tier-3-card,
+[data-bot-hint="true"] .plant-card.bot-recommended {
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.75) !important;
+  border-color: #fbbf24 !important;
+}
+
+
