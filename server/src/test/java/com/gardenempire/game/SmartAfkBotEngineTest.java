@@ -120,10 +120,9 @@ class SmartAfkBotEngineTest {
         visitor.setRequirements(customReq);
         p1.getBonuses().clear();
 
-        // Cấp đủ token để mua
-        for (Resource res : Resource.values()) {
-            p1.getTokens().put(res, 5);
-        }
+        // Cấp đúng số token cần thiết để mua cardOnBoard
+        p1.getTokens().clear();
+        p1.getTokens().putAll(cardOnBoard.getCost());
 
         // Act
         SmartAfkBotEngine.BotAction action = SmartAfkBotEngine.calculateBestMove(game.getState(), p1);

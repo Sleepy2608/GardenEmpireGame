@@ -430,7 +430,7 @@ public class SmartAfkBotEngine {
                             }
                         }
                         if (willClaim) {
-                            utility += 25.0; // Rất cao vì sắp rước được 3 điểm Uy Tín
+                            utility += 38.0; // Rất cao vì sắp rước được 3 điểm Uy Tín ★ từ Khách Quý
                         } else {
                             utility += 3.0; // Tích lũy tiến độ
                         }
