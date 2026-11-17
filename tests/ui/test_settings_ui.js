@@ -41,6 +41,7 @@ globalThis.localStorage = new MockLocalStorage();
 // Import modules
 import { SettingsUI } from '../../client/js/ui/SettingsUI.js';
 import { settingsManager } from '../../client/js/settings/SettingsManager.js';
+import { SoundFX } from '../../client/js/ui/SoundFX.js';
 
 describe('⚙️ TEST SUITE: SETTINGS MODAL & PREFERENCES UI (4 TABS & CONTROLS)', () => {
 
@@ -474,6 +475,101 @@ describe('⚙️ TEST SUITE: SETTINGS MODAL & PREFERENCES UI (4 TABS & CONTROLS)
     assert.strictEqual(soundIcon.textContent, '🔊', 'sound-icon phải tự động đổi lại 🔊');
 
     delete globalThis.document;
+  });
+
+  // ===========================================================================
+  // PHẦN 7: KIỂM THỬ CÁC TÙY CHỌN ĐỒ HỌA & BÀN ĐẤU (GIAI ĐOẠN 4)
+  // ===========================================================================
+  it('7.1. applyDisplayAndGameplayPreferences() gán đúng dataset lên documentElement', () => {
+    const mockDocEl = {
+      dataset: {}
+    };
+
+    globalThis.document = {
+      documentElement: mockDocEl
+    };
+
+    settingsManager.setDisplaySetting('particlesEnabled', false);
+    settingsManager.setDisplaySetting('reducedMotion', true);
+    settingsManager.setDisplaySetting('cardHoverZoom', false);
+    settingsManager.setGameplaySetting('colorblindMode', true);
+    settingsManager.setGameplaySetting('botHintEnabled', true);
+
+    SettingsUI.applyDisplayAndGameplayPreferences();
+
+    assert.strictEqual(mockDocEl.dataset.particles, 'false');
+    assert.strictEqual(mockDocEl.dataset.reducedMotion, 'true');
+    assert.strictEqual(mockDocEl.dataset.cardHoverZoom, 'false');
+    assert.strictEqual(mockDocEl.dataset.colorblind, 'true');
+    assert.strictEqual(mockDocEl.dataset.botHint, 'true');
+
+    delete globalThis.document;
+  });
+
+  it('7.2. CSS settings.css chứa đầy đủ selectors data-attributes cho đồ họa và trợ năng', () => {
+    const cssPath = path.resolve('client/css/settings.css');
+    const cssContent = fs.readFileSync(cssPath, 'utf-8');
+
+    assert.ok(cssContent.includes('[data-particles="false"]'), 'CSS có rule tắt hạt [data-particles="false"]');
+    assert.ok(cssContent.includes('[data-reduced-motion="true"]'), 'CSS có rule giảm chuyển động [data-reduced-motion="true"]');
+    assert.ok(cssContent.includes('[data-card-hover-zoom="false"]'), 'CSS có rule tắt zoom [data-card-hover-zoom="false"]');
+    assert.ok(cssContent.includes('[data-colorblind="true"]'), 'CSS có rule khiếm thị màu [data-colorblind="true"]');
+    assert.ok(cssContent.includes('[data-bot-hint="true"]'), 'CSS có rule gợi ý bot [data-bot-hint="true"]');
+  });
+
+  it('7.3. SoundFX.playTurnAlert() phát âm thanh chuông khi tới lượt và hỗ trợ mute', () => {
+    let playedTones = [];
+    const origPlayTone = SoundFX.playTone.bind(SoundFX);
+
+    SoundFX.playTone = function(freq, type, duration, gainVal, startDelay) {
+      playedTones.push({ freq, type, duration, gainVal, startDelay });
+    };
+
+    SoundFX.setMuted(false);
+    SoundFX.setMasterVolume(1.0);
+    SoundFX.playTurnAlert();
+
+    assert.strictEqual(playedTones.length, 3, 'playTurnAlert phải phát hợp âm 3 nốt');
+    assert.strictEqual(playedTones[0].freq, 659.25, 'Nốt 1 là E5');
+    assert.strictEqual(playedTones[1].freq, 880.00, 'Nốt 2 là A5');
+    assert.strictEqual(playedTones[2].freq, 1046.50, 'Nốt 3 là C6');
+
+    // Khi mute
+    playedTones = [];
+    SoundFX.setMuted(true);
+    SoundFX.playTurnAlert();
+    assert.strictEqual(playedTones.length, 0, 'Khi muted không phát âm thanh');
+
+    SoundFX.setMuted(false);
+    SoundFX.playTone = origPlayTone;
+  });
+
+  it('7.4. SoundFX.playChatPop() phát tiếng pop tin nhắn chat mới', () => {
+    let popCalled = false;
+    const origPlayChatSound = SoundFX.playChatSound.bind(SoundFX);
+
+    SoundFX.playChatSound = function() {
+      popCalled = true;
+    };
+
+    SoundFX.playChatPop();
+    assert.strictEqual(popCalled, true, 'playChatPop phải gọi playChatSound');
+
+    SoundFX.playChatSound = origPlayChatSound;
+  });
+
+  it('7.5. BoardUI.js tích hợp turnAlertSound và ChatUI.js tích hợp chatMessageSound', () => {
+    const boardUiPath = path.resolve('client/js/ui/BoardUI.js');
+    const boardUiContent = fs.readFileSync(boardUiPath, 'utf-8');
+
+    const chatUiPath = path.resolve('client/js/ui/ChatUI.js');
+    const chatUiContent = fs.readFileSync(chatUiPath, 'utf-8');
+
+    assert.ok(boardUiContent.includes('turnAlertSound'), 'BoardUI.js phải kiểm tra setting turnAlertSound');
+    assert.ok(boardUiContent.includes('playTurnAlert'), 'BoardUI.js phải gọi SoundFX.playTurnAlert');
+
+    assert.ok(chatUiContent.includes('chatMessageSound'), 'ChatUI.js phải kiểm tra setting chatMessageSound');
+    assert.ok(chatUiContent.includes('playChatSound'), 'ChatUI.js phải gọi SoundFX.playChatSound');
   });
 
 });
