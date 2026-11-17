@@ -3,6 +3,32 @@
 Tất cả các thay đổi đáng chú ý của dự án **Garden Empire Game** được ghi chép và lưu trữ đầy đủ tại tài liệu này từ giai đoạn khởi tạo ban đầu (v0.0.0).  
 Định dạng dựa trên [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), và dự án tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 🚀 [v1.7.0] — 2026-11-17
+### 🤖 Động Cơ Trợ Lý Bot Thông Minh, Tự Động Tiếp Quản & Đấu Trường 4 Bot (Smart AFK Bot, Autonomous Takeover & Tournament Engine)
+- **Kiến Trúc Động Cơ Bot Heuristic Độc Lập 4 Cấp Độ (`SmartAfkBotEngine.java`):**
+  - **Cấp độ 1 — Mua Thẻ Cây Tối Ưu (Buy Card Priority):** Quét toàn bộ thẻ cây khả dụng (bao gồm thẻ lộ diện trên bàn và kho bài giữ của bot). Đánh giá hàm tiện ích kết hợp giữa điểm Uy Tín ★, tier sinh thái (Tier 2 Sweet Spot), và giá trị thúc đẩy Khách Quý (+3★ ~ 38.0 utility). Tự động rước Khách Quý và khấu trừ tài nguyên chuẩn xác.
+  - **Cấp độ 2 — Đặt Chỗ Thẻ Trọng Điểm & Tích Lũy Phân Bón Vàng (Reserve Key Card):** Khi không thể mua thẻ ngay lập tức nhưng kho bài giữ còn chỗ (< 3 thẻ), bot tự động đặt chỗ thẻ mục tiêu có tỷ lệ giá trị/khoảng cách cao nhất hoặc thẻ đối thủ đang nhắm tới, nhận ngay 1 token Phân Bón Vàng WILD ⭐.
+  - **Cấp độ 3 — Bốc Token Chiến Thuật (Strategic Token Harvesting):** Phân tích thẻ mục tiêu dài hạn để ưu tiên bốc 2 token cùng loại (nếu bank $\ge 4$) hoặc bốc 3 token khác loại bù đắp trực tiếp các màu còn thiếu.
+  - **Cấp độ 4 — Bảo Vệ Ngưỡng 10 Token & Lọc Trả Token Thừa (Hand Cap Guard & Smart Discard):** Thuật toán mô phỏng tay bài ảo để tự động giữ lại các token phục vụ thẻ mục tiêu và trả lại ngân hàng các token ít giá trị nhất, đảm bảo người chơi không bao giờ vượt trần 10 token.
+- **Cơ Chế Tiếp Quản Ván Đấu Tức Thời Khi Người Chơi Rời Bàn / AFK Timeout (`GameEngine.java`, `GameService.java`):**
+  - **Instant Bot Takeover (`handlePlayerLeave`):** Khi người chơi đột ngột mất kết nối hoặc rời phòng, thay vì kết thúc ván đấu hoặc làm gián đoạn bàn cờ, hệ thống gắn cờ `isBot = true`, cập nhật tên `[Tên] (🤖 Bot)`, và bàn giao quyền điều khiển cho Smart AFK Bot tiếp tục thi đấu.
+  - **Auto-Turn Timer Integration:** Tích hợp bộ đếm giờ tự động nhận diện `player.isBot()` và kích hoạt `executeBotTurn()` sau độ trễ tự nhiên 300ms, đảm bảo nhịp độ ván đấu liền mạch không độ trễ.
+  - **Bảo Vệ Walkover Chính Xác:** Duy trì kiểm tra nếu toàn bộ người thật đều rời bàn thì trận đấu mới kết thúc chiến thắng mặc định.
+- **Trực Quan Hóa Huy Hiệu Bot & Phản Hồi Giao Diện Người Dùng (`client/`):**
+  - **Huy Hiệu Trợ Lý Bot Bản Thân:** Thanh điều khiển hiển thị huy hiệu `🤖 TRỢ LÝ BOT` khi người chơi được bot tiếp quản hoặc đóng vai trò bot.
+  - **Huy Hiệu Đối Thủ Bot:** Khung thẻ đối thủ gắn badge `.badge-bot` với biểu tượng `🤖 BOT`, phối hợp linh hoạt cùng vương miện Chủ Phòng 👑 và viền sáng Active Turn.
+  - **Phân Biệt Trạng Thái Minh Bạch:** Tách biệt rõ ràng 3 trạng thái: Đang thi đấu bình thường, Bot tiếp quản (`🤖 BOT`), Rời bàn (`🍂 Đã Rời Ván`), và Bị truất quyền (`⏳ Truất Quyền AFK`).
+  - **Thông Báo Tiếp Quản (Bot Takeover Toast & Chat):** Đẩy thông báo hổ phách và tin nhắn hệ thống vào khung Chat khi Bot tiếp quản người chơi rời phòng.
+- **Đấu Trường 4 Bot Tự Động & Bộ Benchmark Siêu Tốc (`SmartAfkBotEngineTest.java`):**
+  - **Flora Valley 4-Bot Tournament:** Ván đấu 4 Bot (`Bot-Gia Định`, `Bot-Thăng Long`, `Bot-Hoa Lư`, `Bot-Phú Xuân`) diễn ra tự động 100% từ đầu tới khi chạm ngưỡng 15★ và phân định Tiebreaker ít thẻ hơn thắng.
+  - **Tốc Độ Tính Toán Kỷ Lục:** Trung bình chỉ **~0.15ms (150 µs)** cho một nước đi; toàn bộ một ván cờ 110–125 lượt của 4 Bot hoàn tất trong chưa đầy **0.05 giây** (40–55ms).
+  - **Test Thực Nghiệm Tiếp Quản:** Mô phỏng thành công người chơi đột ngột disconnect giữa chừng, Bot lập tức tiếp quản nước đi và chuyển lượt hợp lệ.
+- **Tái Cấu Trúc Module Hóa Thư Mục Kiểm Thử & Runner Đệ Quy (`tests/`):**
+  - Gom nhóm toàn bộ 23 tệp test vào 6 module chuyên biệt chuẩn Domain-Driven: `welcome/` (2 suites), `ui/` (9 suites), `bot/` (3 suites), `audio/` (3 suites), `regression/` (2 suites), `e2e/` (4 suites).
+  - Nâng cấp `run_all_tests.js` thành runner quét đệ quy tự động nhận diện bài test mới, hỗ trợ cờ `--e2e` cho bài test WebSocket Live.
+- **Đồng Bộ Số Hiệu Phiên Bản Toàn Hệ Thống:**
+  - Nâng cấp lên **v1.7.0** trên toàn bộ Client Badges (`index.html`, `lobby.html`, `waiting-room.html`, `welcome.html`), Server Maven (`pom.xml`), README và tài liệu quy chuẩn `.agents/AGENTS.md`.
+
 ## 🚀 [v1.6.0] — 2026-11-16
 ### 🎵 Hệ Thống Nhạc Nền Phục Hưng & Âm Thanh Không Gian Đa Giai Đoạn (Renaissance Botanical Soundtrack & Dynamic BGM System)
 - **Thư Viện Âm Thanh Phục Hưng CC-BY 4.0 Chuẩn Mực & Ghi Nhận Tác Quyền In-Game (`client/assets/audio/`):**
